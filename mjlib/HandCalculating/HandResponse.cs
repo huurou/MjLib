@@ -9,7 +9,7 @@ namespace mjlib.HandCalculating
         public int Fu { get; }
         public List<Yaku> Yaku { get; }
         public string? Error { get; }
-        public List<FuDetail>? FuDetailSet { get; }
+        public List<FuDetail> FuDetailSet { get; }
 
         public HandResponse(Cost? cost = null,
             int han = 0,
@@ -23,7 +23,7 @@ namespace mjlib.HandCalculating
             Fu = fu;
             Yaku = yaku ?? new();
             Error = error;
-            FuDetailSet = fuDetails;
+            FuDetailSet = fuDetails ?? new();
         }
     }
 }

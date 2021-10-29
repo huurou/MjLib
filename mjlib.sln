@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mjlib", "mjlib\mjlib.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mjlibTest", "mjlibTest\mjlibTest.csproj", "{7BCDB8D6-D1F3-4756-B03B-517E185B3D0D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mjlibExample", "mjlibExample\mjlibExample.csproj", "{83CE2649-8287-40EF-A8FD-B554A3016339}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{7BCDB8D6-D1F3-4756-B03B-517E185B3D0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7BCDB8D6-D1F3-4756-B03B-517E185B3D0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7BCDB8D6-D1F3-4756-B03B-517E185B3D0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83CE2649-8287-40EF-A8FD-B554A3016339}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83CE2649-8287-40EF-A8FD-B554A3016339}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83CE2649-8287-40EF-A8FD-B554A3016339}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83CE2649-8287-40EF-A8FD-B554A3016339}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
