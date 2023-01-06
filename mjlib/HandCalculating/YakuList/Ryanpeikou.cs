@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace mjlib.HandCalculating.YakuList
 {
-    internal class Ryanpeikou : Yaku
+    internal class Ryanpeikou : YakuBase
     {
         public override int YakuId => 34;
 
@@ -22,7 +22,7 @@ namespace mjlib.HandCalculating.YakuList
 
         public override bool IsYakuman => false;
 
-        public override bool IsConditionMet(IEnumerable<TileKinds>? hand, object[]? args = null)
+        public override bool Valid(IEnumerable<TileKindList>? hand, params object[] args)
         {
             if (hand is null) return false;
             var chiSets = hand.Where(i => i.IsChi);

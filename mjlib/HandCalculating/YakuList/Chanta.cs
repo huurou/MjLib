@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace mjlib.HandCalculating.YakuList
 {
-    internal class Chanta : Yaku
+    internal class Chanta : YakuBase
     {
         public override int YakuId => 24;
 
@@ -21,9 +21,9 @@ namespace mjlib.HandCalculating.YakuList
 
         public override bool IsYakuman => false;
 
-        public override bool IsConditionMet(IEnumerable<TileKinds>? hand, object[]? args = null)
+        public override bool Valid(IEnumerable<TileKindList>? hand, params object[] args)
         {
-            static bool TileInIndices(TileKinds itemSet, List<int> indicesArray)
+            static bool TileInIndices(TileKindList itemSet, List<int> indicesArray)
             {
                 foreach (var x in itemSet)
                 {

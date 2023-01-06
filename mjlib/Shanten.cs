@@ -10,34 +10,34 @@ namespace mjlib
     {
         public const int AGARI_STATE = -1;
 
-        private static Tiles34 tiles_ = new();
-        private static int numberMelds_ = 0;
-        private static int numberTatsu_ = 0;
-        private static int numberPairs_ = 0;
-        private static int numberJidahai_ = 0;
-        private static int numberCharacters_ = 0;
-        private static int numberIsolatedTiles_ = 0;
-        private static int minShanten_ = 0;
+        private static Tiles34 array = new();
+        private static int meldsCount = 0;
+        private static int tatsuCount = 0;
+        private static int pairsCount = 0;
+        private static int jidahaiCount = 0;
+        private static int honorBits = 0;
+        private static int isolatedBits = 0;
+        private static int shanten = 0;
 
         /// <summary>
         /// シャンテン数を計算する 0:テンパイ, -1: あがり
         /// </summary>
-        /// <param name="tiles"></param>
+        /// <param name="hand"></param>
         /// <param name="openSets"></param>
         /// <param name="chiitoitsu"></param>
-        /// <param name="kokushi"></param>
+        /// <param name="kokushimusou"></param>
         /// <returns></returns>
-        public static int CalculateShanten(TileIds tiles, IList<TileKinds>? openSets = null,
-            bool chiitoitsu = true, bool kokushi = true)
+        public static int CalculateShanten(TileList hand, IList<TileKindList>? openSets = null,
+            bool chiitoitsu = true, bool kokushimusou = true)
         {
-            var tiles34 = tiles.ToTiles34();
-            Init(tiles34);
-            var countOfTiles = tiles34.Sum();
-            if (countOfTiles > 14) throw new ArgumentException("牌の数が14個より多いです。", nameof(countOfTiles));
+            array = hand.ToTiles34();
+            Init(array);
+            var countOfTiles = array.Sum();
+            if (countOfTiles > 14) throw new ArgumentException("牌の数が14個より多いです。", nameof(hand));
 
             if (!(openSets is null || openSets.Count == 0))
             {
-                var isolatedTiles = tiles_.FindIsolatedTileIndices();
+                var isolatedTiles = Shanten.array.FindIsolatedTileIndices();
                 foreach (var meld in openSets)
                 {
                     if (isolatedTiles.Count == 0) break;
@@ -46,40 +46,40 @@ namespace mjlib
                     var isolatedTile = isolatedTiles[lastIndex];
                     isolatedTiles.RemoveAt(lastIndex);
 
-                    tiles34[meld[0].Value] -= 1;
-                    tiles34[meld[1].Value] -= 1;
-                    tiles34[meld[2].Value] -= 1;
-                    tiles34[isolatedTile.Value] = 3;
+                    array[meld[0].Value] -= 1;
+                    array[meld[1].Value] -= 1;
+                    array[meld[2].Value] -= 1;
+                    array[isolatedTile.Value] = 3;
                 }
             }
 
             if (openSets is null || openSets.Count == 0)
             {
-                minShanten_ = ScanChiitoitsuAndKokushi(chiitoitsu, kokushi);
+                shanten = ScanChiitoitsuAndKokushi(chiitoitsu, kokushimusou);
             }
 
             RemoveCharacterTiles(countOfTiles);
 
             var initMentsu = (14 - countOfTiles) / 3;
             Scan(initMentsu);
-            return minShanten_;
+            return shanten;
         }
 
         private static void Init(Tiles34 tiles)
         {
-            tiles_ = tiles;
-            numberMelds_ = 0;
-            numberTatsu_ = 0;
-            numberPairs_ = 0;
-            numberJidahai_ = 0;
-            numberCharacters_ = 0;
-            numberIsolatedTiles_ = 0;
-            minShanten_ = 8;
+            array = tiles;
+            meldsCount = 0;
+            tatsuCount = 0;
+            pairsCount = 0;
+            jidahaiCount = 0;
+            honorBits = 0;
+            isolatedBits = 0;
+            shanten = 8;
         }
 
         private static int ScanChiitoitsuAndKokushi(bool chiitoitsu, bool kokushi)
         {
-            var shanten = minShanten_;
+            var shanten = Shanten.shanten;
             var yaochuIndices = new List<int>
             {
                 0, 8, 9, 17, 18,
@@ -89,13 +89,13 @@ namespace mjlib
             var completedTerminals = 0;
             foreach (var i in yaochuIndices)
             {
-                completedTerminals += tiles_[i] >= 2 ? 1 : 0;
+                completedTerminals += array[i] >= 2 ? 1 : 0;
             }
 
             var terminals = 0;
             foreach (var i in yaochuIndices)
             {
-                terminals += tiles_[i] != 0 ? 1 : 0;
+                terminals += array[i] != 0 ? 1 : 0;
             }
 
             var chuchanIndices = new List<int>
@@ -108,13 +108,13 @@ namespace mjlib
             var completedPairs = completedTerminals;
             foreach (var i in chuchanIndices)
             {
-                completedPairs += tiles_[i] >= 2 ? 1 : 0;
+                completedPairs += array[i] >= 2 ? 1 : 0;
             }
 
             var pairs = terminals;
             foreach (var i in chuchanIndices)
             {
-                pairs += tiles_[i] != 0 ? 1 : 0;
+                pairs += array[i] != 0 ? 1 : 0;
             }
 
             //七対子のシャンテン数: 6-対子
@@ -145,57 +145,57 @@ namespace mjlib
             var isoleted = 0;
             for (var i = 27; i < 34; i++)
             {
-                if (tiles_[i] == 4)
+                if (array[i] == 4)
                 {
-                    numberMelds_ += 1;
-                    numberJidahai_ += 1;
+                    meldsCount += 1;
+                    jidahaiCount += 1;
                     number |= 1 << (i - 27);
                     isoleted |= 1 << (i - 27);
                 }
-                if (tiles_[i] == 3)
+                if (array[i] == 3)
                 {
-                    numberMelds_ += 1;
+                    meldsCount += 1;
                 }
-                if (tiles_[i] == 2)
+                if (array[i] == 2)
                 {
-                    numberPairs_ += 1;
+                    pairsCount += 1;
                 }
-                if (tiles_[i] == 1)
+                if (array[i] == 1)
                 {
                     isoleted |= i << (i - 27);
                 }
             }
-            if (numberJidahai_ != 0 && (countOfTiles % 3) == 2)
+            if (jidahaiCount != 0 && (countOfTiles % 3) == 2)
             {
-                numberJidahai_ -= 1;
+                jidahaiCount -= 1;
             }
             if (isoleted != 0)
             {
-                numberIsolatedTiles_ |= 1 << 27;
+                isolatedBits |= 1 << 27;
                 if ((number | isoleted) == number)
                 {
-                    numberCharacters_ |= 1 << 27;
+                    honorBits |= 1 << 27;
                 }
             }
         }
 
         private static void Scan(int initMentsu)
         {
-            numberCharacters_ = 0;
+            honorBits = 0;
             for (var i = 0; i < 27; i++)
             {
-                numberCharacters_ |= tiles_[i] == 4 ? 1 << i : 0;
+                honorBits |= array[i] == 4 ? 1 << i : 0;
             }
-            numberMelds_ += initMentsu;
+            meldsCount += initMentsu;
             Run(0);
         }
 
         private static void Run(int depth)
         {
-            if (minShanten_ == AGARI_STATE) return;
+            if (shanten == AGARI_STATE) return;
 
             //牌が存在するインデックスまで移動
-            while (tiles_[depth] == 0)
+            while (array[depth] == 0)
             {
                 depth += 1;
                 if (depth >= 27) break;
@@ -214,12 +214,12 @@ namespace mjlib
             {
                 i -= 9;
             }
-            if (tiles_[depth] == 4)
+            if (array[depth] == 4)
             {
                 IncreaseSet(depth);
-                if (i < 7 && tiles_[depth + 2] != 0)
+                if (i < 7 && array[depth + 2] != 0)
                 {
-                    if (tiles_[depth + 1] != 0)
+                    if (array[depth + 1] != 0)
                     {
                         IncreaseSyuntsu(depth);
                         Run(depth + 1);
@@ -229,7 +229,7 @@ namespace mjlib
                     Run(depth + 1);
                     DecreaseTatsuSecond(depth);
                 }
-                if (i < 8 && tiles_[depth + 1] != 0)
+                if (i < 8 && array[depth + 1] != 0)
                 {
                     IncreaseTatsuFirst(depth);
                     Run(depth + 1);
@@ -241,9 +241,9 @@ namespace mjlib
                 DecreaseSet(depth);
                 IncreasePair(depth);
 
-                if (i < 7 && tiles_[depth + 2] != 0)
+                if (i < 7 && array[depth + 2] != 0)
                 {
-                    if (tiles_[depth + 1] != 0)
+                    if (array[depth + 1] != 0)
                     {
                         IncreaseSyuntsu(depth);
                         Run(depth);
@@ -253,7 +253,7 @@ namespace mjlib
                     Run(depth + 1);
                     DecreaseTatsuSecond(depth);
                 }
-                if (i < 8 && tiles_[depth + 1] != 0)
+                if (i < 8 && array[depth + 1] != 0)
                 {
                     IncreaseTatsuFirst(depth);
                     Run(depth + 1);
@@ -261,13 +261,13 @@ namespace mjlib
                 }
                 DecreasePair(depth);
             }
-            if (tiles_[depth] == 3)
+            if (array[depth] == 3)
             {
                 IncreaseSet(depth);
                 Run(depth + 1);
                 DecreaseSet(depth);
                 IncreasePair(depth);
-                if (i < 7 && tiles_[depth + 1] != 0 && tiles_[depth + 2] != 0)
+                if (i < 7 && array[depth + 1] != 0 && array[depth + 2] != 0)
                 {
                     IncreaseSyuntsu(depth);
                     Run(depth + 1);
@@ -275,13 +275,13 @@ namespace mjlib
                 }
                 else
                 {
-                    if (i < 7 && tiles_[depth + 2] != 0)
+                    if (i < 7 && array[depth + 2] != 0)
                     {
                         IncreaseTatsuSecond(depth);
                         Run(depth + 1);
                         DecreaseTatsuSecond(depth);
                     }
-                    if (i < 8 && tiles_[depth + 1] != 0)
+                    if (i < 8 && array[depth + 1] != 0)
                     {
                         IncreaseTatsuFirst(depth);
                         Run(depth + 1);
@@ -290,7 +290,7 @@ namespace mjlib
                 }
                 DecreasePair(depth);
 
-                if (i < 7 && tiles_[depth + 2] >= 2 && tiles_[depth + 1] >= 2)
+                if (i < 7 && array[depth + 2] >= 2 && array[depth + 1] >= 2)
                 {
                     IncreaseSyuntsu(depth);
                     IncreaseSyuntsu(depth);
@@ -299,21 +299,21 @@ namespace mjlib
                     DecreaseSyuntsu(depth);
                 }
             }
-            if (tiles_[depth] == 2)
+            if (array[depth] == 2)
             {
                 IncreasePair(depth);
                 Run(depth + 1);
                 DecreasePair(depth);
-                if (1 < 7 && tiles_[depth + 2] != 0 && tiles_[depth + 1] != 0)
+                if (1 < 7 && array[depth + 2] != 0 && array[depth + 1] != 0)
                 {
                     IncreaseSyuntsu(depth);
                     Run(depth);
                     DecreaseSyuntsu(depth);
                 }
             }
-            if (tiles_[depth] == 1)
+            if (array[depth] == 1)
             {
-                if (i < 6 && tiles_[depth + 1] == 1 && tiles_[depth + 2] != 0 && tiles_[depth + 3] != 4)
+                if (i < 6 && array[depth + 1] == 1 && array[depth + 2] != 0 && array[depth + 3] != 4)
                 {
                     IncreaseSyuntsu(depth);
                     Run(depth + 2);
@@ -324,9 +324,9 @@ namespace mjlib
                     IncreaseIsolatedTile(depth);
                     Run(depth + 1);
                     DecreaseIsolatedTile(depth);
-                    if (i < 7 && tiles_[depth + 2] != 0)
+                    if (i < 7 && array[depth + 2] != 0)
                     {
-                        if (tiles_[depth + 1] != 0)
+                        if (array[depth + 1] != 0)
                         {
                             IncreaseSyuntsu(depth);
                             Run(depth + 1);
@@ -336,7 +336,7 @@ namespace mjlib
                         Run(depth + 1);
                         DecreaseTatsuSecond(depth);
                     }
-                    if (i < 8 && tiles_[depth + 1] != 0)
+                    if (i < 8 && array[depth + 1] != 0)
                     {
                         IncreaseTatsuFirst(depth);
                         Run(depth + 1);
@@ -348,15 +348,15 @@ namespace mjlib
 
         private static void UpdateResult()
         {
-            var retShanten = 8 - numberMelds_ * 2 - numberTatsu_ - numberPairs_;
-            var nMentsuKouho = numberMelds_ + numberTatsu_;
-            if (numberPairs_ != 0)
+            var retShanten = 8 - meldsCount * 2 - tatsuCount - pairsCount;
+            var nMentsuKouho = meldsCount + tatsuCount;
+            if (pairsCount != 0)
             {
-                nMentsuKouho += numberPairs_ - 1;
+                nMentsuKouho += pairsCount - 1;
             }
-            else if (numberCharacters_ != 0 && numberIsolatedTiles_ != 0)
+            else if (honorBits != 0 && isolatedBits != 0)
             {
-                if ((numberCharacters_ | numberIsolatedTiles_) == numberCharacters_)
+                if ((honorBits | isolatedBits) == honorBits)
                 {
                     retShanten += 1;
                 }
@@ -365,94 +365,94 @@ namespace mjlib
             {
                 retShanten += nMentsuKouho - 4;
             }
-            if (retShanten != AGARI_STATE && retShanten < numberJidahai_)
+            if (retShanten != AGARI_STATE && retShanten < jidahaiCount)
             {
-                retShanten = numberJidahai_;
+                retShanten = jidahaiCount;
             }
-            if (retShanten < minShanten_)
+            if (retShanten < shanten)
             {
-                minShanten_ = retShanten;
+                shanten = retShanten;
             }
         }
 
         private static void IncreaseSet(int k)
         {
-            tiles_[k] -= 3;
-            numberMelds_ += 1;
+            array[k] -= 3;
+            meldsCount += 1;
         }
 
         private static void DecreaseSet(int k)
         {
-            tiles_[k] += 3;
-            numberMelds_ -= 1;
+            array[k] += 3;
+            meldsCount -= 1;
         }
 
         private static void IncreasePair(int k)
         {
-            tiles_[k] -= 2;
-            numberPairs_ += 1;
+            array[k] -= 2;
+            pairsCount += 1;
         }
 
         private static void DecreasePair(int k)
         {
-            tiles_[k] += 2;
-            numberPairs_ -= 1;
+            array[k] += 2;
+            pairsCount -= 1;
         }
 
         private static void IncreaseSyuntsu(int k)
         {
-            tiles_[k] -= 1;
-            tiles_[k + 1] -= 1;
-            tiles_[k + 2] -= 1;
-            numberMelds_ += 1;
+            array[k] -= 1;
+            array[k + 1] -= 1;
+            array[k + 2] -= 1;
+            meldsCount += 1;
         }
 
         private static void DecreaseSyuntsu(int k)
         {
-            tiles_[k] += 1;
-            tiles_[k + 1] += 1;
-            tiles_[k + 2] += 1;
-            numberMelds_ -= 1;
+            array[k] += 1;
+            array[k + 1] += 1;
+            array[k + 2] += 1;
+            meldsCount -= 1;
         }
 
         private static void IncreaseTatsuFirst(int k)
         {
-            tiles_[k] -= 1;
-            tiles_[k + 1] -= 1;
-            numberTatsu_ += 1;
+            array[k] -= 1;
+            array[k + 1] -= 1;
+            tatsuCount += 1;
         }
 
         private static void DecreaseTatsuFirst(int k)
         {
-            tiles_[k] += 1;
-            tiles_[k + 1] += 1;
-            numberTatsu_ -= 1;
+            array[k] += 1;
+            array[k + 1] += 1;
+            tatsuCount -= 1;
         }
 
         private static void IncreaseTatsuSecond(int k)
         {
-            tiles_[k] -= 1;
-            tiles_[k + 2] -= 1;
-            numberTatsu_ += 1;
+            array[k] -= 1;
+            array[k + 2] -= 1;
+            tatsuCount += 1;
         }
 
         private static void DecreaseTatsuSecond(int k)
         {
-            tiles_[k] += 1;
-            tiles_[k + 2] += 1;
-            numberTatsu_ -= 1;
+            array[k] += 1;
+            array[k + 2] += 1;
+            tatsuCount -= 1;
         }
 
         private static void IncreaseIsolatedTile(int k)
         {
-            tiles_[k] -= 1;
-            numberIsolatedTiles_ |= 1 << k;
+            array[k] -= 1;
+            isolatedBits |= 1 << k;
         }
 
         private static void DecreaseIsolatedTile(int k)
         {
-            tiles_[k] += 1;
-            numberIsolatedTiles_ |= 1 << k;
+            array[k] += 1;
+            isolatedBits |= 1 << k;
         }
     }
 }

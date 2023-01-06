@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace mjlib.HandCalculating.YakuList
 {
-    internal class SanKantsu : Yaku
+    internal class SanKantsu : YakuBase
     {
         public override int YakuId => 28;
 
@@ -22,11 +22,11 @@ namespace mjlib.HandCalculating.YakuList
 
         public override bool IsYakuman => false;
 
-        public override bool IsConditionMet(IEnumerable<TileKinds>? hand, object[]? args = null)
+        public override bool Valid(IEnumerable<TileKindList>? hand, params object[] args)
         {
             if (args is null) return false;
             var melds = (List<Meld>)args[0];
-            return melds.Where(x => x.Type is MeldType.KAN or MeldType.CHANKAN)
+            return melds.Where(x => x.Type is MeldType.Kan or MeldType.Chankan)
                         .Count() == 3;
         }
     }

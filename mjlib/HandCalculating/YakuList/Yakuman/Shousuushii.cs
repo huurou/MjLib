@@ -5,7 +5,7 @@ using static mjlib.Constants;
 
 namespace mjlib.HandCalculating.YakuList.Yakuman
 {
-    internal class Shousuushii : Yaku
+    internal class Shousuushii : YakuBase
     {
         public override int YakuId => 40;
 
@@ -23,7 +23,7 @@ namespace mjlib.HandCalculating.YakuList.Yakuman
 
         public override bool IsYakuman => true;
 
-        public override bool IsConditionMet(IEnumerable<TileKinds>? hand, object[]? args = null)
+        public override bool Valid(IEnumerable<TileKindList>? hand, params object[] args)
         {
             if (hand is null) return false;
             var ponSets = hand.Where(x => x.IsPon);

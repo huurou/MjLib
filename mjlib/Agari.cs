@@ -7,7 +7,7 @@ namespace mjlib
 {
     public static class Agari
     {
-        internal static bool IsAgari(TileIds tileIds, IEnumerable<TileKinds>? openSets = null)
+        internal static bool IsAgari(TileList tileIds, IEnumerable<TileKindList>? openSets = null)
         {
             var tiles34 = tileIds.ToTiles34();
 
@@ -56,26 +56,26 @@ namespace mjlib
 
             //(1,4,7),(2,5,8),(3,6,9)それぞれの個数を集めたもの
             //萬子
-            var n00 = tiles34[0] + tiles34[3] + tiles34[6];
-            var n01 = tiles34[1] + tiles34[4] + tiles34[7];
-            var n02 = tiles34[2] + tiles34[5] + tiles34[8];
+            var man147 = tiles34[0] + tiles34[3] + tiles34[6];
+            var man258 = tiles34[1] + tiles34[4] + tiles34[7];
+            var man369 = tiles34[2] + tiles34[5] + tiles34[8];
             //索子
-            var n10 = tiles34[9] + tiles34[12] + tiles34[15];
-            var n11 = tiles34[10] + tiles34[13] + tiles34[16];
-            var n12 = tiles34[11] + tiles34[14] + tiles34[17];
+            var pin147 = tiles34[9] + tiles34[12] + tiles34[15];
+            var pin258 = tiles34[10] + tiles34[13] + tiles34[16];
+            var pin369 = tiles34[11] + tiles34[14] + tiles34[17];
             //筒子
-            var n20 = tiles34[18] + tiles34[21] + tiles34[24];
-            var n21 = tiles34[19] + tiles34[22] + tiles34[25];
-            var n22 = tiles34[20] + tiles34[23] + tiles34[26];
+            var sou147 = tiles34[18] + tiles34[21] + tiles34[24];
+            var sou258 = tiles34[19] + tiles34[22] + tiles34[25];
+            var sou369 = tiles34[20] + tiles34[23] + tiles34[26];
 
             //対子があれば2, 面子のみなら0
-            var n0 = (n00 + n01 + n02) % 3;
-            var n1 = (n10 + n11 + n12) % 3;
-            var n2 = (n20 + n21 + n22) % 3;
-            if (n0 == 1 || n1 == 1 || n2 == 1) return false;
+            var man = (man147 + man258 + man369) % 3;
+            var sou = (pin147 + pin258 + pin369) % 3;
+            var pin = (sou147 + sou258 + sou369) % 3;
+            if (man == 1 || sou == 1 || pin == 1) return false;
 
             //雀頭は1つだけ
-            if (new List<int> { n0, n1, n2,
+            if (new List<int> { man, sou, pin,
                 tiles34[27], tiles34[28], tiles34[29], tiles34[30],
                 tiles34[31],tiles34[32],tiles34[33]}.Count(n => n == 2) != 1)
                 return false;
@@ -83,47 +83,47 @@ namespace mjlib
             //面子を消す
             //(1,4,7)%3=1,(2,5,8)%3=2, (3,6,9)%3=0
             //[123]=>(1*1+2*1=3)=0, [444]=>(1*3)%3=0
-            //0:(3,6,9)に,1;(2,5,8)に,2:(3,6,9)に雀頭がある
+            //0:(3,6,9)に,1;(2,5,8)に,2:(1,4,7)に雀頭がある
             //[77]=>(1*2)%3=2, [88]=>(2*2)%3=1,[99]=>(0*2)%3=0
-            var nn0 = (n00 * 1 + n01 * 2) % 3;
-            var nn1 = (n10 * 1 + n11 * 2) % 3;
-            var nn2 = (n20 * 1 + n21 * 2) % 3;
+            var manHead = (man147 * 1 + man258 * 2) % 3;
+            var pinHead = (pin147 * 1 + pin258 * 2) % 3;
+            var souHead = (sou147 * 1 + sou258 * 2) % 3;
 
-            var m0 = ToMeld(tiles34, 0);
-            var m1 = ToMeld(tiles34, 9);
-            var m2 = ToMeld(tiles34, 18);
+            var manBits = ToMeld(tiles34, 0);
+            var souBits = ToMeld(tiles34, 9);
+            var pinBits = ToMeld(tiles34, 18);
 
             //3桁目:1-字牌に対子がある
             if ((j & 4) != 0)
             {
                 //字牌以外面子しかもたない 以下も同様
-                return (n0 | nn0 | n1 | nn1 | n2 | nn2) == 0
-                    && IsMentsu(m0)
-                    && IsMentsu(m1)
-                    && IsMentsu(m2);
+                return (man | manHead | sou | pinHead | pin | souHead) == 0
+                    && IsMentsu(manBits)
+                    && IsMentsu(souBits)
+                    && IsMentsu(pinBits);
             }
             //萬子に対子がある
-            if (n0 == 2)
+            if (man == 2)
             {
-                return (n1 | nn1 | n2 | nn2) == 0
-                    && IsMentsu(m1)
-                    && IsMentsu(m2)
-                    && IsAtamaMentsu(nn0, m0);
+                return (sou | pinHead | pin | souHead) == 0
+                    && IsMentsu(souBits)
+                    && IsMentsu(pinBits)
+                    && IsAtamaMentsu(manHead, manBits);
             }
             //筒子に対子がある
-            if (n1 == 2)
+            if (sou == 2)
             {
-                return (n2 | nn2 | n0 | nn0) == 0
-                    && IsMentsu(m2)
-                    && IsMentsu(m0)
-                    && IsAtamaMentsu(nn1, m1);
+                return (pin | souHead | man | manHead) == 0
+                    && IsMentsu(pinBits)
+                    && IsMentsu(manBits)
+                    && IsAtamaMentsu(pinHead, souBits);
             }
             //索子に対子がある
-            return n2 == 2 &&
-                (n0 | nn0 | n1 | nn1) == 0 &&
-                IsMentsu(m0) &&
-                IsMentsu(m1) &&
-                IsAtamaMentsu(nn2, m2);
+            return pin == 2 &&
+                (man | manHead | sou | pinHead) == 0 &&
+                IsMentsu(manBits) &&
+                IsMentsu(souBits) &&
+                IsAtamaMentsu(souHead, pinBits);
         }
 
         //Tilesの各intをバイナリにしたものが右から3桁ずつ並ぶ

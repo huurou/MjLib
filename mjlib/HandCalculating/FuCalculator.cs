@@ -17,11 +17,20 @@ namespace mjlib.HandCalculating
             Reason = reason;
         }
 
-        public override bool Equals(object? obj) => obj is FuDetail other && Equals(other);
+        public override bool Equals(object? obj)
+        {
+            return obj is FuDetail other && Equals(other);
+        }
 
-        public bool Equals(FuDetail? other) => other is not null && Fu == other.Fu && Reason == other.Reason;
+        public bool Equals(FuDetail? other)
+        {
+            return other is not null && Fu == other.Fu && Reason == other.Reason;
+        }
 
-        public override int GetHashCode() => base.GetHashCode();
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 
     internal static class FuCalculator
@@ -46,9 +55,9 @@ namespace mjlib.HandCalculating
         public const string CLOSED_TERMINAL_KAN = "closed_terminal_kan";
         public const string OPEN_TERMINAL_KAN = "open_terminal_kan";
 
-        public static (List<FuDetail>, int) CalculateFu(IList<TileKinds> hand,
-            TileId winTile,
-            TileKinds winGroup,
+        public static (List<FuDetail>, int) CalculateFu(IList<TileKindList> devidedHand,
+            Tile winTile,
+            TileKindList winGroup,
             HandConfig config,
             IEnumerable<int>? valuedTiles = null,
             IEnumerable<Meld>? melds = null)
@@ -63,7 +72,7 @@ namespace mjlib.HandCalculating
                 melds = new List<Meld>();
             }
             var fuDetails = new List<FuDetail>();
-            if (hand.Count == 7)
+            if (devidedHand.Count == 7)
             {
                 fuDetails = new List<FuDetail>
                 {
@@ -71,26 +80,24 @@ namespace mjlib.HandCalculating
                 };
                 return (fuDetails, 25);
             }
-            var pair = hand.Where(x => x.IsPair)
-                           .ToList()[0];
-            var ponSets = hand.Where(x => x.IsPon);
+            var pair = devidedHand.Where(x => x.IsPair).ElementAt(0);
+            var ponSets = devidedHand.Where(x => x.IsPon);
 
-            var copiedOpenedMelds = melds.Where(x => x.Type == MeldType.CHI)
-                                         .Select(x => x.TileKinds)
+            var openMeldsCopy = melds.Where(x => x.Type == MeldType.Chi)
+                                         .Select(x => x.KindList)
                                          .ToList();
-            var closedChiSets = new List<TileKinds>();
-            foreach (var x in hand)
+            var closedChiSets = new List<TileKindList>();
+            foreach (var x in devidedHand)
             {
-                if (!copiedOpenedMelds.Contains(x))
+                if (!openMeldsCopy.Contains(x))
                 {
                     closedChiSets.Add(x);
                 }
                 else
                 {
-                    copiedOpenedMelds.Remove(x);
+                    openMeldsCopy.Remove(x);
                 }
             }
-            var IsOpenHand = melds.Any(x => x.Opened);
 
             if (closedChiSets.Contains(winGroup))
             {
@@ -136,17 +143,17 @@ namespace mjlib.HandCalculating
                 fuDetails.Add(new FuDetail(2, PAIR_WAIT));
             }
 
-            foreach (var setItem in ponSets)
+            foreach (var ponSet in ponSets)
             {
-                var openMelds = melds.Where(x => setItem.Equals(x.TileKinds))
+                var openMelds = melds.Where(x => ponSet.Equals(x.KindList))
                                     .ToList();
                 var openMeld = openMelds.Count == 0 ? null : openMelds[0];
-                var setWasOpen = !(openMeld is null) && openMeld.Opened;
+                var setWasOpen = !(openMeld is null) && openMeld.IsOpen;
                 var isKan = !(openMeld is null) &&
-                    (openMeld.Type == MeldType.KAN || openMeld.Type == MeldType.CHANKAN);
-                var isYaochu = YAOCHU_INDICES.Contains(setItem[0].Value);
+                    (openMeld.Type == MeldType.Kan || openMeld.Type == MeldType.Chankan);
+                var isYaochu = YAOCHU_INDICES.Contains(ponSet[0].Value);
 
-                if (!config.IsTsumo && setItem.Equals(winGroup))
+                if (!config.IsTsumo && ponSet.Equals(winGroup))
                 {
                     setWasOpen = true;
                 }
@@ -185,13 +192,13 @@ namespace mjlib.HandCalculating
                     }
                 }
             }
-            var addTsumoFu = fuDetails.Count > 0 || config.Options.FuForPinfuTsumo;
+            var addTsumoFu = fuDetails.Count > 0 || !config.Rurles.FuForPinfuTsumo;
 
             if (config.IsTsumo && addTsumoFu)
                 fuDetails.Add(new FuDetail(2, TSUMO));
-            if (IsOpenHand && fuDetails.Count == 0 && config.Options.FuForOpenPinfu)
+            if (melds.Any(x => x.IsOpen) && fuDetails.Count == 0 && config.Rurles.FuForOpenPinfu)
                 fuDetails.Add(new FuDetail(2, HAND_WITHOUT_FU));
-            if (IsOpenHand || config.IsTsumo)
+            if (melds.Any(x => x.IsOpen) || config.IsTsumo)
                 fuDetails.Add(new FuDetail(20, BASE));
             else
                 fuDetails.Add(new FuDetail(30, BASE));

@@ -8,15 +8,15 @@ namespace mjlibTest
 {
     internal static class TestsMixin
     {
-        public static TileKinds StringToOpenTiles34(string man = "", string pin = "", string sou = "", string honors = "")
+        public static TileKindList StringToOpenTiles34(string man = "", string pin = "", string sou = "", string honors = "")
         {
-            var openSet = TileIds.Parse(man: man, pin: pin, sou: sou, honors: honors);
-            return new TileKinds(openSet.Select(t => t.Value / 4));
+            var openSet = TileList.Parse(man: man, pin: pin, sou: sou, honor: honors);
+            return new TileKindList(openSet.Select(t => t.Value / 4));
         }
 
         public static TileKind StringToTileKind(string man = "", string pin = "", string sou = "", string honors = "")
         {
-            var item = TileIds.Parse(man: man, pin: pin, sou: sou, honors: honors);
+            var item = TileList.Parse(man: man, pin: pin, sou: sou, honor: honors);
             return new TileKind(item[0].Value / 4);
         }
 
@@ -27,11 +27,11 @@ namespace mjlibTest
             string honors = "",
             bool isOpen = true)
         {
-            var tiles = TileIds.Parse(man: man, pin: pin, sou: sou, honors: honors);
+            var tiles = TileList.Parse(man: man, pin: pin, sou: sou, honor: honors);
             return new Meld(meldType, tiles, isOpen, tiles[0], who: 0);
         }
 
-        public static IList<TileKinds> Hand(Tiles34 tiles, int handIndex = 0)
+        public static IList<TileKindList> Hand(Tiles34 tiles, int handIndex = 0)
         {
             return HandDivider.DivideHand(tiles)[handIndex];
         }

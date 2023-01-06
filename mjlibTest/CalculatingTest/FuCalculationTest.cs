@@ -19,9 +19,9 @@ namespace mjlibTest.CalculatingTest
         {
             var config = new HandConfig();
 
-            var tiles = TileIds.Parse(man: "115599", pin: "6", sou: "112244");
-            var winTile = TileId.Parse(pin: "6");
-            var hand = Hand(new TileIds(tiles.Append(winTile)).ToTiles34());
+            var tiles = TileList.Parse(man: "115599", pin: "6", sou: "112244");
+            var winTile = Tile.Parse(pin: "6");
+            var hand = Hand(new TileList(tiles.Append(winTile)).ToTiles34());
 
             var (fuDetails, fu) = CalculateFu(hand,
                 winTile,
@@ -38,12 +38,12 @@ namespace mjlibTest.CalculatingTest
         {
             var config = new HandConfig();
 
-            var tiles = TileIds.Parse(man: "123456", pin: "11", sou: "22278");
-            var winTile = TileId.Parse(sou: "6");
-            var hand = Hand(new TileIds(tiles.Append(winTile)).ToTiles34());
+            var tiles = TileList.Parse(man: "123456", pin: "11", sou: "22278");
+            var winTile = Tile.Parse(sou: "6");
+            var hand = Hand(new TileList(tiles.Append(winTile)).ToTiles34());
             var melds = new List<Meld>
             {
-                MakeMeld(MeldType.PON,sou:"222")
+                MakeMeld(MeldType.Pon,sou:"222")
             };
 
             var (fuDetails, fu) = CalculateFu(hand,
@@ -63,9 +63,9 @@ namespace mjlibTest.CalculatingTest
         {
             var config = new HandConfig();
 
-            var tiles = TileIds.Parse(man: "234789", pin: "1234566");
-            var winTile = TileId.Parse(pin: "6");
-            var hand = Hand(new TileIds(tiles.Append(winTile)).ToTiles34());
+            var tiles = TileList.Parse(man: "234789", pin: "1234566");
+            var winTile = Tile.Parse(pin: "6");
+            var hand = Hand(new TileList(tiles.Append(winTile)).ToTiles34());
 
             var winGroups = hand.Where(x => x.Contains(winTile.ToTileKind())).ToList();
 
@@ -87,12 +87,12 @@ namespace mjlibTest.CalculatingTest
         {
             var config = new HandConfig(options: new OptionalRules(fuForOpenPinfu: false));
 
-            var tiles = TileIds.Parse(man: "234567", pin: "22", sou: "23478");
-            var winTile = TileId.Parse(sou: "6");
-            var hand = Hand(new TileIds(tiles.Append(winTile)).ToTiles34());
+            var tiles = TileList.Parse(man: "234567", pin: "22", sou: "23478");
+            var winTile = Tile.Parse(sou: "6");
+            var hand = Hand(new TileList(tiles.Append(winTile)).ToTiles34());
             var melds = new List<Meld>
             {
-                MakeMeld(MeldType.CHI,sou:"234")
+                MakeMeld(MeldType.Chi,sou:"234")
             };
 
             var (fuDetails, fu) = CalculateFu(hand,
@@ -111,9 +111,9 @@ namespace mjlibTest.CalculatingTest
         {
             var config = new HandConfig(isTsumo: true);
 
-            var tiles = TileIds.Parse(man: "123456", pin: "11", sou: "22278");
-            var winTile = TileId.Parse(sou: "6");
-            var hand = Hand(new TileIds(tiles.Append(winTile)).ToTiles34());
+            var tiles = TileList.Parse(man: "123456", pin: "11", sou: "22278");
+            var winTile = Tile.Parse(sou: "6");
+            var hand = Hand(new TileList(tiles.Append(winTile)).ToTiles34());
 
             var (fuDetails, _) = CalculateFu(hand,
                 winTile,
@@ -126,11 +126,11 @@ namespace mjlibTest.CalculatingTest
         [TestMethod]
         public void TsumoHandAndPinfuTest()
         {
-            var config = new HandConfig(isTsumo: true);
-
-            var tiles = TileIds.Parse(man: "123456", pin: "123", sou: "2278");
-            var winTile = TileId.Parse(sou: "6");
-            var hand = Hand(new TileIds(tiles.Append(winTile)).ToTiles34());
+            var config = new HandConfig(isTsumo: true,
+                options: new OptionalRules(fuForPinfuTsumo: true));
+            var tiles = TileList.Parse(man: "123456", pin: "123", sou: "2278");
+            var winTile = Tile.Parse(sou: "6");
+            var hand = Hand(new TileList(tiles.Append(winTile)).ToTiles34());
 
             var (fuDetails, fu) = CalculateFu(hand,
                 winTile,
@@ -146,11 +146,11 @@ namespace mjlibTest.CalculatingTest
         public void TsumoAndDisabledPinfuTest()
         {
             var config = new HandConfig(isTsumo: true,
-                options: new OptionalRules(fuForPinfuTsumo: true));
+                options: new OptionalRules(fuForPinfuTsumo: false));
 
-            var tiles = TileIds.Parse(man: "123456", pin: "123", sou: "2278");
-            var winTile = TileId.Parse(sou: "6");
-            var hand = Hand(new TileIds(tiles.Append(winTile)).ToTiles34());
+            var tiles = TileList.Parse(man: "123456", pin: "123", sou: "2278");
+            var winTile = Tile.Parse(sou: "6");
+            var hand = Hand(new TileList(tiles.Append(winTile)).ToTiles34());
 
             var (fuDetails, fu) = CalculateFu(hand,
                 winTile,
@@ -168,9 +168,9 @@ namespace mjlibTest.CalculatingTest
         {
             var config = new HandConfig(isTsumo: true);
 
-            var tiles = TileIds.Parse(man: "123456", pin: "111", sou: "2278");
-            var winTile = TileId.Parse(sou: "6");
-            var hand = Hand(new TileIds(tiles.Append(winTile)).ToTiles34());
+            var tiles = TileList.Parse(man: "123456", pin: "111", sou: "2278");
+            var winTile = Tile.Parse(sou: "6");
+            var hand = Hand(new TileList(tiles.Append(winTile)).ToTiles34());
 
             var (fuDetails, fu) = CalculateFu(hand,
                 winTile,
@@ -183,13 +183,14 @@ namespace mjlibTest.CalculatingTest
         }
 
         [TestMethod]
+        // 喰い平和加符あり
         public void PenchanFuTest()
         {
             var config = new HandConfig();
 
-            var tiles = TileIds.Parse(man: "123456", pin: "55", sou: "12456");
-            var winTile = TileId.Parse(sou: "3");
-            var hand = Hand(new TileIds(tiles.Append(winTile)).ToTiles34());
+            var tiles = TileList.Parse(man: "123456", pin: "55", sou: "12456");
+            var winTile = Tile.Parse(sou: "3");
+            var hand = Hand(new TileList(tiles.Append(winTile)).ToTiles34());
 
             var (fuDetails, fu) = CalculateFu(hand,
                 winTile,
@@ -201,9 +202,9 @@ namespace mjlibTest.CalculatingTest
             IsTrue(fuDetails.Contains(new FuDetail(2, PENCHAN)));
             AreEqual(fu, 40);
 
-            tiles = TileIds.Parse(man: "123456", pin: "55", sou: "34589");
-            winTile = TileId.Parse(sou: "7");
-            hand = Hand(new TileIds(tiles.Append(winTile)).ToTiles34());
+            tiles = TileList.Parse(man: "123456", pin: "55", sou: "34589");
+            winTile = Tile.Parse(sou: "7");
+            hand = Hand(new TileList(tiles.Append(winTile)).ToTiles34());
 
             (fuDetails, fu) = CalculateFu(hand,
                 winTile,
@@ -221,9 +222,9 @@ namespace mjlibTest.CalculatingTest
         {
             var config = new HandConfig();
 
-            var tiles = TileIds.Parse(man: "123456", pin: "55", sou: "12357");
-            var winTile = TileId.Parse(sou: "6");
-            var hand = Hand(new TileIds(tiles.Append(winTile)).ToTiles34());
+            var tiles = TileList.Parse(man: "123456", pin: "55", sou: "12357");
+            var winTile = Tile.Parse(sou: "6");
+            var hand = Hand(new TileList(tiles.Append(winTile)).ToTiles34());
 
             var (fuDetails, fu) = CalculateFu(hand,
                 winTile,
@@ -241,9 +242,9 @@ namespace mjlibTest.CalculatingTest
         {
             var config = new HandConfig();
 
-            var tiles = TileIds.Parse(man: "123456", sou: "12378", honors: "11");
-            var winTile = TileId.Parse(sou: "6");
-            var hand = Hand(new TileIds(tiles.Append(winTile)).ToTiles34());
+            var tiles = TileList.Parse(man: "123456", sou: "12378", honor: "11");
+            var winTile = Tile.Parse(sou: "6");
+            var hand = Hand(new TileList(tiles.Append(winTile)).ToTiles34());
 
             var valuedTiles = new List<int> { EAST };
             var (fuDetails, fu) = CalculateFu(hand,
@@ -276,9 +277,9 @@ namespace mjlibTest.CalculatingTest
         {
             var config = new HandConfig();
 
-            var tiles = TileIds.Parse(man: "123456", pin: "1", sou: "123678");
-            var winTile = TileId.Parse(pin: "1");
-            var hand = Hand(new TileIds(tiles.Append(winTile)).ToTiles34());
+            var tiles = TileList.Parse(man: "123456", pin: "1", sou: "123678");
+            var winTile = Tile.Parse(pin: "1");
+            var hand = Hand(new TileList(tiles.Append(winTile)).ToTiles34());
 
             var (fuDetails, fu) = CalculateFu(hand,
                 winTile,
@@ -296,9 +297,9 @@ namespace mjlibTest.CalculatingTest
         {
             var config = new HandConfig();
 
-            var tiles = TileIds.Parse(man: "123456", pin: "11", sou: "22278");
-            var winTile = TileId.Parse(sou: "6");
-            var hand = Hand(new TileIds(tiles.Append(winTile)).ToTiles34());
+            var tiles = TileList.Parse(man: "123456", pin: "11", sou: "22278");
+            var winTile = Tile.Parse(sou: "6");
+            var hand = Hand(new TileList(tiles.Append(winTile)).ToTiles34());
 
             var (fuDetails, fu) = CalculateFu(hand,
                 winTile,
@@ -316,9 +317,9 @@ namespace mjlibTest.CalculatingTest
         {
             var config = new HandConfig();
 
-            var tiles = TileIds.Parse(man: "123456", pin: "11", sou: "11178");
-            var winTile = TileId.Parse(sou: "6");
-            var hand = Hand(new TileIds(tiles.Append(winTile)).ToTiles34());
+            var tiles = TileList.Parse(man: "123456", pin: "11", sou: "11178");
+            var winTile = Tile.Parse(sou: "6");
+            var hand = Hand(new TileList(tiles.Append(winTile)).ToTiles34());
 
             var (fuDetails, fu) = CalculateFu(hand,
                 winTile,
@@ -330,9 +331,9 @@ namespace mjlibTest.CalculatingTest
             IsTrue(fuDetails.Contains(new FuDetail(8, CLOSED_TERMINAL_PON)));
             AreEqual(fu, 40);
 
-            tiles = TileIds.Parse(man: "123456", pin: "11", sou: "11678");
-            winTile = TileId.Parse(sou: "1");
-            hand = Hand(new TileIds(tiles.Append(winTile)).ToTiles34());
+            tiles = TileList.Parse(man: "123456", pin: "11", sou: "11678");
+            winTile = Tile.Parse(sou: "1");
+            hand = Hand(new TileList(tiles.Append(winTile)).ToTiles34());
 
             (fuDetails, fu) = CalculateFu(hand,
                 winTile,
@@ -350,9 +351,9 @@ namespace mjlibTest.CalculatingTest
         {
             var config = new HandConfig();
 
-            var tiles = TileIds.Parse(man: "123456", sou: "1178", honors: "111");
-            var winTile = TileId.Parse(sou: "6");
-            var hand = Hand(new TileIds(tiles.Append(winTile)).ToTiles34());
+            var tiles = TileList.Parse(man: "123456", sou: "1178", honor: "111");
+            var winTile = Tile.Parse(sou: "6");
+            var hand = Hand(new TileList(tiles.Append(winTile)).ToTiles34());
 
             var (fuDetails, fu) = CalculateFu(hand,
                 winTile,
@@ -364,9 +365,9 @@ namespace mjlibTest.CalculatingTest
             IsTrue(fuDetails.Contains(new FuDetail(8, CLOSED_TERMINAL_PON)));
             AreEqual(fu, 40);
 
-            tiles = TileIds.Parse(man: "123456", sou: "11678", honors: "11");
-            winTile = TileId.Parse(honors: "1");
-            hand = Hand(new TileIds(tiles.Append(winTile)).ToTiles34());
+            tiles = TileList.Parse(man: "123456", sou: "11678", honor: "11");
+            winTile = Tile.Parse(honors: "1");
+            hand = Hand(new TileList(tiles.Append(winTile)).ToTiles34());
 
             (fuDetails, fu) = CalculateFu(hand,
                 winTile,
@@ -384,12 +385,12 @@ namespace mjlibTest.CalculatingTest
         {
             var config = new HandConfig();
 
-            var tiles = TileIds.Parse(man: "123456", sou: "22278", pin: "11");
-            var winTile = TileId.Parse(sou: "6");
-            var hand = Hand(new TileIds(tiles.Append(winTile)).ToTiles34());
+            var tiles = TileList.Parse(man: "123456", sou: "22278", pin: "11");
+            var winTile = Tile.Parse(sou: "6");
+            var hand = Hand(new TileList(tiles.Append(winTile)).ToTiles34());
             var melds = new List<Meld>
             {
-                MakeMeld(MeldType.PON,sou:"222")
+                MakeMeld(MeldType.Pon,sou:"222")
             };
 
             var (fuDetails, fu) = CalculateFu(hand,
@@ -409,12 +410,12 @@ namespace mjlibTest.CalculatingTest
         {
             var config = new HandConfig();
 
-            var tiles = TileIds.Parse(man: "123456", sou: "2278", honors: "111");
-            var winTile = TileId.Parse(sou: "6");
-            var hand = Hand(new TileIds(tiles.Append(winTile)).ToTiles34());
+            var tiles = TileList.Parse(man: "123456", sou: "2278", honor: "111");
+            var winTile = Tile.Parse(sou: "6");
+            var hand = Hand(new TileList(tiles.Append(winTile)).ToTiles34());
             var melds = new List<Meld>
             {
-                MakeMeld(MeldType.PON,honors:"111")
+                MakeMeld(MeldType.Pon,honors:"111")
             };
 
             var (fuDetails, fu) = CalculateFu(hand,
@@ -434,12 +435,12 @@ namespace mjlibTest.CalculatingTest
         {
             var config = new HandConfig();
 
-            var tiles = TileIds.Parse(man: "123456", pin: "11", sou: "22278");
-            var winTile = TileId.Parse(sou: "6");
-            var hand = Hand(new TileIds(tiles.Append(winTile)).ToTiles34());
+            var tiles = TileList.Parse(man: "123456", pin: "11", sou: "22278");
+            var winTile = Tile.Parse(sou: "6");
+            var hand = Hand(new TileList(tiles.Append(winTile)).ToTiles34());
             var melds = new List<Meld>
             {
-                MakeMeld(MeldType.KAN, sou:"222", isOpen:false)
+                MakeMeld(MeldType.Kan, sou:"222", isOpen:false)
             };
 
             var (fuDetails, fu) = CalculateFu(hand,
@@ -459,12 +460,12 @@ namespace mjlibTest.CalculatingTest
         {
             var config = new HandConfig();
 
-            var tiles = TileIds.Parse(man: "123456", pin: "11", sou: "22278");
-            var winTile = TileId.Parse(sou: "6");
-            var hand = Hand(new TileIds(tiles.Append(winTile)).ToTiles34());
+            var tiles = TileList.Parse(man: "123456", pin: "11", sou: "22278");
+            var winTile = Tile.Parse(sou: "6");
+            var hand = Hand(new TileList(tiles.Append(winTile)).ToTiles34());
             var melds = new List<Meld>
             {
-                MakeMeld(MeldType.KAN, sou:"222", isOpen:true)
+                MakeMeld(MeldType.Kan, sou:"222", isOpen:true)
             };
 
             var (fuDetails, fu) = CalculateFu(hand,
@@ -484,12 +485,12 @@ namespace mjlibTest.CalculatingTest
         {
             var config = new HandConfig();
 
-            var tiles = TileIds.Parse(man: "123456", pin: "111", sou: "2278");
-            var winTile = TileId.Parse(sou: "6");
-            var hand = Hand(new TileIds(tiles.Append(winTile)).ToTiles34());
+            var tiles = TileList.Parse(man: "123456", pin: "111", sou: "2278");
+            var winTile = Tile.Parse(sou: "6");
+            var hand = Hand(new TileList(tiles.Append(winTile)).ToTiles34());
             var melds = new List<Meld>
             {
-                MakeMeld(MeldType.KAN, pin:"111", isOpen:false)
+                MakeMeld(MeldType.Kan, pin:"111", isOpen:false)
             };
 
             var (fuDetails, fu) = CalculateFu(hand,
@@ -509,12 +510,12 @@ namespace mjlibTest.CalculatingTest
         {
             var config = new HandConfig();
 
-            var tiles = TileIds.Parse(man: "123456", pin: "111", sou: "2278");
-            var winTile = TileId.Parse(sou: "6");
-            var hand = Hand(new TileIds(tiles.Append(winTile)).ToTiles34());
+            var tiles = TileList.Parse(man: "123456", pin: "111", sou: "2278");
+            var winTile = Tile.Parse(sou: "6");
+            var hand = Hand(new TileList(tiles.Append(winTile)).ToTiles34());
             var melds = new List<Meld>
             {
-                MakeMeld(MeldType.KAN, pin:"111", isOpen:true)
+                MakeMeld(MeldType.Kan, pin:"111", isOpen:true)
             };
 
             var (fuDetails, fu) = CalculateFu(hand,
@@ -529,7 +530,7 @@ namespace mjlibTest.CalculatingTest
             AreEqual(fu, 40);
         }
 
-        private static TileKinds GetWinGroup(IList<TileKinds> hand, TileId winTile)
+        private static TileKindList GetWinGroup(IList<TileKindList> hand, Tile winTile)
         {
             return hand.Where(x => x.Contains(winTile.ToTileKind())).ToList()[0];
         }

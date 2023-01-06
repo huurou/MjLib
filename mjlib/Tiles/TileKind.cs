@@ -20,14 +20,29 @@ namespace mjlib.Tiles
 
         public int Simplify => Value - 9 * (Value / 9);
 
-        public TileKind(int value) => Value = value;
+        public TileKind(int value)
+        {
+            Value = value;
+        }
 
-        public override bool Equals(object? obj) =>  obj is TileKind other && Equals(other);
+        public override bool Equals(object? obj)
+        {
+            return obj is TileKind other && Equals(other);
+        }
 
-        public bool Equals(TileKind? other) => other is not null && Value.Equals(other.Value);
+        public bool Equals(TileKind? other)
+        {
+            return other is not null && Value.Equals(other.Value);
+        }
 
-        public override int GetHashCode() => base.GetHashCode();
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
 
-        public int CompareTo(TileKind? other) => other is null ? 1 : Value > other.Value ? 1 : Value < other.Value ? -1 : 0;
+        public int CompareTo(TileKind? other)
+        {
+            return other is null ? 1 : Value > other.Value ? 1 : Value < other.Value ? -1 : 0;
+        }
     }
 }

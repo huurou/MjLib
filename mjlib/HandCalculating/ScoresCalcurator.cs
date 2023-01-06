@@ -8,12 +8,12 @@ namespace mjlib.HandCalculating
     /// 満貫ツモアガリ->4000オール or (4000, 2000)
     /// 満貫出アガリ->12000 or 8000
     /// </summary>
-    public class Cost
+    public class Score
     {
         public int Main { get; }
         public int Additional { get; }
 
-        public Cost(int main, int additional)
+        public Score(int main, int additional)
         {
             Main = main;
             Additional = additional;
@@ -22,16 +22,16 @@ namespace mjlib.HandCalculating
 
     internal static class ScoresCalcurator
     {
-        public static Cost CalculateScores(int han, int fu, HandConfig config, bool isYakuman = false)
+        public static Score CalculateScore(int han, int fu, HandConfig config, bool isYakuman = false)
         {
             //数え役満
             if (han >= 13 && !isYakuman)
             {
-                if (config.Options.KazoeLimit == Kazoe.Limited)
+                if (config.Rurles.KazoeLimit == Kazoe.Limited)
                 {
                     han = 13;
                 }
-                else if (config.Options.KazoeLimit == Kazoe.Sanbaiman)
+                else if (config.Rurles.KazoeLimit == Kazoe.Sanbaiman)
                 {
                     han = 12;
                 }
@@ -67,7 +67,7 @@ namespace mjlib.HandCalculating
                 sixRounded = (int)((6 * basePoint + 99) / 100) * 100;
 
                 var IsKiriage = false;
-                if (config.Options.Kiriage)
+                if (config.Rurles.Kiriage)
                 {
                     if (han == 4 && fu == 30)
                     {
@@ -90,8 +90,8 @@ namespace mjlib.HandCalculating
             }
 
             return config.IsTsumo
-                ? new Cost(doubleRounded, config.IsDealer ? doubleRounded : rounded)
-                : new Cost(config.IsDealer ? sixRounded : fourRounded, 0);
+                ? new Score(doubleRounded, config.IsDealer ? doubleRounded : rounded)
+                : new Score(config.IsDealer ? sixRounded : fourRounded, 0);
         }
     }
 }

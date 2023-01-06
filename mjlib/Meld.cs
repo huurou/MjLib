@@ -6,39 +6,42 @@ namespace mjlib
     public class Meld
     {
         public MeldType Type { get; }
-        public TileIds Tiles { get; }
-        public bool Opened { get; }
-        public TileId? CalledTile { get; }
+        public TileList Tiles { get; }
+        public bool IsOpen { get; }
+        public Tile? CalledTile { get; }
         public int? Who { get; }
         public int? FromWho { get; }
 
-        public TileKinds TileKinds => new(Tiles.Take(3).Select(t => t.Value / 4));
+        public TileKindList KindList => new(Tiles.Take(3).Select(t => t.Value / 4));
 
         public Meld(MeldType meldType = MeldType.None,
-            TileIds? tiles = null,
+            TileList? tiles = null,
             bool opened = true,
-            TileId? calledTile = null,
+            Tile? calledTile = null,
             int? who = null,
             int? fromWho = null)
         {
             Type = meldType;
             Tiles = tiles ?? new();
-            Opened = opened;
+            IsOpen = opened;
             CalledTile = calledTile;
             Who = who;
             FromWho = fromWho;
         }
 
-        public override string ToString() => $"Type: {Type}\tTiles: {Tiles.ToOneLineString()}";
+        public override string ToString()
+        {
+            return $"Type: {Type}\tTiles: {Tiles.ToOneLineString()}";
+        }
     }
 
     public enum MeldType
     {
         None,
-        CHI,
-        PON,
-        KAN,
-        CHANKAN,
-        NUKI,
+        Chi,
+        Pon,
+        Kan,
+        Chankan,
+        Nuki,
     }
 }

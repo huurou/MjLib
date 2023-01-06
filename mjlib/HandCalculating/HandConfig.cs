@@ -7,7 +7,7 @@ namespace mjlib.HandCalculating
     /// </summary>
     public class HandConfig
     {
-        public OptionalRules Options { get; }
+        public OptionalRules Rurles { get; }
 
         //ツモ
         public bool IsTsumo { get; }
@@ -71,7 +71,7 @@ namespace mjlib.HandCalculating
             int playerWind = -1,
             int roundWind = -1)
         {
-            Options = options ?? new OptionalRules();
+            Rurles = options ?? new OptionalRules();
             IsTsumo = isTsumo;
             IsRiichi = isRiichi;
             IsIppatsu = isIppatsu;
@@ -137,7 +137,7 @@ namespace mjlib.HandCalculating
             Kazoe kazoeLimit = Kazoe.Limited,
             bool kiriage = false,
             bool fuForOpenPinfu = true,
-            bool fuForPinfuTsumo = false,
+            bool fuForPinfuTsumo = true,
             bool renhouAsYakuman = false,
             bool hasDaisharin = false)
         {

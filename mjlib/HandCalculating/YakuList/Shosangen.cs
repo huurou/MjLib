@@ -4,7 +4,7 @@ using static mjlib.Constants;
 
 namespace mjlib.HandCalculating.YakuList
 {
-    internal class Shosangen : Yaku
+    internal class Shosangen : YakuBase
     {
         public override int YakuId => 31;
 
@@ -22,7 +22,7 @@ namespace mjlib.HandCalculating.YakuList
 
         public override bool IsYakuman => false;
 
-        public override bool IsConditionMet(IEnumerable<TileKinds>? hand, object[]? args = null)
+        public override bool Valid(IEnumerable<TileKindList>? hand, params object[] args)
         {
             if (hand is null) return false;
             var dragons = new List<int>

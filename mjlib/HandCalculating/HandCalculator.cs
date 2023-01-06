@@ -14,12 +14,10 @@ namespace mjlib.HandCalculating
 {
     public static class HandCalculator
     {
-        private static HandConfig config_ = new();
-
-        public static HandResponse EstimateHandValue(TileIds tiles,
-            TileId? winTile,
+        public static HandResult EstimateHandValue(TileList tiles,
+            Tile? winTile,
             List<Meld>? melds = null,
-            TileIds? doraIndicators = null,
+            TileList? doraIndicators = null,
             HandConfig? config = null)
         {
             if (melds is null)
@@ -30,382 +28,382 @@ namespace mjlib.HandCalculating
             {
                 doraIndicators = new();
             }
-            config_ = config ?? new();
+            config ??= new();
 
-            var handYaku = new List<Yaku>();
-            var tiles34 = tiles.ToTiles34();
-            var openedMelds = melds.Where(x => x.Opened).Select(x => x.TileKinds);
-            var allMelds = melds.Select(x => x.TileKinds);
-            var isOpenHand = openedMelds.Any();
+            var yakus = new List<YakuBase>();
+            var tileArray = tiles.ToTiles34();
+            var openMelds = melds.Where(x => x.IsOpen).Select(x => x.KindList);
+            var allMelds = melds.Select(x => x.KindList);
+            var isOpenHand = openMelds.Any();
 
-            if (config_.IsNagashiMangan)
+            if (config.IsNagashiMangan)
             {
-                handYaku.Add(new NagashiMangan());
+                yakus.Add(new NagashiMangan());
                 var fu = 30;
                 var han = new NagashiMangan().HanClosed;
-                var cost = CalculateScores(han, fu, config_, false);
-                return new HandResponse(cost, han, fu, handYaku);
+                var cost = CalculateScore(han, fu, config, false);
+                return new HandResult(cost, han, fu, yakus);
             }
             if (winTile is null) throw new ArgumentException(null, nameof(winTile));
 
             if (!IsAgari(tiles, allMelds))
             {
-                return new HandResponse(error: "Hand is not winning");
+                return new HandResult(error: "Hand is not winning");
             }
 
             if (!tiles.Contains(winTile))
             {
-                return new HandResponse(error: "Win tile not in the hand");
+                return new HandResult(error: "Win tile not in the hand");
             }
 
-            if (config_.IsRiichi && isOpenHand)
+            if (config.IsRiichi && isOpenHand)
             {
-                return new HandResponse(error: "Riichi can't be declared with open hand");
+                return new HandResult(error: "Riichi can't be declared with open hand");
             }
-            if (config_.IsDaburuRiichi && isOpenHand)
+            if (config.IsDaburuRiichi && isOpenHand)
             {
-                return new HandResponse(error: "Daburu Riichi can't be declared with open hand");
+                return new HandResult(error: "Daburu Riichi can't be declared with open hand");
             }
-            if (config_.IsIppatsu && isOpenHand)
+            if (config.IsIppatsu && isOpenHand)
             {
-                return new HandResponse(error: "Ippatsu can't be declared with open hand");
-            }
-
-            if (config_.IsIppatsu && !config_.IsRiichi && !config_.IsDaburuRiichi)
-            {
-                return new HandResponse(error: "Ippatsu can't be declared without riichi");
+                return new HandResult(error: "Ippatsu can't be declared with open hand");
             }
 
-            var handOptions = DivideHand(tiles34, melds);
-            var calculatedHands = new List<HandResponse>();
-            foreach (var hand in handOptions)
+            if (config.IsIppatsu && !config.IsRiichi && !config.IsDaburuRiichi)
             {
-                var isChiitoitsu = new Chiitoitsu().IsConditionMet(hand);
+                return new HandResult(error: "Ippatsu can't be declared without riichi");
+            }
+
+            var devidedHand = DivideHand(tileArray, melds);
+            var results = new List<HandResult>();
+            foreach (var hand in devidedHand)
+            {
+                var isChiitoi = new Chiitoitsu().Valid(hand);
                 var valuedTiles = new List<int>
                 {
                     HAKU, HATSU, CHUN,
-                    config_.PlayerWind, config_.RoundWind,
+                    config.PlayerWind, config.RoundWind,
                 };
-                var winGroups = FindWinGroups(winTile, hand, openedMelds.ToList());
+                var winGroups = FindWinGroups(winTile, hand, openMelds.ToList());
                 foreach (var winGroup in winGroups)
                 {
-                    Cost? cost = null;
+                    Score? score = null;
                     string? error = null;
-                    handYaku = new List<Yaku>();
+                    yakus = new List<YakuBase>();
                     var han = 0;
-                    var (fuDetails, fu) = CalculateFu(hand, winTile, winGroup, config_, valuedTiles, melds);
-                    var isPinfu = fuDetails.Count == 1 && !isChiitoitsu && !isOpenHand;
+                    var (fuDetails, fu) = CalculateFu(hand, winTile, winGroup, config, valuedTiles, melds);
+                    var isPinfu = fuDetails.Count == 1 && !isChiitoi && !isOpenHand;
                     var ponSets = hand.Where(x => x.IsPon);
                     var chiSets = hand.Where(x => x.IsChi);
-                    if (config_.IsTsumo)
+                    if (config.IsTsumo)
                     {
                         if (!isOpenHand)
                         {
-                            handYaku.Add(new Tsumo());
+                            yakus.Add(new Tsumo());
                         }
                     }
                     if (isPinfu)
                     {
-                        handYaku.Add(new Pinfu());
+                        yakus.Add(new Pinfu());
                     }
-                    if (isChiitoitsu && isOpenHand) continue;
-                    if (isChiitoitsu)
+                    if (isChiitoi && isOpenHand) continue;
+                    if (isChiitoi)
                     {
-                        handYaku.Add(new Chiitoitsu());
+                        yakus.Add(new Chiitoitsu());
                     }
-                    var isDaisharin = new Daisharin().IsConditionMet(hand);
-                    if (config_.Options.HasDaisharin && isDaisharin)
+                    var isDaisharin = new Daisharin().Valid(hand);
+                    if (config.Rurles.HasDaisharin && isDaisharin)
                     {
-                        handYaku.Add(new Daisharin());
+                        yakus.Add(new Daisharin());
                     }
-                    if (config_.IsRiichi && !config_.IsDaburuRiichi)
+                    if (config.IsRiichi && !config.IsDaburuRiichi)
                     {
-                        handYaku.Add(new Riichi());
+                        yakus.Add(new Riichi());
                     }
-                    if (config_.IsDaburuRiichi)
+                    if (config.IsDaburuRiichi)
                     {
-                        handYaku.Add(new DaburuRiichi());
+                        yakus.Add(new DaburuRiichi());
                     }
-                    var isTanyao = new Tanyao().IsConditionMet(hand);
-                    if (isOpenHand && !config_.Options.HasOpenTanyao)
+                    var isTanyao = new Tanyao().Valid(hand);
+                    if (isOpenHand && !config.Rurles.HasOpenTanyao)
                     {
                         isTanyao = false;
                     }
                     if (isTanyao)
                     {
-                        handYaku.Add(new Tanyao());
+                        yakus.Add(new Tanyao());
                     }
-                    if (config_.IsIppatsu)
+                    if (config.IsIppatsu)
                     {
-                        handYaku.Add(new Ippatsu());
+                        yakus.Add(new Ippatsu());
                     }
-                    if (config_.IsRinshan)
+                    if (config.IsRinshan)
                     {
-                        handYaku.Add(new Rinshan());
+                        yakus.Add(new Rinshan());
                     }
-                    if (config_.IsChankan)
+                    if (config.IsChankan)
                     {
-                        handYaku.Add(new Chankan());
+                        yakus.Add(new Chankan());
                     }
-                    if (config_.IsHaitei)
+                    if (config.IsHaitei)
                     {
-                        handYaku.Add(new Haitei());
+                        yakus.Add(new Haitei());
                     }
-                    if (config_.IsHoutei)
+                    if (config.IsHoutei)
                     {
-                        handYaku.Add(new Houtei());
+                        yakus.Add(new Houtei());
                     }
-                    if (config_.IsRenhou)
+                    if (config.IsRenhou)
                     {
-                        if (config_.Options.RenhouAsYakuman)
+                        if (config.Rurles.RenhouAsYakuman)
                         {
-                            handYaku.Add(new RenhouYakuman());
+                            yakus.Add(new RenhouYakuman());
                         }
                         else
                         {
-                            handYaku.Add(new Renhou());
+                            yakus.Add(new Renhou());
                         }
                     }
-                    if (config_.IsTenhou)
+                    if (config.IsTenhou)
                     {
-                        handYaku.Add(new Tenhou());
+                        yakus.Add(new Tenhou());
                     }
-                    if (config_.IsChiihou)
+                    if (config.IsChiihou)
                     {
-                        handYaku.Add(new Chiihou());
+                        yakus.Add(new Chiihou());
                     }
-                    if (new Honitsu().IsConditionMet(hand))
+                    if (new Honitsu().Valid(hand))
                     {
-                        handYaku.Add(new Honitsu());
+                        yakus.Add(new Honitsu());
                     }
-                    if (new Chinitsu().IsConditionMet(hand))
+                    if (new Chinitsu().Valid(hand))
                     {
-                        handYaku.Add(new Chinitsu());
+                        yakus.Add(new Chinitsu());
                     }
-                    if (new Tsuuiisou().IsConditionMet(hand))
+                    if (new Tsuuiisou().Valid(hand))
                     {
-                        handYaku.Add(new Tsuuiisou());
+                        yakus.Add(new Tsuuiisou());
                     }
-                    if (new Honroto().IsConditionMet(hand))
+                    if (new Honroto().Valid(hand))
                     {
-                        handYaku.Add(new Honroto());
+                        yakus.Add(new Honroto());
                     }
-                    if (new Chinroutou().IsConditionMet(hand))
+                    if (new Chinroutou().Valid(hand))
                     {
-                        handYaku.Add(new Chinroutou());
+                        yakus.Add(new Chinroutou());
                     }
-                    if (new Ryuuiisou().IsConditionMet(hand))
+                    if (new Ryuuiisou().Valid(hand))
                     {
-                        handYaku.Add(new Ryuuiisou());
+                        yakus.Add(new Ryuuiisou());
                     }
 
                     //順子が必要な役
                     if (chiSets.Any())
                     {
-                        if (new Chanta().IsConditionMet(hand))
+                        if (new Chanta().Valid(hand))
                         {
-                            handYaku.Add(new Chanta());
+                            yakus.Add(new Chanta());
                         }
-                        if (new Junchan().IsConditionMet(hand))
+                        if (new Junchan().Valid(hand))
                         {
-                            handYaku.Add(new Junchan());
+                            yakus.Add(new Junchan());
                         }
-                        if (new Ittsu().IsConditionMet(hand))
+                        if (new Ittsu().Valid(hand))
                         {
-                            handYaku.Add(new Ittsu());
+                            yakus.Add(new Ittsu());
                         }
                         if (!isOpenHand)
                         {
-                            if (new Ryanpeikou().IsConditionMet(hand))
+                            if (new Ryanpeikou().Valid(hand))
                             {
-                                handYaku.Add(new Ryanpeikou());
+                                yakus.Add(new Ryanpeikou());
                             }
-                            else if (new Iipeiko().IsConditionMet(hand))
+                            else if (new Iipeiko().Valid(hand))
                             {
-                                handYaku.Add(new Iipeiko());
+                                yakus.Add(new Iipeiko());
                             }
                         }
-                        if (new Sanshoku().IsConditionMet(hand))
+                        if (new Sanshoku().Valid(hand))
                         {
-                            handYaku.Add(new Sanshoku());
+                            yakus.Add(new Sanshoku());
                         }
                     }
 
                     //刻子が必要な役
                     if (ponSets.Any())
                     {
-                        if (new Toitoi().IsConditionMet(hand))
+                        if (new Toitoi().Valid(hand))
                         {
-                            handYaku.Add(new Toitoi());
+                            yakus.Add(new Toitoi());
                         }
-                        if (new Sanankou().IsConditionMet(hand, new object[]
+                        if (new Sanankou().Valid(hand, new object[]
                         {
-                            winTile, melds, config_.IsTsumo
+                            winTile, melds, config.IsTsumo
                         }))
                         {
-                            handYaku.Add(new Sanankou());
+                            yakus.Add(new Sanankou());
                         }
-                        if (new SanshokuDoukou().IsConditionMet(hand))
+                        if (new SanshokuDoukou().Valid(hand))
                         {
-                            handYaku.Add(new SanshokuDoukou());
+                            yakus.Add(new SanshokuDoukou());
                         }
-                        if (new Shosangen().IsConditionMet(hand))
+                        if (new Shosangen().Valid(hand))
                         {
-                            handYaku.Add(new Shosangen());
+                            yakus.Add(new Shosangen());
                         }
-                        if (new Haku().IsConditionMet(hand))
+                        if (new Haku().Valid(hand))
                         {
-                            handYaku.Add(new Haku());
+                            yakus.Add(new Haku());
                         }
-                        if (new Hatsu().IsConditionMet(hand))
+                        if (new Hatsu().Valid(hand))
                         {
-                            handYaku.Add(new Hatsu());
+                            yakus.Add(new Hatsu());
                         }
-                        if (new Chun().IsConditionMet(hand))
+                        if (new Chun().Valid(hand))
                         {
-                            handYaku.Add(new Chun());
+                            yakus.Add(new Chun());
                         }
-                        if (new YakuhaiEast().IsConditionMet(hand, new object[]
+                        if (new YakuhaiEast().Valid(hand, new object[]
                         {
-                            config_.PlayerWind, config_.RoundWind
+                            config.PlayerWind, config.RoundWind
                         }))
                         {
-                            if (config_.PlayerWind == EAST)
+                            if (config.PlayerWind == EAST)
                             {
-                                handYaku.Add(new YakuhaiOfPlace());
+                                yakus.Add(new YakuhaiOfPlace());
                             }
-                            if (config_.RoundWind == EAST)
+                            if (config.RoundWind == EAST)
                             {
-                                handYaku.Add(new YakuhaiOfRound());
+                                yakus.Add(new YakuhaiOfRound());
                             }
                         }
-                        if (new YakuhaiSouth().IsConditionMet(hand, new object[]
+                        if (new YakuhaiSouth().Valid(hand, new object[]
                         {
-                            config_.PlayerWind, config_.RoundWind
+                            config.PlayerWind, config.RoundWind
                         }))
                         {
-                            if (config_.PlayerWind == SOUTH)
+                            if (config.PlayerWind == SOUTH)
                             {
-                                handYaku.Add(new YakuhaiOfPlace());
+                                yakus.Add(new YakuhaiOfPlace());
                             }
-                            if (config_.RoundWind == SOUTH)
+                            if (config.RoundWind == SOUTH)
                             {
-                                handYaku.Add(new YakuhaiOfRound());
+                                yakus.Add(new YakuhaiOfRound());
                             }
                         }
-                        if (new YakuhaiWest().IsConditionMet(hand, new object[]
+                        if (new YakuhaiWest().Valid(hand, new object[]
                         {
-                            config_.PlayerWind, config_.RoundWind
+                            config.PlayerWind, config.RoundWind
                         }))
                         {
-                            if (config_.PlayerWind == WEST)
+                            if (config.PlayerWind == WEST)
                             {
-                                handYaku.Add(new YakuhaiOfPlace());
+                                yakus.Add(new YakuhaiOfPlace());
                             }
-                            if (config_.RoundWind == WEST)
+                            if (config.RoundWind == WEST)
                             {
-                                handYaku.Add(new YakuhaiOfRound());
+                                yakus.Add(new YakuhaiOfRound());
                             }
                         }
-                        if (new YakuhaiNorth().IsConditionMet(hand, new object[]
+                        if (new YakuhaiNorth().Valid(hand, new object[]
                         {
-                            config_.PlayerWind, config_.RoundWind
+                            config.PlayerWind, config.RoundWind
                         }))
                         {
-                            if (config_.PlayerWind == NORTH)
+                            if (config.PlayerWind == NORTH)
                             {
-                                handYaku.Add(new YakuhaiOfPlace());
+                                yakus.Add(new YakuhaiOfPlace());
                             }
-                            if (config_.RoundWind == NORTH)
+                            if (config.RoundWind == NORTH)
                             {
-                                handYaku.Add(new YakuhaiOfRound());
+                                yakus.Add(new YakuhaiOfRound());
                             }
                         }
-                        if (new Daisangen().IsConditionMet(hand))
+                        if (new Daisangen().Valid(hand))
                         {
-                            handYaku.Add(new Daisangen());
+                            yakus.Add(new Daisangen());
                         }
-                        if (new Shousuushii().IsConditionMet(hand))
+                        if (new Shousuushii().Valid(hand))
                         {
-                            handYaku.Add(new Shousuushii());
+                            yakus.Add(new Shousuushii());
                         }
-                        if (new DaiSuushi().IsConditionMet(hand))
+                        if (new DaiSuushi().Valid(hand))
                         {
-                            if (config_.Options.HasDoubleYakuman)
+                            if (config.Rurles.HasDoubleYakuman)
                             {
-                                handYaku.Add(new DaiSuushi());
+                                yakus.Add(new DaiSuushi());
                             }
                             else
                             {
-                                handYaku.Add(new DaiSuushi { HanOpen = 13, HanClosed = 13 });
+                                yakus.Add(new DaiSuushi { HanOpen = 13, HanClosed = 13 });
                             }
                         }
-                        if (melds.Count == 0 && new ChuurenPoutou().IsConditionMet(hand))
+                        if (melds.Count == 0 && new ChuurenPoutou().Valid(hand))
                         {
-                            if (tiles34[winTile.Value / 4] is 2
+                            if (tileArray[winTile.Value / 4] is 2
                                 or 4)
                             {
-                                if (config_.Options.HasDoubleYakuman)
+                                if (config.Rurles.HasDoubleYakuman)
                                 {
-                                    handYaku.Add(new DaburuChuurenPoutou());
+                                    yakus.Add(new DaburuChuurenPoutou());
                                 }
                                 else
                                 {
-                                    handYaku.Add(new DaburuChuurenPoutou { HanClosed = 13 });
+                                    yakus.Add(new DaburuChuurenPoutou { HanClosed = 13 });
                                 }
                             }
                             else
                             {
-                                handYaku.Add(new ChuurenPoutou());
+                                yakus.Add(new ChuurenPoutou());
                             }
                         }
-                        if (!isOpenHand && new Suuankou().IsConditionMet(hand, new object[]
+                        if (!isOpenHand && new Suuankou().Valid(hand, new object[]
                         {
-                            winTile, config_.IsTsumo
+                            winTile, config.IsTsumo
                         }))
                         {
-                            if (tiles34[winTile.Value / 4] == 2)
+                            if (tileArray[winTile.Value / 4] == 2)
                             {
-                                if (config_.Options.HasDoubleYakuman)
+                                if (config.Rurles.HasDoubleYakuman)
                                 {
-                                    handYaku.Add(new SuuankouTanki());
+                                    yakus.Add(new SuuankouTanki());
                                 }
                                 else
                                 {
-                                    handYaku.Add(new SuuankouTanki { HanClosed = 13 });
+                                    yakus.Add(new SuuankouTanki { HanClosed = 13 });
                                 }
                             }
                             else
                             {
-                                handYaku.Add(new Suuankou());
+                                yakus.Add(new Suuankou());
                             }
                         }
-                        if (new SanKantsu().IsConditionMet(hand, new object[]
+                        if (new SanKantsu().Valid(hand, new object[]
                         {
                             melds
                         }))
                         {
-                            handYaku.Add(new SanKantsu());
+                            yakus.Add(new SanKantsu());
                         }
-                        if (new Suukantsu().IsConditionMet(hand, new object[]
+                        if (new Suukantsu().Valid(hand, new object[]
                         {
                             melds
                         }))
                         {
-                            handYaku.Add(new Suukantsu());
+                            yakus.Add(new Suukantsu());
                         }
                     }
 
                     //役満に役満以外の役は付かない
-                    var yakumanList = handYaku.Where(x => x.IsYakuman)
+                    var yakumanList = yakus.Where(x => x.IsYakuman)
                                               .ToList();
                     if (yakumanList.Count != 0)
                     {
-                        handYaku = yakumanList;
+                        yakus = yakumanList;
                     }
 
                     //翻を計算する
-                    foreach (var item in handYaku)
+                    foreach (var item in yakus)
                     {
                         if (isOpenHand && item.HanOpen != 0)
                         {
@@ -419,7 +417,7 @@ namespace mjlib.HandCalculating
                     if (han == 0)
                     {
                         error = "There are no yaku in the hand.";
-                        cost = null;
+                        score = null;
                     }
 
                     //役満にドラは付かない
@@ -428,7 +426,7 @@ namespace mjlib.HandCalculating
                         var tilesForDora = tiles.ToList();
                         foreach (var meld in melds)
                         {
-                            if (meld.Type is MeldType.KAN or MeldType.CHANKAN)
+                            if (meld.Type is MeldType.Kan or MeldType.Chankan)
                             {
                                 tilesForDora.Add(meld.Tiles[3]);
                             }
@@ -441,60 +439,60 @@ namespace mjlib.HandCalculating
                         }
                         foreach (var tile in tilesForDora)
                         {
-                            if (IsAkaDora(tile, config_.Options.HasAkaDora))
+                            if (IsAkaDora(tile, config.Rurles.HasAkaDora))
                             {
                                 countOfAkaDora++;
                             }
                         }
                         if (countOfDora != 0)
                         {
-                            handYaku.Add(new Dora { HanOpen = countOfDora, HanClosed = countOfDora });
+                            yakus.Add(new Dora { HanOpen = countOfDora, HanClosed = countOfDora });
                             han += countOfDora;
                         }
                         if (countOfAkaDora != 0)
                         {
-                            handYaku.Add(new Akadora { HanOpen = countOfAkaDora, HanClosed = countOfAkaDora });
+                            yakus.Add(new Akadora { HanOpen = countOfAkaDora, HanClosed = countOfAkaDora });
                             han += countOfAkaDora;
                         }
                     }
                     if (string.IsNullOrEmpty(error))
                     {
-                        cost = CalculateScores(han, fu, config_, yakumanList.Count > 0);
+                        score = CalculateScore(han, fu, config, yakumanList.Count > 0);
                     }
-                    calculatedHands.Add(new HandResponse(cost, han, fu, handYaku, error, fuDetails));
+                    results.Add(new HandResult(score, han, fu, yakus, error, fuDetails));
                 }
             }
-            if (!isOpenHand && new KokushiMusou().IsConditionMet(null, new object[] { tiles34 }))
+            if (!isOpenHand && new KokushiMusou().Valid(null, new object[] { tileArray }))
             {
-                if (tiles34[winTile.Value / 4] == 2)
+                if (tileArray[winTile.Value / 4] == 2)
                 {
-                    if (config_.Options.HasDoubleYakuman)
+                    if (config.Rurles.HasDoubleYakuman)
                     {
-                        handYaku.Add(new DaburuKokushiMusou());
+                        yakus.Add(new DaburuKokushiMusou());
                     }
                     else
                     {
-                        handYaku.Add(new DaburuKokushiMusou { HanClosed = 13 });
+                        yakus.Add(new DaburuKokushiMusou { HanClosed = 13 });
                     }
                 }
                 else
                 {
-                    handYaku.Add(new KokushiMusou());
+                    yakus.Add(new KokushiMusou());
                 }
-                if (config_.IsRenhou && config_.Options.RenhouAsYakuman)
+                if (config.IsRenhou && config.Rurles.RenhouAsYakuman)
                 {
-                    handYaku.Add(new RenhouYakuman());
+                    yakus.Add(new RenhouYakuman());
                 }
-                if (config_.IsTenhou)
+                if (config.IsTenhou)
                 {
-                    handYaku.Add(new Tenhou());
+                    yakus.Add(new Tenhou());
                 }
-                if (config_.IsChiihou)
+                if (config.IsChiihou)
                 {
-                    handYaku.Add(new Chiihou());
+                    yakus.Add(new Chiihou());
                 }
                 var han = 0;
-                foreach (var item in handYaku)
+                foreach (var item in yakus)
                 {
                     if (isOpenHand && item.HanOpen != 0)
                     {
@@ -506,23 +504,23 @@ namespace mjlib.HandCalculating
                     }
                 }
                 var fu = 0;
-                var cost = CalculateScores(han, fu, config_, handYaku.Count > 0);
-                handYaku.Sort((x, y) => x.YakuId.CompareTo(y.YakuId));
-                calculatedHands.Add(new HandResponse(
-                    cost, han, fu, handYaku, null, new List<FuDetail>()));
+                var cost = CalculateScore(han, fu, config, yakus.Count > 0);
+                yakus.Sort((x, y) => x.YakuId.CompareTo(y.YakuId));
+                results.Add(new HandResult(
+                    cost, han, fu, yakus, null, new List<FuDetail>()));
             }
-            calculatedHands.Sort((x, y) =>
+            results.Sort((x, y) =>
                 x.Han < y.Han ? 1 : x.Han > y.Han ? -1
                 : x.Fu < y.Fu ? 1 : x.Fu > y.Fu ? -1 : 0);
-            var resultHand = calculatedHands[0];
-            resultHand.Yaku?.Sort((x, y) => x.YakuId.CompareTo(y.YakuId));
+            var resultHand = results[0];
+            resultHand.Yakus?.Sort((x, y) => x.YakuId.CompareTo(y.YakuId));
             return resultHand;
         }
 
-        private static IEnumerable<TileKinds> FindWinGroups(TileId winTile, IEnumerable<TileKinds> hand, List<TileKinds> openMelds)
+        private static IEnumerable<TileKindList> FindWinGroups(Tile winTile, IEnumerable<TileKindList> hand, List<TileKindList> openMelds)
         {
             var winTile34 = winTile.ToTileKind();
-            var closedSetItems = new List<TileKinds>();
+            var closedSetItems = new List<TileKindList>();
             foreach (var x in hand)
             {
                 if (!openMelds.Contains(x))
@@ -538,7 +536,7 @@ namespace mjlib.HandCalculating
             return winGroups.Distinct();
         }
 
-        private static int PlusDora(TileId tile, TileIds doraIndicators)
+        private static int PlusDora(Tile tile, TileList doraIndicators)
         {
             var tileIndex = tile.Value / 4;
             var doraCount = 0;
@@ -565,9 +563,12 @@ namespace mjlib.HandCalculating
             return doraCount;
         }
 
-        private static bool IsAkaDora(TileId tile, bool akaEnabled) => akaEnabled
+        private static bool IsAkaDora(Tile tile, bool akaEnabled)
+        {
+            return akaEnabled
                 && (tile.Value == FIVE_RED_MAN
                 || tile.Value == FIVE_RED_PIN
                 || tile.Value == FIVE_RED_SOU);
+        }
     }
 }

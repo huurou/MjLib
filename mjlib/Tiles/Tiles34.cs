@@ -23,7 +23,10 @@ namespace mjlib.Tiles
             set => tiles_[index] = value;
         }
 
-        public Tiles34() => tiles_ = new int[34].ToList();
+        public Tiles34()
+        {
+            tiles_ = new int[34].ToList();
+        }
 
         public Tiles34(IEnumerable<int> tiles)
         {
@@ -34,13 +37,25 @@ namespace mjlib.Tiles
             tiles_ = tiles.ToList();
         }
 
-        public bool Contains(int item) => tiles_.Contains(item);
+        public bool Contains(int item)
+        {
+            return tiles_.Contains(item);
+        }
 
-        public IEnumerator<int> GetEnumerator() => tiles_.GetEnumerator();
+        public IEnumerator<int> GetEnumerator()
+        {
+            return tiles_.GetEnumerator();
+        }
 
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)tiles_).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)tiles_).GetEnumerator();
+        }
 
-        public override bool Equals(object? obj) => obj is Tiles34 other && Equals(other);
+        public override bool Equals(object? obj)
+        {
+            return obj is Tiles34 other && Equals(other);
+        }
 
         public bool Equals(Tiles34? other)
         {
@@ -56,9 +71,12 @@ namespace mjlib.Tiles
             return true;
         }
 
-        public override int GetHashCode() => base.GetHashCode();
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
 
-        public TileIds ToTileIds()
+        public TileList ToTileIds()
         {
             var temp = new List<int>();
             for (var x = 0; x < 34; x++)
@@ -68,17 +86,29 @@ namespace mjlib.Tiles
                     temp.Add(x * 4 + i);
                 }
             }
-            return new TileIds(temp);
+            return new TileList(temp);
         }
 
-        public static Tiles34 Parse(string str, bool hasAkaDora = false) => TileIds.Parse(str: str, hasAkaDora: hasAkaDora).ToTiles34();
+        public static Tiles34 Parse(string str, bool hasAkaDora = false)
+        {
+            return TileList.Parse(str: str, hasAkaDora: hasAkaDora).ToTiles34();
+        }
 
         public static Tiles34 Parse(string man = "", string pin = "",
-            string sou = "", string honors = "") => TileIds.Parse(man: man, pin: pin, sou: sou, honors: honors).ToTiles34();
+            string sou = "", string honor = "")
+        {
+            return TileList.Parse(man: man, pin: pin, sou: sou, honor: honor).ToTiles34();
+        }
 
-        public string ToOneLineString() => ToTileIds().ToOneLineString();
+        public string ToOneLineString()
+        {
+            return ToTileIds().ToOneLineString();
+        }
 
-        public bool ContainsTerminals() => this.Any(x => TERMINAL_INDICES.Contains(x));
+        public bool ContainsTerminals()
+        {
+            return this.Any(x => TERMINAL_INDICES.Contains(x));
+        }
 
         /// <summary>
         /// 自身及び隣り合った牌が存在しないTileKindのリストを返す
@@ -147,18 +177,39 @@ namespace mjlib.Tiles
             return indices.All(x => hand[x] == 0);
         }
 
-        public int IndexOf(int item) => ((IList<int>)tiles_).IndexOf(item);
+        public int IndexOf(int item)
+        {
+            return ((IList<int>)tiles_).IndexOf(item);
+        }
 
-        public void Insert(int index, int item) => ((IList<int>)tiles_).Insert(index, item);
+        public void Insert(int index, int item)
+        {
+            ((IList<int>)tiles_).Insert(index, item);
+        }
 
-        public void RemoveAt(int index) => ((IList<int>)tiles_).RemoveAt(index);
+        public void RemoveAt(int index)
+        {
+            ((IList<int>)tiles_).RemoveAt(index);
+        }
 
-        public void Add(int item) => ((ICollection<int>)tiles_).Add(item);
+        public void Add(int item)
+        {
+            ((ICollection<int>)tiles_).Add(item);
+        }
 
-        public void Clear() => ((ICollection<int>)tiles_).Clear();
+        public void Clear()
+        {
+            ((ICollection<int>)tiles_).Clear();
+        }
 
-        public void CopyTo(int[] array, int arrayIndex) => ((ICollection<int>)tiles_).CopyTo(array, arrayIndex);
+        public void CopyTo(int[] array, int arrayIndex)
+        {
+            ((ICollection<int>)tiles_).CopyTo(array, arrayIndex);
+        }
 
-        public bool Remove(int item) => ((ICollection<int>)tiles_).Remove(item);
+        public bool Remove(int item)
+        {
+            return ((ICollection<int>)tiles_).Remove(item);
+        }
     }
 }
