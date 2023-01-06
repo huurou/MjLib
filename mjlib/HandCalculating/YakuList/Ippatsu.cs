@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace mjlib.HandCalculating.YakuList
 {
-    internal class Ippatsu : Yaku
+    internal class Ippatsu : YakuBase
     {
         public override int YakuId => 2;
         public override int TenhouId => 2;
@@ -14,6 +14,9 @@ namespace mjlib.HandCalculating.YakuList
         public override int HanClosed { get; set; } = 1;
         public override bool IsYakuman => false;
 
-        public override bool IsConditionMet(IEnumerable<TileKinds>? hand, object[]? args = null) => true;
+        public override bool Valid(IEnumerable<TileKindList>? hand, params object[] args)
+        {
+            return true;
+        }
     }
 }

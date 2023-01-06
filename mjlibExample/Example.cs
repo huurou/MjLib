@@ -14,8 +14,8 @@ namespace mjlibExample
             /***********************************************************************/
             /* タンヤオ　ロン                                                       */
             /***********************************************************************/
-            var tiles = TileIds.Parse(man: "22444", pin: "333567", sou: "444");
-            var winTile = TileId.Parse(sou: "4");
+            var tiles = TileList.Parse(man: "22444", pin: "333567", sou: "444");
+            var winTile = Tile.Parse(sou: "4");
             var result = HandCalculator.EstimateHandValue(tiles, winTile);
             PrintHandResult(tiles, winTile, null, result);
 
@@ -30,7 +30,7 @@ namespace mjlibExample
             /***********************************************************************/
             var melds = new List<Meld>
             {
-                new Meld(MeldType.PON, tiles: TileIds.Parse(man: "444"))
+                new Meld(MeldType.Pon, tiles: TileList.Parse(man: "444"))
             };
             var config = new HandConfig(options: new OptionalRules(hasOpenTanyao: true));
             result = HandCalculator.EstimateHandValue(tiles, winTile, melds, config: config);
@@ -39,7 +39,7 @@ namespace mjlibExample
             /***********************************************************************/
             /* シャンテン数計算                                                      */
             /***********************************************************************/
-            tiles = TileIds.Parse(man: "13569", pin: "123459", sou: "443");
+            tiles = TileList.Parse(man: "13569", pin: "123459", sou: "443");
             var shanten = Shanten.CalculateShanten(tiles);
             Console.WriteLine(tiles.ToOneLineString());
             Console.WriteLine($"{shanten}シャンテン");
@@ -49,13 +49,13 @@ namespace mjlibExample
             /* 数え役満                                                             */
             /***********************************************************************/
             //13翻打ち止め
-            tiles = TileIds.Parse(man: "22244466677788");
-            winTile = TileId.Parse(man: "7");
+            tiles = TileList.Parse(man: "22244466677788");
+            winTile = Tile.Parse(man: "7");
             melds = new List<Meld>
             {
-                new Meld(MeldType.KAN, TileIds.Parse(man: "2222"), opened: false)
+                new Meld(MeldType.Kan, TileList.Parse(man: "2222"), opened: false)
             };
-            var doraIndicators = TileIds.Parse(man: "1111"); //ドラ表示牌
+            var doraIndicators = TileList.Parse(man: "1111"); //ドラ表示牌
             config = new HandConfig(isRiichi: true, options: new OptionalRules(kazoeLimit: Kazoe.Limited));
             result = HandCalculator.EstimateHandValue(tiles, winTile, melds, doraIndicators, config);
             PrintHandResult(tiles, winTile, melds, result);
@@ -71,7 +71,7 @@ namespace mjlibExample
             PrintHandResult(tiles, winTile, melds, result);
         }
 
-        private static void PrintHandResult(TileIds tiles, TileId winTile, List<Meld>? melds, HandResponse result)
+        private static void PrintHandResult(TileList tiles, Tile winTile, List<Meld>? melds, HandResult result)
         {
             Console.WriteLine($"{tiles.ToOneLineString()}");
             var IsOpened = false;
@@ -85,16 +85,16 @@ namespace mjlibExample
                 {
                     Console.WriteLine(meldItem);
                 }
-                IsOpened = melds.Any(x => x.Opened);
+                IsOpened = melds.Any(x => x.IsOpen);
             }
-            Console.WriteLine($"和了牌: {new TileIds(new List<TileId> { winTile }).ToOneLineString()}");
-            foreach (var yakuItem in result.Yaku)
+            Console.WriteLine($"和了牌: {new TileList(new List<Tile> { winTile }).ToOneLineString()}");
+            foreach (var yakuItem in result.Yakus)
             {
                 var han = IsOpened ? yakuItem.HanOpen : yakuItem.HanClosed;
                 Console.WriteLine($"{yakuItem.Japanese}\t{han}翻");
             }
             Console.WriteLine($"{result.Han}翻 {result.Fu}符");
-            Console.WriteLine($"{result.Cost.Main}点");
+            Console.WriteLine($"{result.Score.Main}点");
             foreach (var fuItem in result.FuDetailSet)
             {
                 Console.WriteLine($"符: {fuItem.Fu}\tReason: {fuItem.Reason}");

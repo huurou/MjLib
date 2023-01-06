@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace mjlib.HandCalculating
 {
-    public abstract class Yaku
+    public abstract class YakuBase
     {
         public abstract int YakuId { get; }
         public abstract int TenhouId { get; }
@@ -14,6 +14,6 @@ namespace mjlib.HandCalculating
         public abstract int HanClosed { get; set; }
         public abstract bool IsYakuman { get; }
 
-        public abstract bool IsConditionMet(IEnumerable<TileKinds>? hand, object[]? args = null);
+        public abstract bool Valid(IEnumerable<TileKindList>? hand, params object[] args);
     }
 }

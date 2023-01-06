@@ -15,7 +15,7 @@ namespace mjlibTest.CalculatingTest
         [TestMethod]
         public void SimpleHandDividingTest()
         {
-            var tiles34 = Tiles34.Parse(man: "234567", sou: "23455", honors: "777");
+            var tiles34 = Tiles34.Parse(man: "234567", sou: "23455", honor: "777");
             var result = DivideHand(tiles34);
             AreEqual(1, result.Count);
             CollectionAssert.AreEqual(new List<string>
@@ -27,7 +27,7 @@ namespace mjlibTest.CalculatingTest
         [TestMethod]
         public void SecondSimpleHandDividing()
         {
-            var tiles34 = Tiles34.Parse(man: "123", pin: "123", sou: "123", honors: "11222");
+            var tiles34 = Tiles34.Parse(man: "123", pin: "123", sou: "123", honor: "11222");
             var result = DivideHand(tiles34);
             AreEqual(1, result.Count);
             CollectionAssert.AreEqual(new List<string>
@@ -67,7 +67,7 @@ namespace mjlibTest.CalculatingTest
         [TestMethod]
         public void SecondOneSuitHandDividing()
         {
-            var tiles34 = Tiles34.Parse(sou: "111123666789", honors: "11");
+            var tiles34 = Tiles34.Parse(sou: "111123666789", honor: "11");
             var result = DivideHand(tiles34);
             AreEqual(1, result.Count);
             CollectionAssert.AreEqual(new List<string>
@@ -79,11 +79,11 @@ namespace mjlibTest.CalculatingTest
         [TestMethod]
         public void ThirdOneSuitHandDividing()
         {
-            var tiles34 = Tiles34.Parse(pin: "234777888999", honors: "22");
+            var tiles34 = Tiles34.Parse(pin: "234777888999", honor: "22");
             var melds = new List<Meld>
             {
-                MakeMeld(MeldType.CHI, pin:"789"),
-                MakeMeld(MeldType.CHI, pin:"234")
+                MakeMeld(MeldType.Chi, pin:"789"),
+                MakeMeld(MeldType.Chi, pin:"234")
             };
             var result = DivideHand(tiles34, melds);
             AreEqual(1, result.Count);
@@ -109,13 +109,13 @@ namespace mjlibTest.CalculatingTest
             }, ToString(result[1]));
         }
 
-        private List<string> ToString(IEnumerable<TileKinds> hand)
+        private List<string> ToString(IEnumerable<TileKindList> hand)
         {
             var results = new List<string>();
             foreach (var setItem in hand)
             {
                 results.Add(
-                    new TileIds(setItem.Select(x => x.Value * 4)).ToOneLineString());
+                    new TileList(setItem.Select(x => x.Value * 4)).ToOneLineString());
             }
             return results;
         }

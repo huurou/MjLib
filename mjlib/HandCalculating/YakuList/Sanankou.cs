@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace mjlib.HandCalculating.YakuList
 {
-    internal class Sanankou : Yaku
+    internal class Sanankou : YakuBase
     {
         public override int YakuId => 27;
 
@@ -22,20 +22,20 @@ namespace mjlib.HandCalculating.YakuList
 
         public override bool IsYakuman => false;
 
-        public override bool IsConditionMet(IEnumerable<TileKinds>? hand, object[]? args = null)
+        public override bool Valid(IEnumerable<TileKindList>? hand, params object[] args)
         {
             if (hand is null) return false;
             if (args is null) return false;
-            var winTile = ((TileId)args[0]).ToTileKind();
+            var winTile = ((Tile)args[0]).ToTileKind();
             var melds = (List<Meld>)args[1];
             var isTsumo = (bool)args[2];
 
-            var openSets = melds.Where(x => x.Opened)
-                                .Select(x => x.TileKinds);
+            var openSets = melds.Where(x => x.IsOpen)
+                                .Select(x => x.KindList);
             var chiSets = hand.Where(x => x.IsChi
                 && x.Contains(winTile) && !openSets.Contains(x));
             var ponSets = hand.Where(x => x.IsPon);
-            var closedPonSets = new List<TileKinds>();
+            var closedPonSets = new List<TileKindList>();
             foreach (var item in ponSets)
             {
                 if (openSets.Contains(item)) continue;

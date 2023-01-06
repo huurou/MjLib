@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace mjlib.HandCalculating.YakuList
 {
-    internal class Sanshoku : Yaku
+    internal class Sanshoku : YakuBase
     {
         public override int YakuId => 22;
 
@@ -22,15 +22,15 @@ namespace mjlib.HandCalculating.YakuList
 
         public override bool IsYakuman => false;
 
-        public override bool IsConditionMet(IEnumerable<TileKinds>? hand, object[]? args = null)
+        public override bool Valid(IEnumerable<TileKindList>? hand, params object[] args)
         {
             if (hand is null) return false;
             var chiSets = hand.Where(x => x.IsChi);
             if (chiSets.Count() < 3) return false;
 
-            var manChi = new List<TileKinds>();
-            var pinChi = new List<TileKinds>();
-            var souChi = new List<TileKinds>();
+            var manChi = new List<TileKindList>();
+            var pinChi = new List<TileKindList>();
+            var souChi = new List<TileKindList>();
             foreach (var item in chiSets)
             {
                 if (item[0].IsMan)
@@ -52,9 +52,9 @@ namespace mjlib.HandCalculating.YakuList
                 {
                     foreach (var souItem in souChi)
                     {
-                        var manNum = new TileKinds(manItem.Select(x => x.Simplify));
-                        var pinNum = new TileKinds(pinItem.Select(x => x.Simplify));
-                        var souNum = new TileKinds(souItem.Select(x => x.Simplify));
+                        var manNum = new TileKindList(manItem.Select(x => x.Simplify));
+                        var pinNum = new TileKindList(pinItem.Select(x => x.Simplify));
+                        var souNum = new TileKindList(souItem.Select(x => x.Simplify));
                         if (manNum.Equals(pinNum) && pinNum.Equals(souNum)) return true;
                     }
                 }
