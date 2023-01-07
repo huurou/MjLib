@@ -5,6 +5,41 @@
 /// </summary>
 internal class TileKind : ValueObject<TileKind>
 {
+    public static TileKind Man1 => new(0);
+    public static TileKind Man2 => new(1);
+    public static TileKind Man3 => new(2);
+    public static TileKind Man4 => new(3);
+    public static TileKind Man5 => new(4);
+    public static TileKind Man6 => new(5);
+    public static TileKind Man7 => new(6);
+    public static TileKind Man8 => new(7);
+    public static TileKind Man9 => new(8);
+    public static TileKind Pin1 => new(9);
+    public static TileKind Pin2 => new(10);
+    public static TileKind Pin3 => new(11);
+    public static TileKind Pin4 => new(12);
+    public static TileKind Pin5 => new(13);
+    public static TileKind Pin6 => new(14);
+    public static TileKind Pin7 => new(15);
+    public static TileKind Pin8 => new(16);
+    public static TileKind Pin9 => new(17);
+    public static TileKind Sou1 => new(18);
+    public static TileKind Sou2 => new(19);
+    public static TileKind Sou3 => new(20);
+    public static TileKind Sou4 => new(21);
+    public static TileKind Sou5 => new(22);
+    public static TileKind Sou6 => new(23);
+    public static TileKind Sou7 => new(24);
+    public static TileKind Sou8 => new(25);
+    public static TileKind Sou9 => new(26);
+    public static TileKind Ton => new(27);
+    public static TileKind Nan => new(28);
+    public static TileKind Sha => new(29);
+    public static TileKind Pei => new(30);
+    public static TileKind Haku => new(31);
+    public static TileKind Hatsu => new(32);
+    public static TileKind Chun => new(33);
+
     public const int ID_MIN = 0;
     public const int ID_MAX = 33;
     /// <summary>
@@ -23,6 +58,13 @@ internal class TileKind : ValueObject<TileKind>
     public bool IsDragon => Id is 31 or 32 or 33;
     public bool IsChuchan => (IsMan || IsPin || IsSou) && Number is >= 2 and <= 8;
     public bool IsYaochu => !IsChuchan;
+
+    public TileKind(int id)
+    {
+        Id = ID_MIN <= id && id <= ID_MAX
+            ? id
+            : throw new ArgumentException($"牌種別IDは{ID_MIN}～{ID_MAX}です。", nameof(id));
+    }
 
     public override string ToString()
     {
@@ -64,48 +106,6 @@ internal class TileKind : ValueObject<TileKind>
             33 => "中",
             _ => throw new InvalidOperationException()
         };
-    }
-
-    public static TileKind Man1 => new(0);
-    public static TileKind Man2 => new(1);
-    public static TileKind Man3 => new(2);
-    public static TileKind Man4 => new(3);
-    public static TileKind Man5 => new(4);
-    public static TileKind Man6 => new(5);
-    public static TileKind Man7 => new(6);
-    public static TileKind Man8 => new(7);
-    public static TileKind Man9 => new(8);
-    public static TileKind Pin1 => new(9);
-    public static TileKind Pin2 => new(10);
-    public static TileKind Pin3 => new(11);
-    public static TileKind Pin4 => new(12);
-    public static TileKind Pin5 => new(13);
-    public static TileKind Pin6 => new(14);
-    public static TileKind Pin7 => new(15);
-    public static TileKind Pin8 => new(16);
-    public static TileKind Pin9 => new(17);
-    public static TileKind Sou1 => new(18);
-    public static TileKind Sou2 => new(19);
-    public static TileKind Sou3 => new(20);
-    public static TileKind Sou4 => new(21);
-    public static TileKind Sou5 => new(22);
-    public static TileKind Sou6 => new(23);
-    public static TileKind Sou7 => new(24);
-    public static TileKind Sou8 => new(25);
-    public static TileKind Sou9 => new(26);
-    public static TileKind Ton => new(27);
-    public static TileKind Nan => new(28);
-    public static TileKind Sha => new(29);
-    public static TileKind Pei => new(30);
-    public static TileKind Haku => new(31);
-    public static TileKind Hatsu => new(32);
-    public static TileKind Chun => new(33);
-
-    public TileKind(int id)
-    {
-        Id = ID_MIN <= id && id <= ID_MAX
-            ? id
-            : throw new ArgumentException($"牌種別IDは{ID_MIN}～{ID_MAX}です。", nameof(id));
     }
 
     #region ValueObject<T>の実装
