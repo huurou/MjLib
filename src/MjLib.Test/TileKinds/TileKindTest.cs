@@ -1,6 +1,6 @@
 ﻿using static MjLib.TileKinds.TileKind;
 
-namespace MjLib.Test;
+namespace MjLib.Test.TileKinds;
 
 public class TileKindTest
 {
