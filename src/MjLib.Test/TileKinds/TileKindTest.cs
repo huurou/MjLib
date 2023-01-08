@@ -215,7 +215,7 @@ public class TileKindTest
     }
 
     [Test]
-    public void IsWind()
+    public void IsWindTest()
     {
         Assert.Multiple(() =>
         {
@@ -257,7 +257,7 @@ public class TileKindTest
     }
 
     [Test]
-    public void IsDragon()
+    public void IsDragonTest()
     {
         Assert.Multiple(() =>
         {
@@ -299,7 +299,7 @@ public class TileKindTest
     }
 
     [Test]
-    public void IsChuchan()
+    public void IsChuchanTest()
     {
         Assert.Multiple(() =>
         {
@@ -341,7 +341,7 @@ public class TileKindTest
     }
 
     [Test]
-    public void IsYaochu()
+    public void IsYaochuTest()
     {
         Assert.Multiple(() =>
         {

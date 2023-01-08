@@ -60,7 +60,7 @@ public class TileKindListTest
     }
 
     [Test]
-    public void ParseOneLine()
+    public void ParseOneLineTest()
     {
         Assert.Multiple(() =>
         {
@@ -77,7 +77,7 @@ public class TileKindListTest
     }
 
     [Test]
-    public void ParseLines()
+    public void ParseLinesTest()
     {
         Assert.Multiple(() =>
         {
@@ -92,7 +92,7 @@ public class TileKindListTest
     }
 
     [Test]
-    public void ToOneLine()
+    public void ToOneLineTest()
     {
         Assert.Multiple(() =>
         {
