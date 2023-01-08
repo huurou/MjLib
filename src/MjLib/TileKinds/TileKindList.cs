@@ -1,15 +1,54 @@
-﻿using System.Diagnostics;
+﻿using MjLib.TileCountArrays;
+using System.Diagnostics;
+using static MjLib.TileKinds.TileKind;
 
 namespace MjLib.TileKinds;
 
 [DebuggerDisplay("{ToString()}")]
 internal class TileKindList : List<TileKind>
 {
+    public TileKindList()
+        : base() { }
+
     public TileKindList(IEnumerable<TileKind> kinds)
         : base(kinds) { }
 
     public TileKindList(IEnumerable<int> ids)
         : this(ids.Select(x => new TileKind(x))) { }
+
+    public TileKindList(TileCountArray countArray)
+    {
+        for (var id = ID_MIN; id <= ID_MAX; id++)
+        {
+            AddRange(Enumerable.Repeat(new TileKind(id), countArray[id]));
+        }
+    }
+
+    /// <summary>
+    /// 自身及び隣り合った牌を除いたTileKindListを取得する
+    /// </summary>
+    /// <returns></returns>
+    public TileKindList GetIsolated()
+    {
+        var countArray = ToTileCountArray();
+        var isolated = new TileKindList();
+        foreach (var kind in AllKinds)
+        {
+            if (kind.IsHonor && countArray[kind] == 0 ||
+                !kind.IsHonor && kind.Number == 1 && countArray[kind] == 0 && countArray[kind + 1] == 0 ||
+                !kind.IsHonor && kind.Number is >= 2 and <= 8 && countArray[kind - 1] == 0 && countArray[kind] == 0 && countArray[kind + 1] == 0 ||
+                !kind.IsHonor && kind.Number == 9 && countArray[kind - 1] == 0 && countArray[kind] == 0)
+            {
+                isolated.Add(kind);
+            }
+        }
+        return isolated;
+    }
+
+    public TileCountArray ToTileCountArray()
+    {
+        return new(this);
+    }
 
     public static TileKindList Parse(string oneLine = "")
     {

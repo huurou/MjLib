@@ -42,6 +42,7 @@ internal class TileKind : ValueObject<TileKind>
 
     public const int ID_MIN = 0;
     public const int ID_MAX = 33;
+
     /// <summary>
     /// 牌種別ID 0～33
     /// </summary>
@@ -58,6 +59,7 @@ internal class TileKind : ValueObject<TileKind>
     public bool IsDragon => Id is 31 or 32 or 33;
     public bool IsChuchan => (IsMan || IsPin || IsSou) && Number is >= 2 and <= 8;
     public bool IsYaochu => !IsChuchan;
+    public static IEnumerable<TileKind> AllKinds => Enumerable.Range(ID_MIN, ID_MAX + 1).Select(x => new TileKind(x));
 
     public TileKind(int id)
     {
@@ -106,6 +108,16 @@ internal class TileKind : ValueObject<TileKind>
             33 => "中",
             _ => throw new InvalidOperationException()
         };
+    }
+
+    public static TileKind operator +(TileKind x, int y)
+    {
+        return new(x.Id + y);
+    }
+
+    public static TileKind operator -(TileKind x, int y)
+    {
+        return new(x.Id - y);
     }
 
     #region ValueObject<T>の実装

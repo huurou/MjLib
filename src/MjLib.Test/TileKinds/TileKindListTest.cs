@@ -1,9 +1,64 @@
-﻿using MjLib.TileKinds;
+﻿using MjLib.TileCountArrays;
+using MjLib.TileKinds;
+using static MjLib.TileKinds.TileKind;
 
 namespace MjLib.Test.TileKinds;
 
 public class TileKindListTest
 {
+    [Test]
+    public void GetIsolatedTest()
+    {
+        Assert.Multiple(() =>
+        {
+            var kindList = TileKindList.Parse(man: "25", pin: "15678", sou: "1369", honor: "124");
+            var isolated = kindList.GetIsolated();
+            Assert.That(isolated, Does.Not.Contain(Man1));
+            Assert.That(isolated, Does.Not.Contain(Man2));
+            Assert.That(isolated, Does.Not.Contain(Man3));
+            Assert.That(isolated, Does.Not.Contain(Man4));
+            Assert.That(isolated, Does.Not.Contain(Man5));
+            Assert.That(isolated, Does.Not.Contain(Man6));
+            Assert.That(isolated, Does.Contain(Man7));
+            Assert.That(isolated, Does.Contain(Man8));
+            Assert.That(isolated, Does.Contain(Man9));
+            Assert.That(isolated, Does.Not.Contain(Pin1));
+            Assert.That(isolated, Does.Not.Contain(Pin2));
+            Assert.That(isolated, Does.Contain(Pin3));
+            Assert.That(isolated, Does.Not.Contain(Pin4));
+            Assert.That(isolated, Does.Not.Contain(Pin5));
+            Assert.That(isolated, Does.Not.Contain(Pin6));
+            Assert.That(isolated, Does.Not.Contain(Pin7));
+            Assert.That(isolated, Does.Not.Contain(Pin8));
+            Assert.That(isolated, Does.Not.Contain(Pin9));
+            Assert.That(isolated, Does.Not.Contain(Sou1));
+            Assert.That(isolated, Does.Not.Contain(Sou2));
+            Assert.That(isolated, Does.Not.Contain(Sou3));
+            Assert.That(isolated, Does.Not.Contain(Sou4));
+            Assert.That(isolated, Does.Not.Contain(Sou5));
+            Assert.That(isolated, Does.Not.Contain(Sou6));
+            Assert.That(isolated, Does.Not.Contain(Sou7));
+            Assert.That(isolated, Does.Not.Contain(Sou8));
+            Assert.That(isolated, Does.Not.Contain(Sou9));
+            Assert.That(isolated, Does.Not.Contain(Ton));
+            Assert.That(isolated, Does.Not.Contain(Nan));
+            Assert.That(isolated, Does.Contain(Sha));
+            Assert.That(isolated, Does.Not.Contain(Pei));
+            Assert.That(isolated, Does.Contain(Haku));
+            Assert.That(isolated, Does.Contain(Hatsu));
+            Assert.That(isolated, Does.Contain(Chun));
+        });
+    }
+
+    [Test]
+    public void ToTileCountArrayTest()
+    {
+        var kindList = TileKindList.Parse(man: "122333444456789", pin: "123455666777788889", sou: "123456778889999", honor: "1123334555567");
+        var actual = kindList.ToTileCountArray();
+        var expected = new TileCountArray(new[] { 1, 2, 3, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 4, 4, 1, 1, 1, 1, 1, 1, 1, 2, 3, 4, 2, 1, 3, 1, 4, 1, 1 });
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
     [Test]
     public void ParseOneLine()
     {
