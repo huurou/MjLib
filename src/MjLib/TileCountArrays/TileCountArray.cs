@@ -4,6 +4,9 @@ using static MjLib.TileKinds.TileKind;
 
 namespace MjLib.TileCountArrays;
 
+/// <summary>
+/// 牌の種類id0 ~33をインデックスとして, それぞれの牌の個数を値として持つ配列
+/// </summary>
 internal class TileCountArray : IEnumerable<int>, IEnumerable
 {
     private readonly int[] array_ = new int[ID_MAX + 1];
@@ -16,7 +19,7 @@ internal class TileCountArray : IEnumerable<int>, IEnumerable
 
     public TileCountArray(int[] counts)
     {
-        if (counts.Length != ID_MAX + 1) throw new ArgumentException("牌種類数と配列の長さが一致しません。", nameof(counts));
+        if (counts.Length != array_.Length) throw new ArgumentException("牌種類数と配列の長さが一致しません。", nameof(counts));
         array_ = counts;
     }
 

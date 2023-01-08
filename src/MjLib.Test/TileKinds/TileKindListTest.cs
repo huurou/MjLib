@@ -7,46 +7,46 @@ namespace MjLib.Test.TileKinds;
 public class TileKindListTest
 {
     [Test]
-    public void GetIsolatedTest()
+    public void GetIsolationsTest()
     {
         Assert.Multiple(() =>
         {
             var kindList = TileKindList.Parse(man: "25", pin: "15678", sou: "1369", honor: "124");
-            var isolated = kindList.GetIsolated();
-            Assert.That(isolated, Does.Not.Contain(Man1));
-            Assert.That(isolated, Does.Not.Contain(Man2));
-            Assert.That(isolated, Does.Not.Contain(Man3));
-            Assert.That(isolated, Does.Not.Contain(Man4));
-            Assert.That(isolated, Does.Not.Contain(Man5));
-            Assert.That(isolated, Does.Not.Contain(Man6));
-            Assert.That(isolated, Does.Contain(Man7));
-            Assert.That(isolated, Does.Contain(Man8));
-            Assert.That(isolated, Does.Contain(Man9));
-            Assert.That(isolated, Does.Not.Contain(Pin1));
-            Assert.That(isolated, Does.Not.Contain(Pin2));
-            Assert.That(isolated, Does.Contain(Pin3));
-            Assert.That(isolated, Does.Not.Contain(Pin4));
-            Assert.That(isolated, Does.Not.Contain(Pin5));
-            Assert.That(isolated, Does.Not.Contain(Pin6));
-            Assert.That(isolated, Does.Not.Contain(Pin7));
-            Assert.That(isolated, Does.Not.Contain(Pin8));
-            Assert.That(isolated, Does.Not.Contain(Pin9));
-            Assert.That(isolated, Does.Not.Contain(Sou1));
-            Assert.That(isolated, Does.Not.Contain(Sou2));
-            Assert.That(isolated, Does.Not.Contain(Sou3));
-            Assert.That(isolated, Does.Not.Contain(Sou4));
-            Assert.That(isolated, Does.Not.Contain(Sou5));
-            Assert.That(isolated, Does.Not.Contain(Sou6));
-            Assert.That(isolated, Does.Not.Contain(Sou7));
-            Assert.That(isolated, Does.Not.Contain(Sou8));
-            Assert.That(isolated, Does.Not.Contain(Sou9));
-            Assert.That(isolated, Does.Not.Contain(Ton));
-            Assert.That(isolated, Does.Not.Contain(Nan));
-            Assert.That(isolated, Does.Contain(Sha));
-            Assert.That(isolated, Does.Not.Contain(Pei));
-            Assert.That(isolated, Does.Contain(Haku));
-            Assert.That(isolated, Does.Contain(Hatsu));
-            Assert.That(isolated, Does.Contain(Chun));
+            var isolatations = kindList.GetIsolations();
+            Assert.That(isolatations, Does.Not.Contain(Man1));
+            Assert.That(isolatations, Does.Not.Contain(Man2));
+            Assert.That(isolatations, Does.Not.Contain(Man3));
+            Assert.That(isolatations, Does.Not.Contain(Man4));
+            Assert.That(isolatations, Does.Not.Contain(Man5));
+            Assert.That(isolatations, Does.Not.Contain(Man6));
+            Assert.That(isolatations, Does.Contain(Man7));
+            Assert.That(isolatations, Does.Contain(Man8));
+            Assert.That(isolatations, Does.Contain(Man9));
+            Assert.That(isolatations, Does.Not.Contain(Pin1));
+            Assert.That(isolatations, Does.Not.Contain(Pin2));
+            Assert.That(isolatations, Does.Contain(Pin3));
+            Assert.That(isolatations, Does.Not.Contain(Pin4));
+            Assert.That(isolatations, Does.Not.Contain(Pin5));
+            Assert.That(isolatations, Does.Not.Contain(Pin6));
+            Assert.That(isolatations, Does.Not.Contain(Pin7));
+            Assert.That(isolatations, Does.Not.Contain(Pin8));
+            Assert.That(isolatations, Does.Not.Contain(Pin9));
+            Assert.That(isolatations, Does.Not.Contain(Sou1));
+            Assert.That(isolatations, Does.Not.Contain(Sou2));
+            Assert.That(isolatations, Does.Not.Contain(Sou3));
+            Assert.That(isolatations, Does.Not.Contain(Sou4));
+            Assert.That(isolatations, Does.Not.Contain(Sou5));
+            Assert.That(isolatations, Does.Not.Contain(Sou6));
+            Assert.That(isolatations, Does.Not.Contain(Sou7));
+            Assert.That(isolatations, Does.Not.Contain(Sou8));
+            Assert.That(isolatations, Does.Not.Contain(Sou9));
+            Assert.That(isolatations, Does.Not.Contain(Ton));
+            Assert.That(isolatations, Does.Not.Contain(Nan));
+            Assert.That(isolatations, Does.Contain(Sha));
+            Assert.That(isolatations, Does.Not.Contain(Pei));
+            Assert.That(isolatations, Does.Contain(Haku));
+            Assert.That(isolatations, Does.Contain(Hatsu));
+            Assert.That(isolatations, Does.Contain(Chun));
         });
     }
 

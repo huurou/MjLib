@@ -28,21 +28,21 @@ internal class TileKindList : List<TileKind>
     /// 自身及び隣り合った牌を除いたTileKindListを取得する
     /// </summary>
     /// <returns></returns>
-    public TileKindList GetIsolated()
+    public TileKindList GetIsolations()
     {
         var countArray = ToTileCountArray();
-        var isolated = new TileKindList();
-        foreach (var kind in AllKinds)
+        var isolatations = new TileKindList();
+        foreach (var kind in AllKind)
         {
             if (kind.IsHonor && countArray[kind] == 0 ||
                 !kind.IsHonor && kind.Number == 1 && countArray[kind] == 0 && countArray[kind + 1] == 0 ||
                 !kind.IsHonor && kind.Number is >= 2 and <= 8 && countArray[kind - 1] == 0 && countArray[kind] == 0 && countArray[kind + 1] == 0 ||
                 !kind.IsHonor && kind.Number == 9 && countArray[kind - 1] == 0 && countArray[kind] == 0)
             {
-                isolated.Add(kind);
+                isolatations.Add(kind);
             }
         }
-        return isolated;
+        return isolatations;
     }
 
     public TileCountArray ToTileCountArray()
