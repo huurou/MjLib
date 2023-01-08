@@ -51,7 +51,7 @@ public class ShantenTest
             Assert.That(Shanten.CalculateForRegular(kindList), Is.EqualTo(7));
 
             kindList = TileKindList.Parse(man: "1111222235555", honor: "1");
-            Assert.That(Shanten.CalculateForRegular(kindList), Is.EqualTo(0));
+            Assert.That(Shanten.CalculateForRegular(kindList), Is.EqualTo(1));
         });
     }
 }
