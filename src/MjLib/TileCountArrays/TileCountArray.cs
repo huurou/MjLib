@@ -9,17 +9,26 @@ namespace MjLib.TileCountArrays;
 /// </summary>
 internal class TileCountArray : IEnumerable<int>, IEnumerable
 {
-    private readonly int[] array_ = new int[ID_MAX + 1];
+    private readonly int[] array_ = new int[KIND_COUNT];
 
-    public int this[int index] { get => array_[index]; set => array_[index] = value; }
+    public int this[int index]
+    {
+        get => array_[index];
+        set
+        {
+            if (value is < 0 or > 4) throw new ArgumentException($"牌は0～4枚です。 given:{value}", nameof(value));
+            array_[index] = value;
+        }
+    }
     public int this[TileKind kind] { get => this[kind.Id]; set => this[kind.Id] = value; }
+    public int[] this[Range range] => array_[range];
 
     public TileCountArray()
     { }
 
     public TileCountArray(int[] counts)
     {
-        if (counts.Length != array_.Length) throw new ArgumentException("牌種類数と配列の長さが一致しません。", nameof(counts));
+        if (counts.Length != array_.Length) throw new ArgumentException($"牌種類数と配列の長さが一致しません。given:{counts}", nameof(counts));
         array_ = counts;
     }
 
@@ -27,8 +36,24 @@ internal class TileCountArray : IEnumerable<int>, IEnumerable
     {
         foreach (var kind in kinds)
         {
-            array_[kind.Id]++;
+            this[kind]++;
         }
+    }
+
+    public TileKindList GetIsolations()
+    {
+        var isolatations = new TileKindList();
+        foreach (var kind in AllKind)
+        {
+            if (kind.IsHonor && this[kind] == 0 ||
+                !kind.IsHonor && kind.Number == 1 && this[kind] == 0 && this[kind + 1] == 0 ||
+                !kind.IsHonor && kind.Number is >= 2 and <= 8 && this[kind - 1] == 0 && this[kind] == 0 && this[kind + 1] == 0 ||
+                !kind.IsHonor && kind.Number == 9 && this[kind - 1] == 0 && this[kind] == 0)
+            {
+                isolatations.Add(kind);
+            }
+        }
+        return isolatations;
     }
 
     public TileKindList ToTileKindList()

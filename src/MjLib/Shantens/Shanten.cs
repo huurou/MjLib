@@ -13,8 +13,8 @@ internal static class Shanten
     private static int tatsuCount_;
     private static int pairsCount_;
     private static int jidahaiCount_;
-    private static readonly bool[] numberCharacters_ = new bool[ID_MAX + 1];
-    private static readonly bool[] isolations_ = new bool[ID_MAX + 1];
+    private static readonly bool[] numberCharacters_ = new bool[KIND_COUNT];
+    private static readonly bool[] isolations_ = new bool[KIND_COUNT];
     private static int minShanten_;
 
     /// <summary>
@@ -54,7 +54,7 @@ internal static class Shanten
     {
         Init(pureHand);
         // 么九牌の対子の数
-        var yaochuPair = AllKind.Where(x=>x.IsYaochu).Count(x => countArray_[x] >= 2);
+        var yaochuPair = AllKind.Where(x => x.IsYaochu).Count(x => countArray_[x] >= 2);
         // 么九牌の種類数
         var yaochu = AllKind.Where(x => x.IsYaochu).Count(x => countArray_[x] != 0);
         // 13-么九牌 么九牌の対子があればシャンテン数一つ減る
@@ -63,7 +63,7 @@ internal static class Shanten
 
     private static void Init(TileKindList pureHand)
     {
-        if (pureHand.Count > 14) throw new ArgumentException("手牌の数が14個より多いです。", nameof(pureHand));
+        if (pureHand.Count > 14) throw new ArgumentException($"手牌の数が14個より多いです。given:{pureHand}", nameof(pureHand));
         countArray_ = pureHand.ToTileCountArray();
         tripletsCount_ = 0;
         tatsuCount_ = 0;

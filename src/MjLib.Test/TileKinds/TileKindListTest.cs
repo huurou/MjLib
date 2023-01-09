@@ -104,4 +104,12 @@ public class TileKindListTest
         var expected = "一二三四五六七八九(1)(2)(3)(4)(5)(6)(7)(8)(9)123456789東南西北白發中";
         Assert.That(actual, Is.EqualTo(expected));
     }
+
+    [Test]
+    public void ExceptionTest()
+    {
+        // 同種牌5枚
+        var kindList = TileKindList.Parse(pin: "45566777778999");
+        Assert.That(() => { var a = kindList.ToTileCountArray(); }, Throws.ArgumentException);
+    }
 }

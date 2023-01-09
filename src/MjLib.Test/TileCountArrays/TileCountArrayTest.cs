@@ -1,4 +1,5 @@
-﻿using MjLib.TileCountArrays;
+﻿using MjLib.Agaris;
+using MjLib.TileCountArrays;
 using MjLib.TileKinds;
 
 namespace MjLib.Test.TileCountArrays;

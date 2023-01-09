@@ -30,19 +30,7 @@ internal class TileKindList : List<TileKind>
     /// <returns></returns>
     public TileKindList GetIsolations()
     {
-        var countArray = ToTileCountArray();
-        var isolatations = new TileKindList();
-        foreach (var kind in AllKind)
-        {
-            if (kind.IsHonor && countArray[kind] == 0 ||
-                !kind.IsHonor && kind.Number == 1 && countArray[kind] == 0 && countArray[kind + 1] == 0 ||
-                !kind.IsHonor && kind.Number is >= 2 and <= 8 && countArray[kind - 1] == 0 && countArray[kind] == 0 && countArray[kind + 1] == 0 ||
-                !kind.IsHonor && kind.Number == 9 && countArray[kind - 1] == 0 && countArray[kind] == 0)
-            {
-                isolatations.Add(kind);
-            }
-        }
-        return isolatations;
+        return ToTileCountArray().GetIsolations();
     }
 
     public TileCountArray ToTileCountArray()
