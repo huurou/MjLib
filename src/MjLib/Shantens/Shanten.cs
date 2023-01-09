@@ -13,8 +13,8 @@ internal static class Shanten
     private static int tatsuCount_;
     private static int pairsCount_;
     private static int jidahaiCount_;
-    private static bool[] numberCharacters_ = new bool[ID_MAX + 1];
-    private static bool[] isolations_ = new bool[ID_MAX + 1];
+    private static readonly bool[] numberCharacters_ = new bool[ID_MAX + 1];
+    private static readonly bool[] isolations_ = new bool[ID_MAX + 1];
     private static int minShanten_;
 
     /// <summary>
@@ -22,13 +22,9 @@ internal static class Shanten
     /// </summary>
     /// <param name="pureHand">純手牌 鳴かれた牌を含まない手牌</param>
     /// <returns>シャンテン数</returns>
-    public static int Calculate(TileKindList pureHand, bool useChiitoitsu = true, bool useKokushi=true)
+    public static int Calculate(TileKindList pureHand, bool useChiitoitsu = true, bool useKokushi = true)
     {
-        Init(pureHand);
-        RemoveCharacterTiles();
-        Scan();
-        Run(0);
-        var shantens = new List<int> { minShanten_ };
+        var shantens = new List<int> { CalculateForRegular(pureHand) };
         if (useChiitoitsu) shantens.Add(CalculateForChiitoitsu(pureHand));
         if (useKokushi) shantens.Add(CalculateForKokushi(pureHand));
         return shantens.Min();
@@ -192,7 +188,7 @@ internal static class Shanten
             Run(id);
             DecreaseSet(id);
             IncreasePair(id);
-            if (i > 7 && countArray_[id + 1] != 0 && countArray_[id + 2] != 0)
+            if (i < 7 && countArray_[id + 1] != 0 && countArray_[id + 2] != 0)
             {
                 IncreaseShuntsu(id);
                 Run(id);
@@ -278,6 +274,7 @@ internal static class Shanten
         {
             mentsuKouho += pairsCount_ - 1;
         }
+        // 同種の数牌を4枚持っているときに刻子&単騎待ちとみなされないよう修正
         else if (numberCharacters_.Any(x => x) && isolations_.Any(x => x) &&
             isolations_.Select((x, i) => (x, i)).Where(x => x.x).All(x => numberCharacters_[x.i]))
         {

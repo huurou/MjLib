@@ -60,8 +60,8 @@ internal class TileKind : ValueObject<TileKind>
     public bool IsChuchan => (IsMan || IsPin || IsSou) && Number is >= 2 and <= 8;
     public bool IsYaochu => !IsChuchan;
     public static IEnumerable<TileKind> AllKind => Enumerable.Range(ID_MIN, ID_MAX + 1).Select(x => new TileKind(x));
-    public static IEnumerable<TileKind> AllChuchan => AllKind.Where(x=>x.IsChuchan);
-    public static IEnumerable<TileKind> AllYaochu=> AllKind.Where(x=>x.IsYaochu);
+    public static IEnumerable<TileKind> AllChuchan => AllKind.Where(x => x.IsChuchan);
+    public static IEnumerable<TileKind> AllYaochu => AllKind.Where(x => x.IsYaochu);
 
     public TileKind(int id)
     {
