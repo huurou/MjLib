@@ -54,9 +54,9 @@ internal static class Shanten
     {
         Init(pureHand);
         // 么九牌の対子の数
-        var yaochuPair = AllYaochu.Count(x => countArray_[x] >= 2);
+        var yaochuPair = AllKind.Where(x=>x.IsYaochu).Count(x => countArray_[x] >= 2);
         // 么九牌の種類数
-        var yaochu = AllYaochu.Count(x => countArray_[x] != 0);
+        var yaochu = AllKind.Where(x => x.IsYaochu).Count(x => countArray_[x] != 0);
         // 13-么九牌 么九牌の対子があればシャンテン数一つ減る
         return 13 - yaochu - (yaochuPair != 0 ? 1 : 0);
     }
