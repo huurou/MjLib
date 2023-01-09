@@ -9,11 +9,11 @@ internal static class Shanten
     public const int AGARI_STATE = -1;
 
     private static TileCountArray countArray_ = new();
-    private static int tripletsCount_;
+    private static int mentsuCount_;
     private static int tatsuCount_;
-    private static int pairsCount_;
+    private static int toitsusCount_;
     private static int jidahaiCount_;
-    private static readonly bool[] numberCharacters_ = new bool[KIND_COUNT];
+    private static readonly bool[] suits_ = new bool[KIND_COUNT];
     private static readonly bool[] isolations_ = new bool[KIND_COUNT];
     private static int minShanten_;
 
@@ -43,42 +43,42 @@ internal static class Shanten
     {
         Init(pureHand);
         // 対子の数
-        var pair = countArray_.Count(x => x >= 2);
+        var toitsu = countArray_.Count(x => x >= 2);
         // 牌種類の数
         var count = countArray_.Count(x => x != 0);
         // 6-対子 7種類の牌が必要なので補正する
-        return 6 - pair + Math.Max(0, 7 - count);
+        return 6 - toitsu + Math.Max(0, 7 - count);
     }
 
     public static int CalculateForKokushi(TileKindList pureHand)
     {
         Init(pureHand);
         // 么九牌の対子の数
-        var yaochuPair = AllKind.Where(x => x.IsYaochu).Count(x => countArray_[x] >= 2);
+        var yaochuToitsu = AllKind.Where(x => x.IsYaochu).Count(x => countArray_[x] >= 2);
         // 么九牌の種類数
         var yaochu = AllKind.Where(x => x.IsYaochu).Count(x => countArray_[x] != 0);
         // 13-么九牌 么九牌の対子があればシャンテン数一つ減る
-        return 13 - yaochu - (yaochuPair != 0 ? 1 : 0);
+        return 13 - yaochu - (yaochuToitsu != 0 ? 1 : 0);
     }
 
     private static void Init(TileKindList pureHand)
     {
         if (pureHand.Count > 14) throw new ArgumentException($"手牌の数が14個より多いです。given:{pureHand}", nameof(pureHand));
         countArray_ = pureHand.ToTileCountArray();
-        tripletsCount_ = 0;
+        mentsuCount_ = 0;
         tatsuCount_ = 0;
-        pairsCount_ = 0;
+        toitsusCount_ = 0;
         jidahaiCount_ = 0;
-        Array.Clear(numberCharacters_);
+        Array.Clear(suits_);
         Array.Clear(isolations_);
         minShanten_ = 8;
     }
 
     private static void RemoveCharacterTiles()
     {
-        tripletsCount_ = 0;
+        mentsuCount_ = 0;
         jidahaiCount_ = 0;
-        pairsCount_ = 0;
+        toitsusCount_ = 0;
         for (var id = Ton.Id; id <= Chun.Id; id++)
         {
             switch (countArray_[id])
@@ -88,15 +88,15 @@ internal static class Shanten
                     break;
 
                 case 2:
-                    pairsCount_++;
+                    toitsusCount_++;
                     break;
 
                 case 3:
-                    tripletsCount_++;
+                    mentsuCount_++;
                     break;
 
                 case 4:
-                    tripletsCount_++;
+                    mentsuCount_++;
                     jidahaiCount_++;
                     isolations_[id] = true;
                     break;
@@ -114,9 +114,9 @@ internal static class Shanten
     {
         for (var i = 0; i <= Sou9.Id; i++)
         {
-            numberCharacters_[i] = countArray_[i] == 4;
+            suits_[i] = countArray_[i] == 4;
         }
-        tripletsCount_ += (14 - countArray_.Sum()) / 3;
+        mentsuCount_ += (14 - countArray_.Sum()) / 3;
     }
 
     private static void Run(int id)
@@ -161,7 +161,7 @@ internal static class Shanten
             Run(id);
             DecreaseIsolation(id);
             DecreaseSet(id);
-            IncreasePair(id);
+            IncreaseToitsu(id);
             if (i < 7 && countArray_[id + 2] != 0)
             {
                 if (countArray_[id + 1] != 0)
@@ -180,14 +180,14 @@ internal static class Shanten
                 Run(id);
                 DecreaseTatsu1(id);
             }
-            DecreasePair(id);
+            DecreaseToitsu(id);
         }
         if (countArray_[id] == 3)
         {
             IncreaseSet(id);
             Run(id);
             DecreaseSet(id);
-            IncreasePair(id);
+            IncreaseToitsu(id);
             if (i < 7 && countArray_[id + 1] != 0 && countArray_[id + 2] != 0)
             {
                 IncreaseShuntsu(id);
@@ -209,7 +209,7 @@ internal static class Shanten
                     DecreaseTatsu1(id);
                 }
             }
-            DecreasePair(id);
+            DecreaseToitsu(id);
             if (i < 7 && countArray_[id + 2] >= 2 && countArray_[id + 1] >= 2)
             {
                 IncreaseShuntsu(id);
@@ -221,9 +221,9 @@ internal static class Shanten
         }
         if (countArray_[id] == 2)
         {
-            IncreasePair(id);
+            IncreaseToitsu(id);
             Run(id);
-            DecreasePair(id);
+            DecreaseToitsu(id);
             if (i < 7 && countArray_[id + 1] != 0 && countArray_[id + 2] != 0)
             {
                 IncreaseShuntsu(id);
@@ -268,15 +268,15 @@ internal static class Shanten
 
     private static void UpdateResult()
     {
-        var shanten = 8 - tripletsCount_ * 2 - tatsuCount_ - pairsCount_;
-        var mentsuKouho = tripletsCount_ + tatsuCount_;
-        if (pairsCount_ != 0)
+        var shanten = 8 - mentsuCount_ * 2 - tatsuCount_ - toitsusCount_;
+        var mentsuKouho = mentsuCount_ + tatsuCount_;
+        if (toitsusCount_ != 0)
         {
-            mentsuKouho += pairsCount_ - 1;
+            mentsuKouho += toitsusCount_ - 1;
         }
         // 同種の数牌を4枚持っているときに刻子&単騎待ちとみなされないよう修正
-        else if (numberCharacters_.Any(x => x) && isolations_.Any(x => x) &&
-            isolations_.Select((x, i) => (x, i)).Where(x => x.x).All(x => numberCharacters_[x.i]))
+        else if (suits_.Any(x => x) && isolations_.Any(x => x) &&
+            isolations_.Select((x, i) => (x, i)).Where(x => x.x).All(x => suits_[x.i]))
         {
             shanten++;
         }
@@ -297,25 +297,25 @@ internal static class Shanten
     private static void IncreaseSet(int id)
     {
         countArray_[id] -= 3;
-        tripletsCount_++;
+        mentsuCount_++;
     }
 
     private static void DecreaseSet(int id)
     {
         countArray_[id] += 3;
-        tripletsCount_--;
+        mentsuCount_--;
     }
 
-    private static void IncreasePair(int id)
+    private static void IncreaseToitsu(int id)
     {
         countArray_[id] -= 2;
-        pairsCount_++;
+        toitsusCount_++;
     }
 
-    private static void DecreasePair(int id)
+    private static void DecreaseToitsu(int id)
     {
         countArray_[id] += 2;
-        pairsCount_--;
+        toitsusCount_--;
     }
 
     private static void IncreaseShuntsu(int id)
@@ -323,7 +323,7 @@ internal static class Shanten
         countArray_[id]--;
         countArray_[id + 1]--;
         countArray_[id + 2]--;
-        tripletsCount_++;
+        mentsuCount_++;
     }
 
     private static void DecreaseShuntsu(int id)
@@ -331,7 +331,7 @@ internal static class Shanten
         countArray_[id]++;
         countArray_[id + 1]++;
         countArray_[id + 2]++;
-        tripletsCount_--;
+        mentsuCount_--;
     }
 
     private static void IncreaseTatsu1(int id)

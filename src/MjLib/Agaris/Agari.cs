@@ -158,25 +158,25 @@ internal static class Agari
     {
         if (nokori == 0)
         {
-            if (RemovePairAndCheck(3, counts)) return true;
-            if (RemovePairAndCheck(6, counts)) return true;
-            if (RemovePairAndCheck(9, counts)) return true;
+            if (RemoveToitsuAndCheck(3, counts)) return true;
+            if (RemoveToitsuAndCheck(6, counts)) return true;
+            if (RemoveToitsuAndCheck(9, counts)) return true;
         }
         else if (nokori == 1)
         {
-            if (RemovePairAndCheck(2, counts)) return true;
-            if (RemovePairAndCheck(5, counts)) return true;
-            if (RemovePairAndCheck(8, counts)) return true;
+            if (RemoveToitsuAndCheck(2, counts)) return true;
+            if (RemoveToitsuAndCheck(5, counts)) return true;
+            if (RemoveToitsuAndCheck(8, counts)) return true;
         }
         else if (nokori == 2)
         {
-            if (RemovePairAndCheck(1, counts)) return true;
-            if (RemovePairAndCheck(4, counts)) return true;
-            if (RemovePairAndCheck(7, counts)) return true;
+            if (RemoveToitsuAndCheck(1, counts)) return true;
+            if (RemoveToitsuAndCheck(4, counts)) return true;
+            if (RemoveToitsuAndCheck(7, counts)) return true;
         }
         return false;
 
-        static bool RemovePairAndCheck(int number, ImmutableList<int> counts)
+        static bool RemoveToitsuAndCheck(int number, ImmutableList<int> counts)
         {
             if (counts[number - 1] >= 2)
             {

@@ -5,8 +5,25 @@ using static MjLib.TileKinds.TileKind;
 namespace MjLib.TileKinds;
 
 [DebuggerDisplay("{ToString()}")]
-internal class TileKindList : List<TileKind>
+internal class TileKindList : List<TileKind>, IEquatable<TileKindList>, IComparable<TileKindList>
 {
+    /// <summary>
+    /// 対子かどうか
+    /// </summary>
+    public bool IsToitsu => Count == 2 && this[0] == this[1];
+    /// <summary>
+    /// 順子かどうか
+    /// </summary>
+    public bool IsShuntsu => Count == 3 && this[0] == this[1] - 1 && this[1] == this[2] - 1;
+    /// <summary>
+    /// 刻子かどうか
+    /// </summary>
+    public bool IsKoutsu => Count == 3 && this[0] == this[1] && this[1] == this[2];
+    /// <summary>
+    /// 槓子かどうか
+    /// </summary>
+    public bool IsKantsu => Count == 4 && this[0] == this[1] && this[1] == this[2] && this[2] == this[3];
+
     public TileKindList()
         : base() { }
 
@@ -105,5 +122,22 @@ internal class TileKindList : List<TileKind>
     public override string ToString()
     {
         return string.Join("", this);
+    }
+
+    public bool Equals(TileKindList? other)
+    {
+        return other is TileKindList x && x.SequenceEqual(this);
+    }
+
+    public int CompareTo(TileKindList? other)
+    {
+        if (other is null) return 1;
+        var min = Math.Min(Count, other.Count);
+        for (var i = 0; i < min; i++)
+        {
+            if (this[i] > other[i]) return 1;
+            if (this[i] < other[i]) return -1;
+        }
+        return Count > other.Count ? 1 : Count < other.Count ? -1 : 0;
     }
 }
