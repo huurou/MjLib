@@ -124,6 +124,10 @@ internal class TileKindList : List<TileKind>, IEquatable<TileKindList>, ICompara
         return string.Join("", this);
     }
 
+    public static bool operator ==(TileKindList? x, TileKindList? y) => x?.Equals(y) ?? y is null;
+
+    public static bool operator !=(TileKindList? x, TileKindList? y) => !(x == y);
+
     public bool Equals(TileKindList? other)
     {
         return other is TileKindList x && x.SequenceEqual(this);

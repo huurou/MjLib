@@ -20,28 +20,28 @@ internal static class Shanten
     /// <summary>
     /// シャンテン数を計算する 0:テンパイ -1:あがり
     /// </summary>
-    /// <param name="pureHand">純手牌 鳴かれた牌を含まない手牌</param>
+    /// <param name="hand">手牌 鳴かれた牌を含まない手牌</param>
     /// <returns>シャンテン数</returns>
-    public static int Calculate(TileKindList pureHand, bool useChiitoitsu = true, bool useKokushi = true)
+    public static int Calculate(TileKindList hand, bool useChiitoitsu = true, bool useKokushi = true)
     {
-        var shantens = new List<int> { CalculateForRegular(pureHand) };
-        if (useChiitoitsu) shantens.Add(CalculateForChiitoitsu(pureHand));
-        if (useKokushi) shantens.Add(CalculateForKokushi(pureHand));
+        var shantens = new List<int> { CalculateForRegular(hand) };
+        if (useChiitoitsu) shantens.Add(CalculateForChiitoitsu(hand));
+        if (useKokushi) shantens.Add(CalculateForKokushi(hand));
         return shantens.Min();
     }
 
-    public static int CalculateForRegular(TileKindList pureHand)
+    public static int CalculateForRegular(TileKindList hand)
     {
-        Init(pureHand);
+        Init(hand);
         RemoveCharacterTiles();
         Scan();
         Run(0);
         return minShanten_;
     }
 
-    public static int CalculateForChiitoitsu(TileKindList pureHand)
+    public static int CalculateForChiitoitsu(TileKindList hand)
     {
-        Init(pureHand);
+        Init(hand);
         // 対子の数
         var toitsu = countArray_.Count(x => x >= 2);
         // 牌種類の数
@@ -50,9 +50,9 @@ internal static class Shanten
         return 6 - toitsu + Math.Max(0, 7 - count);
     }
 
-    public static int CalculateForKokushi(TileKindList pureHand)
+    public static int CalculateForKokushi(TileKindList hand)
     {
-        Init(pureHand);
+        Init(hand);
         // 么九牌の対子の数
         var yaochuToitsu = AllKind.Where(x => x.IsYaochu).Count(x => countArray_[x] >= 2);
         // 么九牌の種類数
@@ -61,10 +61,10 @@ internal static class Shanten
         return 13 - yaochu - (yaochuToitsu != 0 ? 1 : 0);
     }
 
-    private static void Init(TileKindList pureHand)
+    private static void Init(TileKindList hand)
     {
-        if (pureHand.Count > 14) throw new ArgumentException($"手牌の数が14個より多いです。given:{pureHand}", nameof(pureHand));
-        countArray_ = pureHand.ToTileCountArray();
+        if (hand.Count > 14) throw new ArgumentException($"手牌の数が14個より多いです。given:{hand}", nameof(hand));
+        countArray_ = hand.ToTileCountArray();
         mentsuCount_ = 0;
         tatsuCount_ = 0;
         toitsusCount_ = 0;

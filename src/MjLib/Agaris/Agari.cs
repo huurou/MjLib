@@ -12,11 +12,11 @@ internal static class Agari
     /// <summary>
     /// アガリ形かどうか判定する
     /// </summary>
-    /// <param name="pureHand">純手牌 鳴かれた牌を含まない手牌</param>
+    /// <param name="hand">手牌 副露を含まない手牌+アガリ牌</param>
     /// <returns>アガリ形かどうか</returns>
-    public static bool IsAgari(TileKindList pureHand)
+    public static bool IsAgari(TileKindList hand)
     {
-        countArray_ = pureHand.ToTileCountArray();
+        countArray_ = hand.ToTileCountArray();
 
         // 字牌が4枚以上ならアガリ形ではない
         if (AllKind.Where(x => x.IsHonor).Any(x => countArray_[x] >= 4)) return false;

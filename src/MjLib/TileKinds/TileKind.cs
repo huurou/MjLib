@@ -94,6 +94,7 @@ internal class TileKind : ValueObject<TileKind>
     public bool IsWind => Id is >= TON and <= PEI;
     public bool IsDragon => Id is >= HAKU and <= CHUN;
     public bool IsChuchan => (IsMan || IsPin || IsSou) && Number is >= 2 and <= 8;
+    public bool IsRoutou => (IsMan || IsPin || IsSou) && Number is 1 or 9;
     public bool IsYaochu => !IsChuchan;
     public static IEnumerable<TileKind> AllKind => Enumerable.Range(ID_MIN, KIND_COUNT).Select(x => new TileKind(x));
 
@@ -146,15 +147,13 @@ internal class TileKind : ValueObject<TileKind>
         };
     }
 
-    public static TileKind operator +(TileKind x, int y)
-    {
-        return new(x.Id + y);
-    }
+    public static TileKind operator +(TileKind x, int y) => new(x.Id + y);
 
-    public static TileKind operator -(TileKind x, int y)
-    {
-        return new(x.Id - y);
-    }
+    public static TileKind operator -(TileKind x, int y) => new(x.Id - y);
+
+    public static bool operator <(TileKind x, TileKind y) => x.Id < y.Id;
+
+    public static bool operator >(TileKind x, TileKind y) => x.Id > y.Id;
 
     #region ValueObject<T>の実装
 
