@@ -8,7 +8,7 @@ namespace MjLib.HandCalculating.Fus;
 internal static class FuCalculator
 {
     private static FuList fuList_ = new();
-    private static DevidedHand hand_ = new();
+    private static TileKindListList hand_ = new();
     private static TileKind winTile_ = Man1;
     private static TileKindList winGroup_ = new();
     private static HandConfig config_ = new();
@@ -24,7 +24,7 @@ internal static class FuCalculator
     /// <param name="fuuroList">副露のリスト</param>
     /// <returns></returns>
     internal static FuList Calc(
-        DevidedHand hand,
+        TileKindListList hand,
         TileKind winTile,
         TileKindList winGroup,
         HandConfig config,

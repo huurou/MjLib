@@ -14,7 +14,7 @@ internal class TileKindList : List<TileKind>, IEquatable<TileKindList>, ICompara
     /// <summary>
     /// 順子かどうか
     /// </summary>
-    public bool IsShuntsu => Count == 3 && this[0] == this[1] - 1 && this[1] == this[2] - 1;
+    public bool IsShuntsu => Count == 3 && this[0].Id == this[1].Id - 1 && this[1].Id == this[2].Id - 1;
     /// <summary>
     /// 刻子かどうか
     /// </summary>
@@ -35,7 +35,7 @@ internal class TileKindList : List<TileKind>, IEquatable<TileKindList>, ICompara
 
     public TileKindList(TileCountArray countArray)
     {
-        for (var id = ID_MIN; id <= ID_MAX; id++)
+        for (var id = ID_MIN; id < KIND_COUNT; id++)
         {
             AddRange(Enumerable.Repeat(new TileKind(id), countArray[id]));
         }
@@ -127,6 +127,8 @@ internal class TileKindList : List<TileKind>, IEquatable<TileKindList>, ICompara
     public static bool operator ==(TileKindList? x, TileKindList? y) => x?.Equals(y) ?? y is null;
 
     public static bool operator !=(TileKindList? x, TileKindList? y) => !(x == y);
+    public static bool operator >(TileKindList x, TileKindList y) => x.CompareTo(y) > 0;
+    public static bool operator <(TileKindList x, TileKindList y) => x.CompareTo(y) < 0;
 
     public bool Equals(TileKindList? other)
     {
@@ -143,5 +145,14 @@ internal class TileKindList : List<TileKind>, IEquatable<TileKindList>, ICompara
             if (this[i] < other[i]) return -1;
         }
         return Count > other.Count ? 1 : Count < other.Count ? -1 : 0;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is TileKindList x && Equals(x);
+    }
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
     }
 }

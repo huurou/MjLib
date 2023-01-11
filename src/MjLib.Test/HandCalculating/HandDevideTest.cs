@@ -10,7 +10,7 @@ public class HandDevideTest
     {
         var hand = TileKindList.Parse(man: "234567", sou: "23455", honor: "777");
         var actual = HandDevider.Devide(hand);
-        var expected = new DevidedHand
+        var expected = new TileKindListList
         {
             TileKindList.Parse(man:"234"),
             TileKindList.Parse(man:"567"),
@@ -18,7 +18,6 @@ public class HandDevideTest
             TileKindList.Parse(sou:"55"),
             TileKindList.Parse(honor:"777"),
         };
-        Assert.That(actual, Has.Count.EqualTo(1));
         Assert.That(actual[0], Is.EqualTo(expected));
     }
 }

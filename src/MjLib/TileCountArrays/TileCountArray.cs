@@ -26,10 +26,10 @@ internal class TileCountArray : IEnumerable<int>, IEnumerable
     public TileCountArray()
     { }
 
-    public TileCountArray(int[] counts)
+    public TileCountArray(IEnumerable<int> counts)
     {
-        if (counts.Length != array_.Length) throw new ArgumentException($"牌種類数と配列の長さが一致しません。given:{counts}", nameof(counts));
-        array_ = counts;
+        if (array_.Length != counts.Count()) throw new ArgumentException($"牌種類数と配列の長さが一致しません。given:{counts}", nameof(counts));
+        array_ = counts.ToArray();
     }
 
     public TileCountArray(IEnumerable<TileKind> kinds)
@@ -46,9 +46,9 @@ internal class TileCountArray : IEnumerable<int>, IEnumerable
         foreach (var kind in AllKind)
         {
             if (kind.IsHonor && this[kind] == 0 ||
-                !kind.IsHonor && kind.Number == 1 && this[kind] == 0 && this[kind + 1] == 0 ||
-                !kind.IsHonor && kind.Number is >= 2 and <= 8 && this[kind - 1] == 0 && this[kind] == 0 && this[kind + 1] == 0 ||
-                !kind.IsHonor && kind.Number == 9 && this[kind - 1] == 0 && this[kind] == 0)
+                !kind.IsHonor && kind.Number == 1 && this[kind] == 0 && this[kind.Id + 1] == 0 ||
+                !kind.IsHonor && kind.Number is >= 2 and <= 8 && this[kind.Id - 1] == 0 && this[kind] == 0 && this[kind.Id + 1] == 0 ||
+                !kind.IsHonor && kind.Number == 9 && this[kind.Id - 1] == 0 && this[kind] == 0)
             {
                 isolatations.Add(kind);
             }

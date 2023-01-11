@@ -3,7 +3,7 @@
 /// <summary>
 /// 牌種別
 /// </summary>
-internal class TileKind : ValueObject<TileKind>
+internal class TileKind : ValueObject<TileKind>, IComparable<TileKind>
 {
     public static TileKind Man1 { get; } = new(MAN1);
     public static TileKind Man2 { get; } = new(MAN2);
@@ -147,13 +147,14 @@ internal class TileKind : ValueObject<TileKind>
         };
     }
 
-    public static TileKind operator +(TileKind x, int y) => new(x.Id + y);
-
-    public static TileKind operator -(TileKind x, int y) => new(x.Id - y);
-
     public static bool operator <(TileKind x, TileKind y) => x.Id < y.Id;
 
     public static bool operator >(TileKind x, TileKind y) => x.Id > y.Id;
+
+    public int CompareTo(TileKind? other)
+    {
+        return other is TileKind x ? -x.Id.CompareTo(Id) : 1;
+    }
 
     #region ValueObject<T>の実装
 
