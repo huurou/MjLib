@@ -119,11 +119,6 @@ internal class TileKindList : List<TileKind>, IEquatable<TileKindList>, ICompara
         return $"{mans}{pins}{sous}{honors}";
     }
 
-    public override string ToString()
-    {
-        return string.Join("", this);
-    }
-
     public static bool operator ==(TileKindList? x, TileKindList? y) => x?.Equals(y) ?? y is null;
 
     public static bool operator !=(TileKindList? x, TileKindList? y) => !(x == y);
@@ -145,6 +140,11 @@ internal class TileKindList : List<TileKind>, IEquatable<TileKindList>, ICompara
             if (this[i] < other[i]) return -1;
         }
         return Count > other.Count ? 1 : Count < other.Count ? -1 : 0;
+    }
+
+    public override string ToString()
+    {
+        return string.Join("", this);
     }
 
     public override bool Equals(object? obj)

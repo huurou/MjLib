@@ -1,16 +1,16 @@
 ﻿namespace MjLib.HandCalculating.Fus;
 
-internal abstract class Fu
+internal abstract class Fu : ValueObject<Fu>
 {
     public static Base Base { get; } = new();
-    public static ChuchanMinko ChuchanMinko { get; } = new();
-    public static YaochuMinko YaochuMinko { get; } = new();
-    public static ChuchanAnko ChuchanAnko { get; } = new();
-    public static YaochuAnko YaochuAnko { get; } = new();
-    public static ChuchanMinkan ChuchanMinkan { get; } = new();
-    public static YaochuMinkan YaochuMinkan { get; } = new();
-    public static ChuchanAnkan ChuchanAnkan { get; } = new();
-    public static YaochuAnkan YaochuAnkan { get; } = new();
+    public static ChuuchanMinko ChuuchanMinko { get; } = new();
+    public static YaochuuMinko YaochuuMinko { get; } = new();
+    public static ChuuchanAnko ChuuchanAnko { get; } = new();
+    public static YaochuuAnko YaochuuAnko { get; } = new();
+    public static ChuuchanMinkan ChuuchanMinkan { get; } = new();
+    public static YaochuuMinkan YaochuuMinkan { get; } = new();
+    public static ChuuchanAnkan ChuuchanAnkan { get; } = new();
+    public static YaochuuAnkan YaochuuAnkan { get; } = new();
     public static PlayerWindToitsu PlayerWindToitsu { get; } = new();
     public static RoundWindToitsu RoundWindToitsu { get; } = new();
     public static DragonToitsu DragonToitsu { get; } = new();
@@ -19,11 +19,30 @@ internal abstract class Fu
     public static Tanki Tanki { get; } = new();
     public static Menzen Menzen { get; } = new();
     public static Tsumo Tsumo { get; } = new();
-    public static Chitoitsu Chitoitsu { get; } = new();
+    public static Chiitoitsu Chiitoitsu { get; } = new();
     public static OpenPinfuBase OpenPinfuBase { get; } = new();
 
     public abstract int Value { get; }
     public abstract string Reason { get; }
+
+    public override string ToString()
+    {
+        return $"{Reason}:{Value}符";
+    }
+
+    #region ValueObject<T>の実装
+
+    public override bool EqualsCore(ValueObject<Fu>? other)
+    {
+        return other is Fu x && x.Reason == Reason;
+    }
+
+    public override int GetHashCodeCore()
+    {
+        return new { Reason, Value }.GetHashCode();
+    }
+
+    #endregion ValueObject<T>の実装
 }
 
 internal class Base : Fu
@@ -33,102 +52,102 @@ internal class Base : Fu
     public override string Reason => "副底";
 }
 
-internal class ChuchanMinko : Fu
+internal class ChuuchanMinko : Fu
 {
     public override int Value => 2;
 
-    public override string Reason => "面子::中張明刻";
+    public override string Reason => "中張明刻";
 }
 
-internal class YaochuMinko : Fu
+internal class YaochuuMinko : Fu
 {
     public override int Value => 4;
 
-    public override string Reason => "面子::么九明刻";
+    public override string Reason => "么九明刻";
 }
 
-internal class ChuchanAnko : Fu
+internal class ChuuchanAnko : Fu
 {
     public override int Value => 4;
 
-    public override string Reason => "面子::中張暗刻";
+    public override string Reason => "中張暗刻";
 }
 
-internal class YaochuAnko : Fu
+internal class YaochuuAnko : Fu
 {
     public override int Value => 8;
 
-    public override string Reason => "面子::么九暗刻";
+    public override string Reason => "么九暗刻";
 }
 
-internal class ChuchanMinkan : Fu
+internal class ChuuchanMinkan : Fu
 {
     public override int Value => 8;
 
-    public override string Reason => "面子::中張明槓";
+    public override string Reason => "中張明槓";
 }
 
-internal class YaochuMinkan : Fu
+internal class YaochuuMinkan : Fu
 {
     public override int Value => 16;
 
-    public override string Reason => "面子::么九明槓";
+    public override string Reason => "么九明槓";
 }
 
-internal class ChuchanAnkan : Fu
+internal class ChuuchanAnkan : Fu
 {
     public override int Value => 16;
 
-    public override string Reason => "面子::中張暗槓";
+    public override string Reason => "中張暗槓";
 }
 
-internal class YaochuAnkan : Fu
+internal class YaochuuAnkan : Fu
 {
     public override int Value => 32;
 
-    public override string Reason => "面子::么九暗槓";
+    public override string Reason => "么九暗槓";
 }
 
 internal class PlayerWindToitsu : Fu
 {
     public override int Value => 2;
 
-    public override string Reason => "雀頭::自風";
+    public override string Reason => "自風雀頭";
 }
 
 internal class RoundWindToitsu : Fu
 {
     public override int Value => 2;
 
-    public override string Reason => "雀頭::場風";
+    public override string Reason => "場風雀頭";
 }
 
 internal class DragonToitsu : Fu
 {
     public override int Value => 2;
 
-    public override string Reason => "雀頭::三元牌";
+    public override string Reason => "三元牌雀頭";
 }
 
 internal class Kanchan : Fu
 {
     public override int Value => 2;
 
-    public override string Reason => "待ち::嵌張";
+    public override string Reason => "嵌張待ち";
 }
 
 internal class Penchan : Fu
 {
     public override int Value => 2;
 
-    public override string Reason => "待ち::辺張";
+    public override string Reason => "辺張待ち";
 }
 
 internal class Tanki : Fu
 {
     public override int Value => 2;
 
-    public override string Reason => "待ち::単騎";
+    public override string Reason => "単騎待ち";
 }
 
 internal class Menzen : Fu
@@ -145,7 +164,7 @@ internal class Tsumo : Fu
     public override string Reason => "自摸";
 }
 
-internal class Chitoitsu : Fu
+internal class Chiitoitsu : Fu
 {
     public override int Value => 25;
 

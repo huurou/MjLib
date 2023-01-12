@@ -93,9 +93,9 @@ internal class TileKind : ValueObject<TileKind>, IComparable<TileKind>
     public bool IsHonor => Id is >= TON and <= CHUN;
     public bool IsWind => Id is >= TON and <= PEI;
     public bool IsDragon => Id is >= HAKU and <= CHUN;
-    public bool IsChuchan => (IsMan || IsPin || IsSou) && Number is >= 2 and <= 8;
+    public bool IsChuuchan => (IsMan || IsPin || IsSou) && Number is >= 2 and <= 8;
     public bool IsRoutou => (IsMan || IsPin || IsSou) && Number is 1 or 9;
-    public bool IsYaochu => !IsChuchan;
+    public bool IsYaochuu => !IsChuuchan;
     public static IEnumerable<TileKind> AllKind => Enumerable.Range(ID_MIN, KIND_COUNT).Select(x => new TileKind(x));
 
     public TileKind(int id)

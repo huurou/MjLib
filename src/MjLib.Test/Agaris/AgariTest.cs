@@ -76,7 +76,7 @@ public class AgariTest
     }
 
     [Test]
-    public void IsAgariChitoitsuTest()
+    public void IsAgariChiitoitsuTest()
     {
         var kindList = TileKindList.Parse(pin: "1199", sou: "1133557799");
         Assert.That(Agari.IsAgari(kindList), Is.True);

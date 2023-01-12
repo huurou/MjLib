@@ -6,7 +6,7 @@ internal abstract class Yaku
     public static Chankan Chankan { get; } = new();
     public static Chanta Chanta { get; } = new();
     public static Chiihou Chiihou { get; } = new();
-    public static Chitoitsu Chitoitsu { get; } = new();
+    public static Chiitoitsu Chiitoitsu { get; } = new();
     public static Chinitsu Chinitsu { get; } = new();
     public static Chinroutou Chinroutou { get; } = new();
     public static Chun Chun { get; } = new();
@@ -41,7 +41,7 @@ internal abstract class Yaku
     public static Sankantsu Sankantsu { get; } = new();
     public static Sanshoku Sanshoku { get; } = new();
     public static Sanshokudoukou Sanshokudoukou { get; } = new();
-    public static Shosangen Shosangen { get; } = new();
+    public static Shousangen Shousangen { get; } = new();
     public static Shousuushii Shousuushii { get; } = new();
     public static Suuankou Suuankou { get; } = new();
     public static SuuankouTanki SuuankouTanki { get; } = new();
@@ -109,7 +109,7 @@ internal class Chiihou : Yaku
     public override bool IsYakuman => true;
 }
 
-internal class Chitoitsu : Yaku
+internal class Chiitoitsu : Yaku
 {
     public override string Name => "七対子";
 
@@ -494,7 +494,7 @@ internal class Sanshokudoukou : Yaku
     public override bool IsYakuman => false;
 }
 
-internal class Shosangen : Yaku
+internal class Shousangen : Yaku
 {
     public override string Name => "小三元";
 

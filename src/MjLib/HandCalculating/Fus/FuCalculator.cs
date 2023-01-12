@@ -37,15 +37,15 @@ internal static class FuCalculator
         config_ = config;
         fuuroList_ = fuuroList ?? new();
 
-        if (hand_.Count == 7) return new() { Fu.Chitoitsu };
-        CalcAtama();
+        if (hand_.Count == 7) return new() { Fu.Chiitoitsu };
+        CalcJantou();
         CalcWait();
         CalcMentsu();
         CalcBase();
         return fuList_;
     }
 
-    private static void CalcAtama()
+    private static void CalcJantou()
     {
         var toitsuTile = hand_.Toitsu[0];
         // 役牌雀頭符
@@ -72,9 +72,8 @@ internal static class FuCalculator
         if (winGroup_.IsShuntsu)
         {
             // ペンチャン待ち[12(3)] [(7)89]
-            if (winGroup_.Any(x => x.IsRoutou) &&
-                (winTile_.Number == 3 && winGroup_.IndexOf(winTile_) == 2 ||
-                winTile_.Number == 7 && winGroup_.IndexOf(winTile_) == 0))
+            if (winTile_.Number == 3 && winGroup_.IndexOf(winTile_) == 2 ||
+                winTile_.Number == 7 && winGroup_.IndexOf(winTile_) == 0)
             {
                 fuList_.Add(Fu.Penchan);
             }
@@ -93,25 +92,35 @@ internal static class FuCalculator
 
     private static void CalcMentsu()
     {
-        // 明刻扱いになるのはロンのときのアガリ面子と副露
-        foreach (var minko in config_.IsTsumo ? fuuroList_.Pons.Select(x => x.Tiles) : fuuroList_.Pons.Select(x => x.Tiles).Append(winGroup_))
+        //副露の明刻
+        foreach (var minko in fuuroList_.Pons.Select(x => x.Tiles))
         {
-            fuList_.Add(minko[0].IsChuchan ? Fu.ChuchanMinko : Fu.YaochuMinko);
+            fuList_.Add(minko[0].IsChuuchan ? Fu.ChuuchanMinko : Fu.YaochuuMinko);
         }
-        // 暗刻扱いになるのはツモのときのアガリ面子とそれ以外の手牌
-        foreach (var anko in config_.IsTsumo ? hand_.Koutsus : hand_.Koutsus.Where(x => x != winGroup_))
+        // シャンポン待ちロンアガリのとき明刻扱いになる
+        if (!config_.IsTsumo && winGroup_.IsKoutsu)
         {
-            fuList_.Add(anko[0].IsChuchan ? Fu.ChuchanAnko : Fu.YaochuAnko);
+            fuList_.Add(winGroup_[0].IsChuuchan ? Fu.ChuuchanMinko : Fu.YaochuuMinko);
+        }
+        // 手牌の暗刻
+        foreach (var anko in hand_.Koutsus.Where(x => x != winGroup_))
+        {
+            fuList_.Add(anko[0].IsChuuchan ? Fu.ChuuchanAnko : Fu.YaochuuAnko);
+        }
+        // シャンポン待ちツモアガリのとき暗刻扱いになる
+        if (config_.IsTsumo && winGroup_.IsKoutsu)
+        {
+            fuList_.Add(winGroup_[0].IsChuuchan ? Fu.ChuuchanAnko : Fu.YaochuuAnko);
         }
         // 明槓
         foreach (var minkan in fuuroList_.Minkans.Select(x => x.Tiles))
         {
-            fuList_.Add(minkan[0].IsChuchan ? Fu.ChuchanMinkan : Fu.YaochuMinkan);
+            fuList_.Add(minkan[0].IsChuuchan ? Fu.ChuuchanMinkan : Fu.YaochuuMinkan);
         }
         // 暗槓
         foreach (var ankan in fuuroList_.Ankans.Select(x => x.Tiles))
         {
-            fuList_.Add(ankan[0].IsChuchan ? Fu.ChuchanAnkan : Fu.YaochuAnkan);
+            fuList_.Add(ankan[0].IsChuuchan ? Fu.ChuuchanAnkan : Fu.YaochuuAnkan);
         }
     }
 
@@ -146,7 +155,6 @@ internal static class FuCalculator
             Wind.South => Nan,
             Wind.West => Sha,
             Wind.North => Pei,
-
             _ => throw new NotSupportedException()
         };
     }

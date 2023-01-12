@@ -22,10 +22,10 @@ internal static class Shanten
     /// </summary>
     /// <param name="hand">手牌 鳴かれた牌を含まない手牌</param>
     /// <returns>シャンテン数</returns>
-    public static int Calculate(TileKindList hand, bool useChitoitsu = true, bool useKokushi = true)
+    public static int Calculate(TileKindList hand, bool useChiitoitsu = true, bool useKokushi = true)
     {
         var shantens = new List<int> { CalculateForRegular(hand) };
-        if (useChitoitsu) shantens.Add(CalculateForChitoitsu(hand));
+        if (useChiitoitsu) shantens.Add(CalculateForChiitoitsu(hand));
         if (useKokushi) shantens.Add(CalculateForKokushi(hand));
         return shantens.Min();
     }
@@ -39,7 +39,7 @@ internal static class Shanten
         return minShanten_;
     }
 
-    public static int CalculateForChitoitsu(TileKindList hand)
+    public static int CalculateForChiitoitsu(TileKindList hand)
     {
         Init(hand);
         // 対子の数
@@ -54,11 +54,11 @@ internal static class Shanten
     {
         Init(hand);
         // 么九牌の対子の数
-        var yaochuToitsu = AllKind.Where(x => x.IsYaochu).Count(x => countArray_[x] >= 2);
+        var yaochuuToitsu = AllKind.Where(x => x.IsYaochuu).Count(x => countArray_[x] >= 2);
         // 么九牌の種類数
-        var yaochu = AllKind.Where(x => x.IsYaochu).Count(x => countArray_[x] != 0);
+        var yaochuu = AllKind.Where(x => x.IsYaochuu).Count(x => countArray_[x] != 0);
         // 13-么九牌 么九牌の対子があればシャンテン数一つ減る
-        return 13 - yaochu - (yaochuToitsu != 0 ? 1 : 0);
+        return 13 - yaochuu - (yaochuuToitsu != 0 ? 1 : 0);
     }
 
     private static void Init(TileKindList hand)

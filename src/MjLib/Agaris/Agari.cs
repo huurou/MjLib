@@ -23,18 +23,18 @@ internal static class Agari
         if (IsAgariForKokushi()) return true;
         // 国士無双でないのに1枚だけの字牌があるならアガリ形ではない
         if (AllKind.Where(x => x.IsHonor).Any(x => countArray_[x] == 1)) return false;
-        if (IsAgariForChitoitsu()) return true;
+        if (IsAgariForChiitoitsu()) return true;
         return IsAgariForRegular();
     }
 
     // 国士無双のアガリ形かどうか
     private static bool IsAgariForKokushi()
     {
-        return AllKind.Where(x => x.IsYaochu).Aggregate(1, (result, current) => result * countArray_[current]) == 2;
+        return AllKind.Where(x => x.IsYaochuu).Aggregate(1, (result, current) => result * countArray_[current]) == 2;
     }
 
     // 七対子のアガリ形かどうか
-    private static bool IsAgariForChitoitsu()
+    private static bool IsAgariForChiitoitsu()
     {
         return AllKind.Count(x => countArray_[x] == 2) == 7;
     }
