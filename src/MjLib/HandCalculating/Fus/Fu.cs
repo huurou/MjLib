@@ -19,7 +19,7 @@ internal abstract class Fu
     public static Tanki Tanki { get; } = new();
     public static Menzen Menzen { get; } = new();
     public static Tsumo Tsumo { get; } = new();
-    public static Chiitoitsu Chiitoitsu { get; } = new();
+    public static Chitoitsu Chitoitsu { get; } = new();
     public static OpenPinfuBase OpenPinfuBase { get; } = new();
 
     public abstract int Value { get; }
@@ -145,7 +145,7 @@ internal class Tsumo : Fu
     public override string Reason => "自摸";
 }
 
-internal class Chiitoitsu : Fu
+internal class Chitoitsu : Fu
 {
     public override int Value => 25;
 

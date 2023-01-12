@@ -79,31 +79,31 @@ public class ShantenTest
     }
 
     [Test]
-    public void ForChiitoitsuTest()
+    public void ForChitoitsuTest()
     {
         var kindList = TileKindList.Parse(man: "77", pin: "114477", sou: "114477");
-        Assert.That(Shanten.CalculateForChiitoitsu(kindList), Is.EqualTo(Shanten.AGARI_STATE));
+        Assert.That(Shanten.CalculateForChitoitsu(kindList), Is.EqualTo(Shanten.AGARI_STATE));
 
         kindList = TileKindList.Parse(man: "76", pin: "114477", sou: "114477");
-        Assert.That(Shanten.CalculateForChiitoitsu(kindList), Is.EqualTo(0));
+        Assert.That(Shanten.CalculateForChitoitsu(kindList), Is.EqualTo(0));
 
         kindList = TileKindList.Parse(man: "76", pin: "114479", sou: "114477");
-        Assert.That(Shanten.CalculateForChiitoitsu(kindList), Is.EqualTo(1));
+        Assert.That(Shanten.CalculateForChitoitsu(kindList), Is.EqualTo(1));
 
         kindList = TileKindList.Parse(man: "76", pin: "14479", sou: "114477", honor: "1");
-        Assert.That(Shanten.CalculateForChiitoitsu(kindList), Is.EqualTo(2));
+        Assert.That(Shanten.CalculateForChitoitsu(kindList), Is.EqualTo(2));
 
         kindList = TileKindList.Parse(man: "76", pin: "13479", sou: "114477", honor: "1");
-        Assert.That(Shanten.CalculateForChiitoitsu(kindList), Is.EqualTo(3));
+        Assert.That(Shanten.CalculateForChitoitsu(kindList), Is.EqualTo(3));
 
         kindList = TileKindList.Parse(man: "76", pin: "13479", sou: "114467", honor: "1");
-        Assert.That(Shanten.CalculateForChiitoitsu(kindList), Is.EqualTo(4));
+        Assert.That(Shanten.CalculateForChitoitsu(kindList), Is.EqualTo(4));
 
         kindList = TileKindList.Parse(man: "76", pin: "13479", sou: "113467", honor: "1");
-        Assert.That(Shanten.CalculateForChiitoitsu(kindList), Is.EqualTo(5));
+        Assert.That(Shanten.CalculateForChitoitsu(kindList), Is.EqualTo(5));
 
         kindList = TileKindList.Parse(man: "76", pin: "13479", sou: "123467", honor: "1");
-        Assert.That(Shanten.CalculateForChiitoitsu(kindList), Is.EqualTo(6));
+        Assert.That(Shanten.CalculateForChitoitsu(kindList), Is.EqualTo(6));
     }
 
     [Test]

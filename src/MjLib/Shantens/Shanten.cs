@@ -22,10 +22,10 @@ internal static class Shanten
     /// </summary>
     /// <param name="hand">手牌 鳴かれた牌を含まない手牌</param>
     /// <returns>シャンテン数</returns>
-    public static int Calculate(TileKindList hand, bool useChiitoitsu = true, bool useKokushi = true)
+    public static int Calculate(TileKindList hand, bool useChitoitsu = true, bool useKokushi = true)
     {
         var shantens = new List<int> { CalculateForRegular(hand) };
-        if (useChiitoitsu) shantens.Add(CalculateForChiitoitsu(hand));
+        if (useChitoitsu) shantens.Add(CalculateForChitoitsu(hand));
         if (useKokushi) shantens.Add(CalculateForKokushi(hand));
         return shantens.Min();
     }
@@ -39,7 +39,7 @@ internal static class Shanten
         return minShanten_;
     }
 
-    public static int CalculateForChiitoitsu(TileKindList hand)
+    public static int CalculateForChitoitsu(TileKindList hand)
     {
         Init(hand);
         // 対子の数

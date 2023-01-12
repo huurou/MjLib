@@ -63,7 +63,7 @@ public class HandDevideTest
     }
 
     [Test]
-    public void ChiitoitsuLikeHandDividingTest()
+    public void ChitoitsuLikeHandDividingTest()
     {
         var hand = TileKindList.Parse(man: "112233", pin: "99", sou: "445566");
         var actual = HandDevider.Devide(hand);

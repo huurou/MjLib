@@ -23,7 +23,7 @@ internal static class Agari
         if (IsAgariForKokushi()) return true;
         // 国士無双でないのに1枚だけの字牌があるならアガリ形ではない
         if (AllKind.Where(x => x.IsHonor).Any(x => countArray_[x] == 1)) return false;
-        if (IsAgariForChiitoitsu()) return true;
+        if (IsAgariForChitoitsu()) return true;
         return IsAgariForRegular();
     }
 
@@ -34,7 +34,7 @@ internal static class Agari
     }
 
     // 七対子のアガリ形かどうか
-    private static bool IsAgariForChiitoitsu()
+    private static bool IsAgariForChitoitsu()
     {
         return AllKind.Count(x => countArray_[x] == 2) == 7;
     }

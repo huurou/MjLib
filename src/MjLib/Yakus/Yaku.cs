@@ -6,7 +6,7 @@ internal abstract class Yaku
     public static Chankan Chankan { get; } = new();
     public static Chanta Chanta { get; } = new();
     public static Chiihou Chiihou { get; } = new();
-    public static Chiitoitsu Chiitoitsu { get; } = new();
+    public static Chitoitsu Chitoitsu { get; } = new();
     public static Chinitsu Chinitsu { get; } = new();
     public static Chinroutou Chinroutou { get; } = new();
     public static Chun Chun { get; } = new();
@@ -109,7 +109,7 @@ internal class Chiihou : Yaku
     public override bool IsYakuman => true;
 }
 
-internal class Chiitoitsu : Yaku
+internal class Chitoitsu : Yaku
 {
     public override string Name => "七対子";
 

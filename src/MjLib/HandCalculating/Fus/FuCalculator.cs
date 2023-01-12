@@ -37,7 +37,7 @@ internal static class FuCalculator
         config_ = config;
         fuuroList_ = fuuroList ?? new();
 
-        if (hand_.Count == 7) return new() { Fu.Chiitoitsu };
+        if (hand_.Count == 7) return new() { Fu.Chitoitsu };
         CalcAtama();
         CalcWait();
         CalcMentsu();
