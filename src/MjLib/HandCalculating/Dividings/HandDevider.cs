@@ -18,6 +18,7 @@ internal static class HandDevider
         countArray_ = hand.ToTileCountArray();
 
         var hands = new List<TileKindListList>();
+        var requiredMentsuCount = hand.Count / 3 + 1;
         var toitsuKinds = FindToitsuKinds();
         foreach (var toitsuKind in toitsuKinds)
         {
@@ -27,19 +28,16 @@ internal static class HandDevider
             var man = FindValidCombinations(copiedArray, Man1);
             var pin = FindValidCombinations(copiedArray, Pin1);
             var sou = FindValidCombinations(copiedArray, Sou1);
-            var honor = new List<TileKindListList>
-            {
-                new(AllKind.Where(x => x.IsHonor && copiedArray[x] == 3).Select(x =>new TileKindList(Enumerable.Repeat(x, 3))))
-            };
+            var honor = new TileKindListList(AllKind.Where(x => x.IsHonor && copiedArray[x] == 3).Select(x => new TileKindList(Enumerable.Repeat(x, 3))));
             var suits = new List<List<TileKindListList>> { new() { new() { new(Enumerable.Repeat(toitsuKind, 2)) } } };
             if (man.Any()) suits.Add(man);
             if (pin.Any()) suits.Add(pin);
             if (sou.Any()) suits.Add(sou);
-            if (honor.Any()) suits.Add(honor);
+            if (honor.Any()) suits.Add(new List<TileKindListList> { honor });
             foreach (var p in Product(suits))
             {
                 var h = new TileKindListList(p.SelectMany(x => x));
-                if (h.Count == 5)
+                if (h.Count == requiredMentsuCount)
                 {
                     h.Sort((x, y) => x[0].CompareTo(y[0]));
                     hands.Add(h);

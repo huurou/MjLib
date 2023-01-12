@@ -13,8 +13,14 @@ internal class TileKindListList : List<TileKindList>, IEquatable<TileKindListLis
     public TileKindListList()
         : base() { }
 
-    public TileKindListList(IEnumerable<TileKindList> kindList)
-        : base(kindList) { }
+    public TileKindListList(IEnumerable<TileKindList> kindLists)
+        : base(kindLists) { }
+
+    public TileKindListList(params TileKindList[] kindLists)
+        : this(kindLists.AsEnumerable()) { }
+
+    public TileKindListList(params string[] sets)
+        : this(sets.Select(TileKindList.Parse)) { }
 
     public override string ToString()
     {
@@ -23,6 +29,6 @@ internal class TileKindListList : List<TileKindList>, IEquatable<TileKindListLis
 
     public bool Equals(TileKindListList? other)
     {
-        return other is TileKindListList x &&x.SequenceEqual(this);
+        return other is TileKindListList x && x.SequenceEqual(this);
     }
 }
