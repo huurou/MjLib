@@ -215,7 +215,7 @@ public class TileKindTest
     }
 
     [Test]
-    public void IsWind()
+    public void IsWindTest()
     {
         Assert.Multiple(() =>
         {
@@ -257,7 +257,7 @@ public class TileKindTest
     }
 
     [Test]
-    public void IsDragon()
+    public void IsDragonTest()
     {
         Assert.Multiple(() =>
         {
@@ -299,86 +299,86 @@ public class TileKindTest
     }
 
     [Test]
-    public void IsChuchan()
+    public void IsChuuchanTest()
     {
         Assert.Multiple(() =>
         {
-            Assert.That(Man1.IsChuchan, Is.False);
-            Assert.That(Man2.IsChuchan, Is.True);
-            Assert.That(Man3.IsChuchan, Is.True);
-            Assert.That(Man4.IsChuchan, Is.True);
-            Assert.That(Man5.IsChuchan, Is.True);
-            Assert.That(Man6.IsChuchan, Is.True);
-            Assert.That(Man7.IsChuchan, Is.True);
-            Assert.That(Man8.IsChuchan, Is.True);
-            Assert.That(Man9.IsChuchan, Is.False);
-            Assert.That(Pin1.IsChuchan, Is.False);
-            Assert.That(Pin2.IsChuchan, Is.True);
-            Assert.That(Pin3.IsChuchan, Is.True);
-            Assert.That(Pin4.IsChuchan, Is.True);
-            Assert.That(Pin5.IsChuchan, Is.True);
-            Assert.That(Pin6.IsChuchan, Is.True);
-            Assert.That(Pin7.IsChuchan, Is.True);
-            Assert.That(Pin8.IsChuchan, Is.True);
-            Assert.That(Pin9.IsChuchan, Is.False);
-            Assert.That(Sou1.IsChuchan, Is.False);
-            Assert.That(Sou2.IsChuchan, Is.True);
-            Assert.That(Sou3.IsChuchan, Is.True);
-            Assert.That(Sou4.IsChuchan, Is.True);
-            Assert.That(Sou5.IsChuchan, Is.True);
-            Assert.That(Sou6.IsChuchan, Is.True);
-            Assert.That(Sou7.IsChuchan, Is.True);
-            Assert.That(Sou8.IsChuchan, Is.True);
-            Assert.That(Sou9.IsChuchan, Is.False);
-            Assert.That(Ton.IsChuchan, Is.False);
-            Assert.That(Nan.IsChuchan, Is.False);
-            Assert.That(Sha.IsChuchan, Is.False);
-            Assert.That(Pei.IsChuchan, Is.False);
-            Assert.That(Haku.IsChuchan, Is.False);
-            Assert.That(Hatsu.IsChuchan, Is.False);
-            Assert.That(Chun.IsChuchan, Is.False);
+            Assert.That(Man1.IsChuuchan, Is.False);
+            Assert.That(Man2.IsChuuchan, Is.True);
+            Assert.That(Man3.IsChuuchan, Is.True);
+            Assert.That(Man4.IsChuuchan, Is.True);
+            Assert.That(Man5.IsChuuchan, Is.True);
+            Assert.That(Man6.IsChuuchan, Is.True);
+            Assert.That(Man7.IsChuuchan, Is.True);
+            Assert.That(Man8.IsChuuchan, Is.True);
+            Assert.That(Man9.IsChuuchan, Is.False);
+            Assert.That(Pin1.IsChuuchan, Is.False);
+            Assert.That(Pin2.IsChuuchan, Is.True);
+            Assert.That(Pin3.IsChuuchan, Is.True);
+            Assert.That(Pin4.IsChuuchan, Is.True);
+            Assert.That(Pin5.IsChuuchan, Is.True);
+            Assert.That(Pin6.IsChuuchan, Is.True);
+            Assert.That(Pin7.IsChuuchan, Is.True);
+            Assert.That(Pin8.IsChuuchan, Is.True);
+            Assert.That(Pin9.IsChuuchan, Is.False);
+            Assert.That(Sou1.IsChuuchan, Is.False);
+            Assert.That(Sou2.IsChuuchan, Is.True);
+            Assert.That(Sou3.IsChuuchan, Is.True);
+            Assert.That(Sou4.IsChuuchan, Is.True);
+            Assert.That(Sou5.IsChuuchan, Is.True);
+            Assert.That(Sou6.IsChuuchan, Is.True);
+            Assert.That(Sou7.IsChuuchan, Is.True);
+            Assert.That(Sou8.IsChuuchan, Is.True);
+            Assert.That(Sou9.IsChuuchan, Is.False);
+            Assert.That(Ton.IsChuuchan, Is.False);
+            Assert.That(Nan.IsChuuchan, Is.False);
+            Assert.That(Sha.IsChuuchan, Is.False);
+            Assert.That(Pei.IsChuuchan, Is.False);
+            Assert.That(Haku.IsChuuchan, Is.False);
+            Assert.That(Hatsu.IsChuuchan, Is.False);
+            Assert.That(Chun.IsChuuchan, Is.False);
         });
     }
 
     [Test]
-    public void IsYaochu()
+    public void IsYaochuuTest()
     {
         Assert.Multiple(() =>
         {
-            Assert.That(Man1.IsYaochu, Is.True);
-            Assert.That(Man2.IsYaochu, Is.False);
-            Assert.That(Man3.IsYaochu, Is.False);
-            Assert.That(Man4.IsYaochu, Is.False);
-            Assert.That(Man5.IsYaochu, Is.False);
-            Assert.That(Man6.IsYaochu, Is.False);
-            Assert.That(Man7.IsYaochu, Is.False);
-            Assert.That(Man8.IsYaochu, Is.False);
-            Assert.That(Man9.IsYaochu, Is.True);
-            Assert.That(Pin1.IsYaochu, Is.True);
-            Assert.That(Pin2.IsYaochu, Is.False);
-            Assert.That(Pin3.IsYaochu, Is.False);
-            Assert.That(Pin4.IsYaochu, Is.False);
-            Assert.That(Pin5.IsYaochu, Is.False);
-            Assert.That(Pin6.IsYaochu, Is.False);
-            Assert.That(Pin7.IsYaochu, Is.False);
-            Assert.That(Pin8.IsYaochu, Is.False);
-            Assert.That(Pin9.IsYaochu, Is.True);
-            Assert.That(Sou1.IsYaochu, Is.True);
-            Assert.That(Sou2.IsYaochu, Is.False);
-            Assert.That(Sou3.IsYaochu, Is.False);
-            Assert.That(Sou4.IsYaochu, Is.False);
-            Assert.That(Sou5.IsYaochu, Is.False);
-            Assert.That(Sou6.IsYaochu, Is.False);
-            Assert.That(Sou7.IsYaochu, Is.False);
-            Assert.That(Sou8.IsYaochu, Is.False);
-            Assert.That(Sou9.IsYaochu, Is.True);
-            Assert.That(Ton.IsYaochu, Is.True);
-            Assert.That(Nan.IsYaochu, Is.True);
-            Assert.That(Sha.IsYaochu, Is.True);
-            Assert.That(Pei.IsYaochu, Is.True);
-            Assert.That(Haku.IsYaochu, Is.True);
-            Assert.That(Hatsu.IsYaochu, Is.True);
-            Assert.That(Chun.IsYaochu, Is.True);
+            Assert.That(Man1.IsYaochuu, Is.True);
+            Assert.That(Man2.IsYaochuu, Is.False);
+            Assert.That(Man3.IsYaochuu, Is.False);
+            Assert.That(Man4.IsYaochuu, Is.False);
+            Assert.That(Man5.IsYaochuu, Is.False);
+            Assert.That(Man6.IsYaochuu, Is.False);
+            Assert.That(Man7.IsYaochuu, Is.False);
+            Assert.That(Man8.IsYaochuu, Is.False);
+            Assert.That(Man9.IsYaochuu, Is.True);
+            Assert.That(Pin1.IsYaochuu, Is.True);
+            Assert.That(Pin2.IsYaochuu, Is.False);
+            Assert.That(Pin3.IsYaochuu, Is.False);
+            Assert.That(Pin4.IsYaochuu, Is.False);
+            Assert.That(Pin5.IsYaochuu, Is.False);
+            Assert.That(Pin6.IsYaochuu, Is.False);
+            Assert.That(Pin7.IsYaochuu, Is.False);
+            Assert.That(Pin8.IsYaochuu, Is.False);
+            Assert.That(Pin9.IsYaochuu, Is.True);
+            Assert.That(Sou1.IsYaochuu, Is.True);
+            Assert.That(Sou2.IsYaochuu, Is.False);
+            Assert.That(Sou3.IsYaochuu, Is.False);
+            Assert.That(Sou4.IsYaochuu, Is.False);
+            Assert.That(Sou5.IsYaochuu, Is.False);
+            Assert.That(Sou6.IsYaochuu, Is.False);
+            Assert.That(Sou7.IsYaochuu, Is.False);
+            Assert.That(Sou8.IsYaochuu, Is.False);
+            Assert.That(Sou9.IsYaochuu, Is.True);
+            Assert.That(Ton.IsYaochuu, Is.True);
+            Assert.That(Nan.IsYaochuu, Is.True);
+            Assert.That(Sha.IsYaochuu, Is.True);
+            Assert.That(Pei.IsYaochuu, Is.True);
+            Assert.That(Haku.IsYaochuu, Is.True);
+            Assert.That(Hatsu.IsYaochuu, Is.True);
+            Assert.That(Chun.IsYaochuu, Is.True);
         });
     }
 }
