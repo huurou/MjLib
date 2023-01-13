@@ -1,4 +1,4 @@
-﻿namespace MjLib.Yakus;
+﻿namespace MjLib.HandCalculating.Yakus;
 
 internal abstract class Yaku
 {

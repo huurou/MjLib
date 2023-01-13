@@ -75,7 +75,7 @@ internal class HandConfig
     public Wind RoundWind { get; init; } = Wind.East;
 
     /// <summary>
-    /// 親
+    /// プレイヤーが親かどうか
     /// </summary>
     public bool IsDealer => PlayerWind == Wind.East;
 }
