@@ -70,8 +70,10 @@ internal static class ScoreCalcurator
             sixRounded = doubleRounded * 3;
         }
 
-        return config.IsTsumo
-            ? new Score(fu, han, doubleRounded, config.IsDealer ? doubleRounded : rounded)
-            : new Score(fu, han, config.IsDealer ? sixRounded : fourRounded, 0);
+        return new()
+        {
+            Main = config.IsTsumo ? doubleRounded : config.IsDealer ? sixRounded : fourRounded,
+            Sub = config.IsTsumo ? config.IsDealer ? doubleRounded : rounded : 0,
+        };
     }
 }

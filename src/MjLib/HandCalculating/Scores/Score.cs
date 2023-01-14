@@ -9,42 +9,29 @@
 /// </summary>
 internal class Score : ValueObject<Score>
 {
-    public int Fu { get; }
-    public int Han { get; }
-
     /// <summary>
     /// ツモ時:親の点数 ロン:手の点数
     /// </summary>
-    public int Main { get; }
+    public int Main { get; init; }
     /// <summary>
     /// ツモ:子の点数 ロン:なし
     /// </summary>
-    public int Sub { get; }
-
-    public Score(int fu, int han, int main, int sub)
-    {
-        Fu = fu;
-        Han = han;
-        Main = main;
-        Sub = sub;
-    }
+    public int Sub { get; init; }
 
     public override bool EqualsCore(ValueObject<Score>? other)
     {
         return other is Score x &&
-            x.Fu == Fu &&
-            x.Han == Han &&
             x.Main == Main &&
             x.Sub == Sub;
     }
 
     public override int GetHashCodeCore()
     {
-        return new { Fu, Han, Main, Sub }.GetHashCode();
+        return new { Main, Sub }.GetHashCode();
     }
 
     public override string ToString()
     {
-        return $"{Fu}符{Han}翻{Main}-{Sub}";
+        return $"{Main}-{Sub}";
     }
 }

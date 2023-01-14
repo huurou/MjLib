@@ -23,7 +23,7 @@ internal static class FuCalculator
     /// <param name="config">HandConfig</param>
     /// <param name="fuuroList">副露のリスト</param>
     /// <returns></returns>
-    internal static FuList Calc(
+    internal static FuList Calculate(
         TileKindListList hand,
         TileKind winTile,
         TileKindList winGroup,

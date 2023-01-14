@@ -47,7 +47,7 @@ internal class HandConfig
     /// <summary>
     /// 流し満貫
     /// </summary>
-    public bool IsNagashiMangan { get; init; } = false;
+    public bool IsNagashimangan { get; init; } = false;
 
     /// <summary>
     /// 天和

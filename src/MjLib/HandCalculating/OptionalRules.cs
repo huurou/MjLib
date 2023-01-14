@@ -13,7 +13,7 @@ internal class OptionalRules
     /// <summary>
     /// ダブル役満あり/なし
     /// </summary>
-    public bool HasDoubleYakuman { get; init; }=true;
+    public bool HasDoubleYakuman { get; init; } = true;
 
     /// <summary>
     /// 数え役満あり/なし
@@ -39,7 +39,6 @@ internal class OptionalRules
     /// 大車輪あり/なし
     /// </summary>
     public bool HasDaisharin { get; init; } = false;
-
 }
 
 internal enum Kazoe

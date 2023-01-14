@@ -31,4 +31,14 @@ internal class TileKindListList : List<TileKindList>, IEquatable<TileKindListLis
     {
         return other is TileKindListList x && x.SequenceEqual(this);
     }
+
+    public override bool Equals(object? obj)
+    {
+        return Equals(obj as TileKindListList);
+    }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
 }
