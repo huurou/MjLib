@@ -54,11 +54,11 @@ internal static class YakuEvaluator
         }
         if (hand.Any(x => x.IsShuntsu))
         {
-            EvaluateShuntsu(yakuList,hand,winGroup);
+            EvaluateShuntsu(yakuList, hand, winGroup);
         }
         if (hand.Any(x => x.IsKoutsu))
         {
-            EvaluateKoutsu(yakuList,hand,winGroup);
+            EvaluateKoutsu(yakuList, hand, winGroup);
         }
         return yakuList;
     }
@@ -130,7 +130,7 @@ internal static class YakuEvaluator
         {
             yakuList.Add(Yaku.Tsuuiisou);
         }
-        if (Honroto.Valid(hand))
+        if (Honrouto.Valid(hand))
         {
             yakuList.Add(Yaku.Honroto);
         }
@@ -178,9 +178,9 @@ internal static class YakuEvaluator
         {
             yakuList.Add(Yaku.Ryanpeikou);
         }
-        else if(Iipeiko.Valid(hand, fuuroList_))
+        else if (Iipeikou.Valid(hand, fuuroList_))
         {
-            yakuList.Add(Yaku.Iipeiko);
+            yakuList.Add(Yaku.Iipeikou);
         }
         if (Sanshoku.Valid(hand))
         {
