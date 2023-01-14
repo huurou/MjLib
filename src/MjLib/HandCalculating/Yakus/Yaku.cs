@@ -1,6 +1,8 @@
 ﻿using MjLib.Fuuros;
 using MjLib.HandCalculating.Dividings;
 using MjLib.HandCalculating.Fus;
+using MjLib.TileKinds;
+using System.Diagnostics.CodeAnalysis;
 using static MjLib.TileKinds.TileKind;
 
 namespace MjLib.HandCalculating.Yakus;
@@ -107,7 +109,7 @@ internal class Chankan : Yaku
     public override int HanClosed => 1;
     public override bool IsYakuman => false;
 
-    public bool Valid(HandConfig config)
+    public static bool Valid(HandConfig config)
     {
         return config.IsChankan;
     }
@@ -120,6 +122,16 @@ internal class Chanta : Yaku
     public override int HanOpen => 1;
     public override int HanClosed => 2;
     public override bool IsYakuman => false;
+
+    public static bool Valid(TileKindListList hand)
+    {
+        var shuntus = hand.Count(x => x.IsShuntsu);
+        var routou = hand.Count(x => x.Any(y => y.IsRoutou));
+        var honor = hand.Count(x => x[0].IsHonor);
+        return shuntus != 0 &&
+            routou + honor == 5 &&
+            routou != 0 && honor != 0;
+    }
 }
 
 internal class Chiihou : Yaku
@@ -130,7 +142,7 @@ internal class Chiihou : Yaku
     public override int HanClosed => 13;
     public override bool IsYakuman => true;
 
-    public bool Valid(HandConfig config)
+    public static bool Valid(HandConfig config)
     {
         return config.IsChiihou;
     }
@@ -144,7 +156,7 @@ internal class Chiitoitsu : Yaku
     public override int HanClosed => 2;
     public override bool IsYakuman => false;
 
-    public bool Valid(TileKindListList hand)
+    public static bool Valid(TileKindListList hand)
     {
         return hand.Count == 7 && hand.All(x => x.IsToitsu);
     }
@@ -157,6 +169,15 @@ internal class Chinitsu : Yaku
     public override int HanOpen => 5;
     public override int HanClosed => 6;
     public override bool IsYakuman => false;
+
+    public static bool Valid(TileKindListList hand)
+    {
+        var man = hand.Count(x => x[0].IsMan);
+        var pin = hand.Count(x => x[0].IsPin);
+        var sou = hand.Count(x => x[0].IsSou);
+        var honor = hand.Count(x => x[0].IsHonor);
+        return new[] { man, pin, sou }.Count(x => x != 0) == 1 && honor == 0;
+    }
 }
 
 internal class Chinroutou : Yaku
@@ -166,6 +187,11 @@ internal class Chinroutou : Yaku
     public override int HanOpen => 13;
     public override int HanClosed => 13;
     public override bool IsYakuman => true;
+
+    public static bool Valid(TileKindListList hand)
+    {
+        return hand.SelectMany(x => x).All(x => x.IsRoutou);
+    }
 }
 
 internal class Chun : Yaku
@@ -227,7 +253,7 @@ internal class Daisharin : Yaku
     public override int Id => 45;
     public override string Name => "大車輪"; public override int HanOpen => 0; public override int HanClosed => 13; public override bool IsYakuman => true;
 
-    public bool Valid(TileKindListList hand, OptionalRules rules)
+    public static bool Valid(TileKindListList hand, OptionalRules rules)
     {
         return hand.Equals(new TileKindListList
             {
@@ -268,7 +294,7 @@ internal class Haitei : Yaku
     public override int HanClosed => 1;
     public override bool IsYakuman => false;
 
-    public bool Valid(HandConfig config)
+    public static bool Valid(HandConfig config)
     {
         return config.IsHaitei;
     }
@@ -300,16 +326,12 @@ internal class Honitsu : Yaku
     public override int HanClosed => 3;
     public override bool IsYakuman => false;
 
-    public bool Valid(TileKindListList hand)
+    public static bool Valid(TileKindListList hand)
     {
-        var (man, pin, sou, honor) = (0, 0, 0, 0);
-        foreach (var item in hand)
-        {
-            if (item[0].IsMan) man++;
-            else if (item[0].IsPin) pin++;
-            else if (item[0].IsSou) sou++;
-            else if (item[0].IsHonor) honor++;
-        }
+        var man = hand.Count(x => x[0].IsMan);
+        var pin = hand.Count(x => x[0].IsPin);
+        var sou = hand.Count(x => x[0].IsSou);
+        var honor = hand.Count(x => x[0].IsHonor);
         return new[] { man, pin, sou }.Count(x => x != 0) == 1 && honor != 0;
     }
 }
@@ -321,6 +343,11 @@ internal class Honroto : Yaku
     public override int HanOpen => 2;
     public override int HanClosed => 2;
     public override bool IsYakuman => false;
+
+    public static bool Valid(TileKindListList hand)
+    {
+        return hand.SelectMany(x => x).All(x => x.IsYaochuu);
+    }
 }
 
 internal class Houtei : Yaku
@@ -331,7 +358,7 @@ internal class Houtei : Yaku
     public override int HanClosed => 1;
     public override bool IsYakuman => false;
 
-    public bool Valid(HandConfig config)
+    public static bool Valid(HandConfig config)
     {
         return config.IsHoutei;
     }
@@ -344,6 +371,15 @@ internal class Iipeiko : Yaku
     public override int HanOpen => 0;
     public override int HanClosed => 1;
     public override bool IsYakuman => false;
+
+    public static bool Valid(TileKindListList hand, FuuroList fuuroList)
+    {
+        if (!fuuroList.HasOpen) return false;
+        var shuntsus = hand.Where(x => x.IsShuntsu);
+        if (!shuntsus.Any()) return false;
+        var count = shuntsus.Max(x => shuntsus.Count(x.Equals));
+        return count >= 2;
+    }
 }
 
 internal class Ippatsu : Yaku
@@ -354,7 +390,7 @@ internal class Ippatsu : Yaku
     public override int HanClosed => 1;
     public override bool IsYakuman => false;
 
-    public bool Valid(HandConfig config)
+    public static bool Valid(HandConfig config)
     {
         return config.IsIppatsu;
     }
@@ -367,6 +403,46 @@ internal class Ittsu : Yaku
     public override int HanOpen => 1;
     public override int HanClosed => 2;
     public override bool IsYakuman => false;
+
+    public static bool Valid(TileKindListList hand)
+    {
+        var shuntsus = hand.Where(x => x.IsShuntsu);
+        if (shuntsus.Count() < 3) return false;
+        var suits = new[]
+        {
+            shuntsus.Where(x=>x[0].IsMan),
+            shuntsus.Where(x=>x[0].IsPin),
+            shuntsus.Where(x=>x[0].IsSou),
+        };
+        foreach (var suit in suits)
+        {
+            if (suit.Count() < 3) continue;
+            var casted = suit.Select(x => x.Select(y => y.Number));
+            return casted.Contains(new[] { 1, 2, 3 }, IntEnumerableEqualityComparer.Singleton)
+                && casted.Contains(new[] { 4, 5, 6 }, IntEnumerableEqualityComparer.Singleton)
+                && casted.Contains(new[] { 7, 8, 9 }, IntEnumerableEqualityComparer.Singleton);
+        }
+        return false;
+    }
+
+    private class IntEnumerableEqualityComparer : IEqualityComparer<IEnumerable<int>>
+    {
+        public static IntEnumerableEqualityComparer Singleton { get; } = new();
+
+        private IntEnumerableEqualityComparer()
+        { }
+
+        public bool Equals(IEnumerable<int>? x, IEnumerable<int>? y)
+        {
+            return (x is null && y is null) ||
+                (x is not null && y is not null && x.SequenceEqual(y));
+        }
+
+        public int GetHashCode([DisallowNull] IEnumerable<int> obj)
+        {
+            return obj.GetHashCode();
+        }
+    }
 }
 
 internal class Junchan : Yaku
@@ -376,6 +452,13 @@ internal class Junchan : Yaku
     public override int HanOpen => 2;
     public override int HanClosed => 3;
     public override bool IsYakuman => false;
+
+    public static bool Valid(TileKindListList hand)
+    {
+        var shuntsu = hand.Count(x => x.IsShuntsu);
+        var routou = hand.Count(x => x.Any(x => x.IsRoutou));
+        return shuntsu != 0 && routou == 5;
+    }
 }
 
 internal class Kokushimusou : Yaku
@@ -401,7 +484,7 @@ internal class Pinfu : Yaku
     public override int Id => 10;
     public override string Name => "平和"; public override int HanOpen => 0; public override int HanClosed => 1; public override bool IsYakuman => false;
 
-    public bool Valid(FuList fuList, FuuroList fuuroList)
+    public static bool Valid(FuList fuList, FuuroList fuuroList)
     {
         return (fuList.Contains(Fu.Base) && fuList.Count == 1 ||
             fuList.Contains(Fu.Base) && fuList.Contains(Fu.Menzen) && fuList.Count == 2) &&
@@ -417,7 +500,7 @@ internal class Renhou : Yaku
     public override int HanClosed => 5;
     public override bool IsYakuman => false;
 
-    public bool Valid(HandConfig config, OptionalRules rules)
+    public static bool Valid(HandConfig config, OptionalRules rules)
     {
         return config.IsRenhou && !rules.RenhouAsYakuman;
     }
@@ -431,7 +514,7 @@ internal class RenhouYakuman : Yaku
     public override int HanClosed => 13;
     public override bool IsYakuman => true;
 
-    public bool Valid(HandConfig config, OptionalRules rules)
+    public static bool Valid(HandConfig config, OptionalRules rules)
     {
         return config.IsRenhou && rules.RenhouAsYakuman;
     }
@@ -454,7 +537,7 @@ internal class Rinshan : Yaku
     public override int HanClosed => 1;
     public override bool IsYakuman => false;
 
-    public bool Valid(HandConfig config)
+    public static bool Valid(HandConfig config)
     {
         return config.IsRinshan;
     }
@@ -467,6 +550,14 @@ internal class Ryanpeikou : Yaku
     public override int HanOpen => 0;
     public override int HanClosed => 3;
     public override bool IsYakuman => false;
+
+    public static bool Valid(TileKindListList hand, FuuroList fuuroList)
+    {
+        if (!fuuroList.HasOpen) return false;
+        var shuntsus = hand.Where(x => x.IsShuntsu);
+        var counts = shuntsus.Select(x => shuntsus.Count(x.Equals));
+        return counts.Count(x => x >= 2) == 4;
+    }
 }
 
 internal class Ryuuiisou : Yaku
@@ -476,6 +567,12 @@ internal class Ryuuiisou : Yaku
     public override int HanOpen => 13;
     public override int HanClosed => 13;
     public override bool IsYakuman => true;
+
+    public static bool Valid(TileKindListList hand)
+    {
+        var greens = new[] { Sou2, Sou3, Sou4, Sou6, Sou8, TileKind.Hatsu };
+        return hand.SelectMany(x => x).Distinct().All(x => greens.Contains(x));
+    }
 }
 
 internal class Sanankou : Yaku
@@ -503,6 +600,34 @@ internal class Sanshoku : Yaku
     public override int HanOpen => 1;
     public override int HanClosed => 2;
     public override bool IsYakuman => false;
+
+    public static bool Valid(TileKindListList hand)
+    {
+        var shuntsus = hand.Where(x => x.IsShuntsu);
+        if (shuntsus.Count() < 3) return false;
+        var mans = shuntsus.Where(x => x[0].IsMan);
+        var pins = shuntsus.Where(x => x[0].IsPin);
+        var sous = shuntsus.Where(x => x[0].IsSou);
+        foreach (var man in mans)
+        {
+            foreach (var pin in pins)
+            {
+                foreach (var sou in sous)
+                {
+                    var manNum = man.Select(x => x.Number);
+                    var pinNum = pin.Select(x => x.Number);
+                    var souNum = sou.Select(x => x.Number);
+                    if (manNum.SequenceEqual(pinNum) &&
+                        pinNum.SequenceEqual(souNum) &&
+                        souNum.SequenceEqual(manNum))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 }
 
 internal class Sanshokudoukou : Yaku
@@ -567,7 +692,7 @@ internal class Tanyao : Yaku
     public override int HanClosed => 1;
     public override bool IsYakuman => false;
 
-    public bool Valid(TileKindListList hand, FuuroList fuuroList, OptionalRules rules)
+    public static bool Valid(TileKindListList hand, FuuroList fuuroList, OptionalRules rules)
     {
         return hand.SelectMany(x => x).All(x => x.IsChuuchan) &&
             (!fuuroList.HasOpen || rules.HasOpenTanyao);
@@ -582,7 +707,7 @@ internal class Tenhou : Yaku
     public override int HanClosed => 13;
     public override bool IsYakuman => true;
 
-    public bool Valid(HandConfig config)
+    public static bool Valid(HandConfig config)
     {
         return config.IsTenhou;
     }
@@ -605,7 +730,7 @@ internal class Tsumo : Yaku
     public override int HanClosed => 1;
     public override bool IsYakuman => false;
 
-    public bool Valid(HandConfig config, FuuroList fuuroList)
+    public static bool Valid(HandConfig config, FuuroList fuuroList)
     {
         return config.IsTsumo && !fuuroList.HasOpen;
     }
@@ -618,6 +743,11 @@ internal class Tsuuiisou : Yaku
     public override int HanOpen => 13;
     public override int HanClosed => 13;
     public override bool IsYakuman => true;
+
+    public static bool Valid(TileKindListList hand)
+    {
+        return hand.SelectMany(x => x).All(x => x.IsHonor);
+    }
 }
 
 internal class YakuhaiOfPlayer : Yaku

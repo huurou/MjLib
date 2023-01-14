@@ -37,33 +37,38 @@ internal static class YakuEvaluator
             var winGroups = h.Where(x => x.Contains(winTile)).Distinct();
             foreach (var winGroup in winGroups)
             {
-                if (Yaku.Chiitoitsu.Valid(h) && fuuroList_.HasOpen) continue;
-                yakuList = F(h, winGroup);
+                yakuList = EstimateYaku(h, winGroup);
             }
         }
 
         return yakuList;
     }
 
-    private static YakuList F(TileKindListList hand, TileKindList winGroup)
+    private static YakuList EstimateYaku(TileKindListList hand, TileKindList winGroup)
     {
         var yakuList = new YakuList();
-        if (Yaku.Tsumo.Valid(config_, fuuroList_))
+        EvaluateFormless(yakuList, hand, winGroup);
+        if (hand.Count == 7)
+        {
+            EvaluateChiitoisu(yakuList, hand, winGroup);
+        }
+        if (hand.Any(x => x.IsShuntsu))
+        {
+            EvaluateShuntsu(yakuList,hand,winGroup);
+        }
+        if (hand.Any(x => x.IsKoutsu))
+        {
+            EvaluateKoutsu(yakuList,hand,winGroup);
+        }
+        return yakuList;
+    }
+
+    // 形を問わない役を判定する
+    private static void EvaluateFormless(YakuList yakuList, TileKindListList hand, TileKindList winGroup)
+    {
+        if (Tsumo.Valid(config_, fuuroList_))
         {
             yakuList.Add(Yaku.Tsumo);
-        }
-        var fuList = FuCalculator.Calculate(hand, winTile_, winGroup, config_, fuuroList_);
-        if (Yaku.Pinfu.Valid(fuList, fuuroList_))
-        {
-            yakuList.Add(Yaku.Pinfu);
-        }
-        if (Yaku.Chiitoitsu.Valid(hand))
-        {
-            yakuList.Add(Yaku.Chiitoitsu);
-        }
-        if (Yaku.Daisharin.Valid(hand, config_.Rurles))
-        {
-            yakuList.Add(Yaku.Daisharin);
         }
         if (config_.IsRiichi && !config_.IsDaburuRiichi)
         {
@@ -73,50 +78,122 @@ internal static class YakuEvaluator
         {
             yakuList.Add(Yaku.DaburuRiichi);
         }
-        if (Yaku.Tanyao.Valid(hand, fuuroList_, config_.Rurles))
+        if (Tanyao.Valid(hand, fuuroList_, config_.Rurles))
         {
             yakuList.Add(Yaku.Tanyao);
         }
-        if (Yaku.Ippatsu.Valid(config_))
+        if (Ippatsu.Valid(config_))
         {
             yakuList.Add(Yaku.Ippatsu);
         }
-        if (Yaku.Rinshan.Valid(config_))
+        if (Rinshan.Valid(config_))
         {
             yakuList.Add(Yaku.Rinshan);
         }
-        if (Yaku.Chankan.Valid(config_))
+        if (Chankan.Valid(config_))
         {
             yakuList.Add(Yaku.Chankan);
         }
-        if (Yaku.Haitei.Valid(config_))
+        if (Haitei.Valid(config_))
         {
             yakuList.Add(Yaku.Haitei);
         }
-        if (Yaku.Houtei.Valid(config_))
+        if (Houtei.Valid(config_))
         {
             yakuList.Add(Yaku.Houtei);
         }
-        if (Yaku.Renhou.Valid(config_, config_.Rurles))
+        if (Renhou.Valid(config_, config_.Rurles))
         {
             yakuList.Add(Yaku.Renhou);
         }
-        if (Yaku.RenhouYakuman.Valid(config_, config_.Rurles))
+        if (RenhouYakuman.Valid(config_, config_.Rurles))
         {
             yakuList.Add(Yaku.RenhouYakuman);
         }
-        if (Yaku.Tenhou.Valid(config_))
+        if (Tenhou.Valid(config_))
         {
             yakuList.Add(Yaku.Tenhou);
         }
-        if (Yaku.Chiihou.Valid(config_))
+        if (Chiihou.Valid(config_))
         {
             yakuList.Add(Yaku.Chiihou);
         }
-        if (Yaku.Honitsu.Valid()){
+        if (Honitsu.Valid(hand))
+        {
             yakuList.Add(Yaku.Honitsu);
         }
+        if (Chinitsu.Valid(hand))
+        {
+            yakuList.Add(Yaku.Chinitsu);
+        }
+        if (Tsuuiisou.Valid(hand))
+        {
+            yakuList.Add(Yaku.Tsuuiisou);
+        }
+        if (Honroto.Valid(hand))
+        {
+            yakuList.Add(Yaku.Honroto);
+        }
+        if (Ryuuiisou.Valid(hand))
+        {
+            yakuList.Add(Yaku.Ryuuiisou);
+        }
+    }
 
-        return yakuList;
+    // 七対子形の役を判定する
+    private static void EvaluateChiitoisu(YakuList yakuList, TileKindListList hand, TileKindList winGroup)
+    {
+        if (Chiitoitsu.Valid(hand))
+        {
+            yakuList.Add(Yaku.Chiitoitsu);
+        }
+        if (Daisharin.Valid(hand, config_.Rurles))
+        {
+            yakuList.Add(Yaku.Daisharin);
+        }
+    }
+
+    // 順子が必要な役を判定する
+    private static void EvaluateShuntsu(YakuList yakuList, TileKindListList hand, TileKindList winGroup)
+    {
+        var fuList = FuCalculator.Calculate(hand, winTile_, winGroup, config_, fuuroList_);
+        if (Pinfu.Valid(fuList, fuuroList_))
+        {
+            yakuList.Add(Yaku.Pinfu);
+        }
+        if (Chanta.Valid(hand))
+        {
+            yakuList.Add(Yaku.Chanta);
+        }
+        if (Junchan.Valid(hand))
+        {
+            yakuList.Add(Yaku.Junchan);
+        }
+        if (Ittsu.Valid(hand))
+        {
+            yakuList.Add(Yaku.Ittsu);
+        }
+        // 一盃口と二盃口は重複しない
+        if (Ryanpeikou.Valid(hand, fuuroList_))
+        {
+            yakuList.Add(Yaku.Ryanpeikou);
+        }
+        else if(Iipeiko.Valid(hand, fuuroList_))
+        {
+            yakuList.Add(Yaku.Iipeiko);
+        }
+        if (Sanshoku.Valid(hand))
+        {
+            yakuList.Add(Yaku.Sanshoku);
+        }
+    }
+
+    // 刻子が必要な役を判定する
+    private static void EvaluateKoutsu(YakuList yakuList, TileKindListList hand, TileKindList winGroup)
+    {
+        if (Chinroutou.Valid(hand))
+        {
+            yakuList.Add(Yaku.Chinroutou);
+        }
     }
 }

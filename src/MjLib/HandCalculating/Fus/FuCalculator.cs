@@ -47,7 +47,7 @@ internal static class FuCalculator
 
     private static void CalcJantou()
     {
-        var toitsuTile = hand_.Toitsu[0];
+        var toitsuTile = hand_.First(x => x.IsToitsu).ElementAt(0);
         // 役牌雀頭符
         // 三元牌符
         if (toitsuTile == Haku || toitsuTile == Hatsu || toitsuTile == Chun)
@@ -103,7 +103,7 @@ internal static class FuCalculator
             fuList_.Add(winGroup_[0].IsChuuchan ? Fu.ChuuchanMinko : Fu.YaochuuMinko);
         }
         // 手牌の暗刻
-        foreach (var anko in hand_.Koutsus.Where(x => x != winGroup_))
+        foreach (var anko in hand_.Where(x => x.IsKoutsu && x != winGroup_))
         {
             fuList_.Add(anko[0].IsChuuchan ? Fu.ChuuchanAnko : Fu.YaochuuAnko);
         }

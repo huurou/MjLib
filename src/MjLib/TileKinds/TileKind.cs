@@ -87,15 +87,15 @@ internal class TileKind : ValueObject<TileKind>, IComparable<TileKind>
     /// 牌に書かれている番号 萬子・筒子・索子は1～9 字牌は東南西北白發中の順に1～7
     /// </summary>
     public int Number => IsMan ? Id + 1 : IsPin ? Id - 8 : IsSou ? Id - 17 : IsHonor ? Id - 26 : throw new InvalidOperationException();
-    public bool IsMan => Id is >= MAN1 and <= MAN9;
-    public bool IsPin => Id is >= PIN1 and <= PIN9;
-    public bool IsSou => Id is >= SOU1 and <= SOU9;
-    public bool IsHonor => Id is >= TON and <= CHUN;
-    public bool IsWind => Id is >= TON and <= PEI;
-    public bool IsDragon => Id is >= HAKU and <= CHUN;
-    public bool IsChuuchan => (IsMan || IsPin || IsSou) && Number is >= 2 and <= 8;
-    public bool IsRoutou => (IsMan || IsPin || IsSou) && Number is 1 or 9;
-    public bool IsYaochuu => !IsChuuchan;
+    public bool IsMan => Id is MAN1 or MAN2 or MAN3 or MAN4 or MAN5 or MAN6 or MAN7 or MAN8 or MAN9;
+    public bool IsPin => Id is PIN1 or PIN2 or PIN3 or PIN4 or PIN5 or PIN6 or PIN7 or PIN8 or PIN9;
+    public bool IsSou => Id is SOU1 or SOU2 or SOU3 or SOU4 or SOU5 or SOU6 or SOU7 or SOU8 or SOU9;
+    public bool IsWind => Id is TON or NAN or SHA or PEI;
+    public bool IsDragon => Id is HAKU or HATSU or CHUN;
+    public bool IsHonor => IsWind || IsDragon;
+    public bool IsChuuchan => !IsYaochuu;
+    public bool IsYaochuu => IsRoutou || IsHonor;
+    public bool IsRoutou => Id is MAN1 or MAN9 or PIN1 or PIN9 or SOU1 or SOU9;
     public static IEnumerable<TileKind> AllKind => Enumerable.Range(ID_MIN, KIND_COUNT).Select(x => new TileKind(x));
 
     public TileKind(int id)
