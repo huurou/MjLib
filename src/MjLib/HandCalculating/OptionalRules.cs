@@ -13,7 +13,7 @@ internal class OptionalRules
     /// <summary>
     /// ダブル役満あり/なし
     /// </summary>
-    public bool HasDoubleYakuman { get; init; } = true;
+    public bool HasDaburuYakuman { get; init; } = true;
 
     /// <summary>
     /// 数え役満あり/なし

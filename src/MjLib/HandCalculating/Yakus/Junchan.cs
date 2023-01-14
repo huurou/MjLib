@@ -1,4 +1,5 @@
-﻿using MjLib.HandCalculating.Dividings;
+﻿using MjLib.Fuuros;
+using MjLib.HandCalculating.Dividings;
 
 namespace MjLib.HandCalculating.Yakus;
 
@@ -12,10 +13,11 @@ internal class Junchan : Yaku
     public override int HanClosed => 3;
     public override bool IsYakuman => false;
 
-    public static bool Valid(TileKindListList hand)
+    public static bool Valid(TileKindListList hand, FuuroList fuuroList)
     {
-        var shuntsu = hand.Count(x => x.IsShuntsu);
-        var routou = hand.Count(x => x.Any(x => x.IsRoutou));
+        var kindLists = hand.Concat(fuuroList.KindLists);
+        var shuntsu = kindLists.Count(x => x.IsShuntsu);
+        var routou = kindLists.Count(x => x.Any(x => x.IsRoutou));
         return shuntsu != 0 && routou == 5;
     }
 }

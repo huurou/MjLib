@@ -14,7 +14,7 @@ internal class Fuuro
     /// <summary>
     /// 副露
     /// </summary>
-    public TileKindList Tiles { get; }
+    public TileKindList KindList { get; }
 
     /// <summary>
     /// チーかどうか
@@ -45,10 +45,10 @@ internal class Fuuro
     /// </summary>
     public bool IsOpen => Type is FuuroType.Chi or FuuroType.Pon or FuuroType.Shouminkan or FuuroType.Daiminkan;
 
-    public Fuuro(FuuroType type, TileKindList tiles)
+    public Fuuro(FuuroType type, TileKindList kindList)
     {
         Type = type;
-        Tiles = tiles;
+        KindList = kindList;
     }
 
     public override string ToString()
@@ -63,7 +63,7 @@ internal class Fuuro
             FuuroType.Nuki => "抜き",
             _ => "",
         };
-        return $"{typeStr} {Tiles}";
+        return $"{typeStr} {KindList}";
     }
 }
 

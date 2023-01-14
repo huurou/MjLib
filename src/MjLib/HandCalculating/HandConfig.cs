@@ -75,6 +75,11 @@ internal class HandConfig
     public Wind RoundWind { get; init; } = Wind.East;
 
     /// <summary>
+    /// 赤ドラの枚数
+    /// </summary>
+    public int Akadora { get; init; } = 0;
+
+    /// <summary>
     /// プレイヤーが親かどうか
     /// </summary>
     public bool IsDealer => PlayerWind == Wind.East;

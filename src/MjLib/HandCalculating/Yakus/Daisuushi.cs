@@ -1,12 +1,20 @@
-﻿namespace MjLib.HandCalculating.Yakus;
+﻿using MjLib.Fuuros;
+using MjLib.HandCalculating.Dividings;
 
-internal class Daisuushi : Yaku
+namespace MjLib.HandCalculating.Yakus;
+
+internal class Daisuushii : Yaku
 {
-    public Daisuushi(int id)
+    public Daisuushii(int id)
         : base(id) { }
 
     public override string Name => "大四喜";
-    public override int HanOpen => 26;
-    public override int HanClosed => 26;
+    public override int HanOpen => 13;
+    public override int HanClosed => 13;
     public override bool IsYakuman => true;
+
+    public static bool Valid(TileKindListList hand, FuuroList fuuroList_)
+    {
+        return hand.Concat(fuuroList_.KindLists).Count(x => (x.IsKoutsu || x.IsKantsu) && x[0].IsWind) == 4;
+    }
 }

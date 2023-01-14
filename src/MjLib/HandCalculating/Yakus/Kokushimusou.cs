@@ -1,4 +1,7 @@
-﻿namespace MjLib.HandCalculating.Yakus;
+﻿using MjLib.TileCountArrays;
+using MjLib.TileKinds;
+
+namespace MjLib.HandCalculating.Yakus;
 
 internal class Kokushimusou : Yaku
 {
@@ -9,4 +12,9 @@ internal class Kokushimusou : Yaku
     public override int HanOpen => 0;
     public override int HanClosed => 13;
     public override bool IsYakuman => true;
+
+    internal static bool Valid(TileCountArray countArray)
+    {
+        return TileKind.AllKind.Where(x => x.IsYaochuu).Aggregate(1, (x, y) => x * countArray[y]) == 2;
+    }
 }

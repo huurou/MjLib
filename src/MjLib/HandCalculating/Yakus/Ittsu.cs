@@ -1,4 +1,5 @@
-﻿using MjLib.HandCalculating.Dividings;
+﻿using MjLib.Fuuros;
+using MjLib.HandCalculating.Dividings;
 using System.Diagnostics.CodeAnalysis;
 
 namespace MjLib.HandCalculating.Yakus;
@@ -13,9 +14,9 @@ internal class Ittsu : Yaku
     public override int HanClosed => 2;
     public override bool IsYakuman => false;
 
-    public static bool Valid(TileKindListList hand)
+    public static bool Valid(TileKindListList hand, FuuroList fuuroList)
     {
-        var shuntsus = hand.Where(x => x.IsShuntsu);
+        var shuntsus = hand.Concat(fuuroList.KindLists).Where(x => x.IsShuntsu);
         if (shuntsus.Count() < 3) return false;
         var suits = new[]
         {

@@ -1,4 +1,7 @@
-﻿namespace MjLib.HandCalculating.Yakus;
+﻿using MjLib.Fuuros;
+using MjLib.HandCalculating.Dividings;
+
+namespace MjLib.HandCalculating.Yakus;
 
 internal class Suukantsu : Yaku
 {
@@ -9,4 +12,9 @@ internal class Suukantsu : Yaku
     public override int HanOpen => 13;
     public override int HanClosed => 13;
     public override bool IsYakuman => true;
+
+    public static bool Valid(TileKindListList hand, FuuroList fuuroList)
+    {
+        return hand.Concat(fuuroList.KindLists).Count(x => x.IsKantsu) == 4;
+    }
 }

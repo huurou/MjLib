@@ -21,8 +21,8 @@ internal abstract class Yaku : ValueObject<Yaku>
     public static Haku Haku { get; }
     public static Hatsu Hatsu { get; }
     public static Chun Chun { get; }
-    public static YakuhaiOfPlayer YakuhaiOfPlayer { get; }
-    public static YakuhaiOfRound YakuhaiOfRound { get; }
+    public static PlayerWind PlayerWind { get; }
+    public static RoundWind RoundWind { get; }
 
     // 2翻
     public static Sanshoku Sanshoku { get; }
@@ -50,6 +50,7 @@ internal abstract class Yaku : ValueObject<Yaku>
     public static Suuankou Suuankou { get; }
     public static Daisangen Daisangen { get; }
     public static Shousuushii Shousuushii { get; }
+    public static Daisuushii Daisuushii { get; }
     public static Ryuuiisou Ryuuiisou { get; }
     public static Suukantsu Suukantsu { get; }
     public static Tsuuiisou Tsuuiisou { get; }
@@ -57,7 +58,7 @@ internal abstract class Yaku : ValueObject<Yaku>
     public static Daisharin Daisharin { get; }
 
     // ダブル役満
-    public static Daisuushi Daisuushi { get; }
+    public static DaisuushiiDaburu DaisuushiiDaburu { get; }
     public static Kokushimusou13 Kokushimusou13 { get; }
     public static SuuankouTanki SuuankouTanki { get; }
     public static JunseiChuurenpoutou JunseiChuurenpoutou { get; }
@@ -69,6 +70,7 @@ internal abstract class Yaku : ValueObject<Yaku>
 
     // ドラ
     public static Dora Dora { get; }
+    public static Uradora Uradora { get; }
     public static Akadora Akadora { get; }
 
     static Yaku()
@@ -90,8 +92,8 @@ internal abstract class Yaku : ValueObject<Yaku>
         Haku = new(id++);
         Hatsu = new(id++);
         Chun = new(id++);
-        YakuhaiOfPlayer = new(id++);
-        YakuhaiOfRound = new(id++);
+        PlayerWind = new(id++);
+        RoundWind = new(id++);
         Sanshoku = new(id++);
         Ittsu = new(id++);
         Chanta = new(id++);
@@ -111,12 +113,13 @@ internal abstract class Yaku : ValueObject<Yaku>
         Suuankou = new(id++);
         Daisangen = new(id++);
         Shousuushii = new(id++);
+        Daisuushii = new(id++);
         Ryuuiisou = new(id++);
         Suukantsu = new(id++);
         Tsuuiisou = new(id++);
         Chinroutou = new(id++);
         Daisharin = new(id++);
-        Daisuushi = new(id++);
+        DaisuushiiDaburu = new(id++);
         Kokushimusou13 = new(id++);
         SuuankouTanki = new(id++);
         JunseiChuurenpoutou = new(id++);
@@ -124,6 +127,7 @@ internal abstract class Yaku : ValueObject<Yaku>
         Chiihou = new(id++);
         RenhouYakuman = new(id++);
         Dora = new(id++);
+        Uradora = new(id++);
         Akadora = new(id++);
     }
 

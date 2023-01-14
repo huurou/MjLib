@@ -14,8 +14,9 @@ public class YakuEvaluateTest
         var winTile = Sou4;
         var config = new HandConfig { IsRiichi = true };
         var actual = YakuEvaluator.Evaluate(hand, winTile, config: config);
+        Assert.That(actual, Has.Count.EqualTo(1));
         var expected = new YakuList { Yaku.Riichi };
-        Assert.That(actual, Is.EqualTo(expected));
-        Assert.That(actual.HanClosed, Is.EqualTo(1));
+        Assert.That(actual[0], Is.EqualTo(expected));
+        Assert.That(actual[0].HanClosed, Is.EqualTo(1));
     }
 }

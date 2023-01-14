@@ -1,11 +1,11 @@
 ﻿namespace MjLib.HandCalculating.Yakus;
 
-internal class YakuhaiOfPlayer : Yaku
+internal class Uradora : Yaku
 {
-    public YakuhaiOfPlayer(int id)
+    public Uradora(int id)
         : base(id) { }
 
-    public override string Name => "自風牌";
+    public override string Name => "裏ドラ";
     public override int HanOpen => 1;
     public override int HanClosed => 1;
     public override bool IsYakuman => false;

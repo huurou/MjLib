@@ -8,12 +8,15 @@ internal class Pinfu : Yaku
     public Pinfu(int id)
         : base(id) { }
 
-    public override string Name => "平和"; public override int HanOpen => 0; public override int HanClosed => 1; public override bool IsYakuman => false;
+    public override string Name => "平和";
+    public override int HanOpen => 0;
+    public override int HanClosed => 1; 
+    public override bool IsYakuman => false;
 
     public static bool Valid(FuList fuList, FuuroList fuuroList)
     {
-        return (fuList.Contains(Fu.Base) && fuList.Count == 1 ||
-            fuList.Contains(Fu.Base) && fuList.Contains(Fu.Menzen) && fuList.Count == 2) &&
-            !fuuroList.HasOpen;
+        return !fuuroList.HasOpen &&
+            (fuList.Contains(Fu.Base) && fuList.Count == 1 ||
+            fuList.Contains(Fu.Base) && fuList.Contains(Fu.Menzen) && fuList.Count == 2);
     }
 }

@@ -1,4 +1,8 @@
-﻿namespace MjLib.HandCalculating.Yakus;
+﻿using MjLib.Fuuros;
+using MjLib.HandCalculating.Dividings;
+using MjLib.TileKinds;
+
+namespace MjLib.HandCalculating.Yakus;
 
 internal class Sanankou : Yaku
 {
@@ -9,4 +13,13 @@ internal class Sanankou : Yaku
     public override int HanOpen => 2;
     public override int HanClosed => 2;
     public override bool IsYakuman => false;
+
+    public static bool Valid(TileKindListList hand, TileKindList winGroup, FuuroList fuuroList, HandConfig config)
+    {
+        var anko = config.IsTsumo
+            ? hand.Where(x => x.IsKoutsu)
+            : hand.Where(x => x.IsKoutsu && x != winGroup);
+        var ankan = fuuroList.Where(x => x.IsAnkan).Select(x => x.KindList);
+        return ankan.Count() + ankan.Count() == 3;
+    }
 }

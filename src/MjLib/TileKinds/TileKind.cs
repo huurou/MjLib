@@ -105,6 +105,25 @@ internal class TileKind : ValueObject<TileKind>, IComparable<TileKind>
             : throw new ArgumentException($"牌種別IDは{ID_MIN}～{ID_MAX}です。given:{id}", nameof(id));
     }
 
+    public static TileKind ToRealDora(TileKind doraIndicator)
+    {
+        var id = doraIndicator.Id;
+        return id switch
+        {
+            >= MAN1 and <= MAN8 => new(id + 1),
+            MAN9 => new(MAN1),
+            >= PIN1 and <= PIN8 => new(id + 1),
+            PIN9 => new(PIN1),
+            >= SOU1 and <= SOU8 => new(id + 1),
+            SOU9 => new(SOU1),
+            TON or NAN or SHA => new(id + 1),
+            PEI => new(TON),
+            HAKU or HATSU => new(id + 1),
+            CHUN => new(HAKU),
+            _ => throw new NotSupportedException(),
+        };
+    }
+
     public override string ToString()
     {
         return Id switch
