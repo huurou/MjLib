@@ -42,6 +42,7 @@ internal static class FuCalculator
         CalcWait();
         CalcMentsu();
         CalcBase();
+        fuList_.Sort((x, y) => x.Id.CompareTo(y.Id));
         return fuList_;
     }
 
@@ -113,12 +114,12 @@ internal static class FuCalculator
             fuList_.Add(winGroup_[0].IsChuuchan ? Fu.ChuuchanAnko : Fu.YaochuuAnko);
         }
         // 明槓
-        foreach (var minkan in fuuroList_.Where(x=>x.IsMinkan).Select(x => x.KindList))
+        foreach (var minkan in fuuroList_.Where(x => x.IsMinkan).Select(x => x.KindList))
         {
             fuList_.Add(minkan[0].IsChuuchan ? Fu.ChuuchanMinkan : Fu.YaochuuMinkan);
         }
         // 暗槓
-        foreach (var ankan in fuuroList_.Where(x=>x.IsAnkan).Select(x => x.KindList))
+        foreach (var ankan in fuuroList_.Where(x => x.IsAnkan).Select(x => x.KindList))
         {
             fuList_.Add(ankan[0].IsChuuchan ? Fu.ChuuchanAnkan : Fu.YaochuuAnkan);
         }

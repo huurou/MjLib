@@ -2,7 +2,7 @@
 using MjLib.TileCountArrays;
 using MjLib.TileKinds;
 
-namespace MjLib.Test.TileCountArrays;
+namespace MjLib.Test;
 
 internal class TileCountArrayTest
 {

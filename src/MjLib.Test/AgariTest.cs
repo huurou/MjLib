@@ -1,7 +1,7 @@
 ﻿using MjLib.Agaris;
 using MjLib.TileKinds;
 
-namespace MjLib.Test.Agaris;
+namespace MjLib.Test;
 
 public class AgariTest
 {

@@ -2,7 +2,7 @@
 
 internal static class ScoreCalcurator
 {
-    public static Score Calculate(int han, int fu, HandConfig config, bool isYakuman = false)
+    public static Score Calculate(int fu, int han, HandConfig config, bool isYakuman = false)
     {
         var _han = han;
         // 数え役満

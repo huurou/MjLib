@@ -1,7 +1,7 @@
 ﻿using MjLib.Shantens;
 using MjLib.TileKinds;
 
-namespace MjLib.Test.Shantens;
+namespace MjLib.Test;
 
 public class ShantenTest
 {
