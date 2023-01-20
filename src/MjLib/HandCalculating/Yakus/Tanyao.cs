@@ -16,6 +16,6 @@ internal class Tanyao : Yaku
     public static bool Valid(TileKindListList hand, FuuroList fuuroList, OptionalRules rules)
     {
         return hand.Concat(fuuroList.KindLists).SelectMany(x => x).Distinct().All(x => x.IsChuuchan) &&
-            (!fuuroList.HasOpen || rules.HasOpenTanyao);
+            (!fuuroList.HasOpen || rules.Kuitan);
     }
 }

@@ -17,20 +17,22 @@ internal static class HandCalculator
     /// 手を計算します。
     /// </summary>
     /// <param name="hand">手牌 副露を含まない手牌+アガリ牌</param>
-    /// <param name="winTile"></param>
-    /// <param name="fuuroList"></param>
-    /// <param name="doraIndicators"></param>
-    /// <param name="config"></param>
-    /// <returns></returns>
+    /// <param name="winTile">アガリ牌</param>
+    /// <param name="fuuroList">副露のリスト</param>
+    /// <param name="doraIndicators">ドラ表示牌</param>
+    /// <param name="uradoraIndicators">裏ドラ表示牌</param>
+    /// <param name="config">あがった時のの状況</param>
+    /// <returns>結果</returns>
     /// <exception cref="NotImplementedException"></exception>
     public static HandResult Calculate(
         TileKindList hand,
-        TileKind winTile,
+        TileKind? winTile,
         FuuroList? fuuroList = null,
         TileKindList? doraIndicators = null,
         TileKindList? uradoraIndicators = null,
         HandConfig? config = null)
     {
+        winTile ??= TileKind.Man1;
         fuuroList ??= new();
         doraIndicators ??= new();
         uradoraIndicators ??= new();
@@ -121,7 +123,7 @@ internal static class HandCalculator
         if (config.IsIppatsu && fuuroList.HasOpen) result = new("一発と非面前は両立できません。");
         if (config.IsIppatsu && !config.IsRiichi && !config.IsDaburuRiichi) result = new("一発はリーチorダブルリーチ時にしか成立しません。");
         if (config.IsChankan && config.IsTsumo) result = new("槍槓とツモアガリは両立できません。");
-        if (config.IsRinshan && !config.IsTsumo) result = new("嶺上開花とロンsアガリは両立できません。");
+        if (config.IsRinshan && !config.IsTsumo) result = new("嶺上開花とロンアガリは両立できません。");
         if (config.IsHaitei && !config.IsTsumo) result = new("海底撈月とロンアガリは両立できません。");
         if (config.IsHoutei && config.IsTsumo) result = new("河底撈魚とツモアガリは両立できません。");
         if (config.IsHaitei && config.IsRinshan) result = new("海底撈月と嶺上開花は両立できません。");
@@ -132,7 +134,7 @@ internal static class HandCalculator
         if (config.IsChiihou && !config.IsDealer) result = new("地和はプレイヤーが子の時のみ有効です。");
         if (config.IsChiihou && !config.IsTsumo) result = new("地和とロンアガリは両立できません。");
         if (config.IsChiihou && fuuroList.Any()) result = new("副露を伴う地和は無効です。");
-        if (config.IsRenhou && !config.IsDealer) result = new("人和はプレイヤーが子の時のみ有効です。");
+        if (config.IsRenhou && config.IsDealer) result = new("人和はプレイヤーが子の時のみ有効です。");
         if (config.IsRenhou && config.IsTsumo) result = new("人和とロンアガリは両立できません。");
         if (config.IsRenhou && fuuroList.Any()) result = new("副露を伴う人和は無効です。");
 
@@ -335,7 +337,7 @@ internal static class HandCalculator
         }
         if (Daisuushii.Valid(hand, fuuroList))
         {
-            yakuList.Add(config.Rurles.HasDaburuYakuman ? Yaku.DaisuushiiDaburu : Yaku.Daisuushii);
+            yakuList.Add(config.Rurles.DaburuYakuman ? Yaku.DaisuushiiDaburu : Yaku.Daisuushii);
         }
         if (Chuurenpoutou.Valid(hand))
         {

@@ -16,7 +16,7 @@ internal class SuuankouTanki : Yaku
 
     public static bool Valid(TileKindListList hand, TileKindList winGroup, TileKind winTile, FuuroList fuuroList, HandConfig config)
     {
-        if(!config.Rurles.HasDaburuYakuman) return false;
+        if(!config.Rurles.DaburuYakuman) return false;
         var jantou = hand.Where(x => x.IsToitsu).First();
         var anko = config.IsTsumo
             ? hand.Where(x => x.IsKoutsu)
