@@ -127,10 +127,11 @@ internal static class FuCalculator
 
     private static void CalcBase()
     {
-        // ピンヅモありルールなら符が無いときにツモの2符を加えない
-        if (config_.IsTsumo && !fuuroList_.HasOpen && !(fuList_.Total == 0 && config_.Rurles.Pinzumo))
+        // ピンヅモありで符が無くて面前でツモのときツモの2符を加えない
+        if (config_.IsTsumo)
         {
-            fuList_.Add(Fu.Tsumo);
+            if (config_.Rurles.Pinzumo && fuList_.Total == 0 && !fuuroList_.HasOpen) { }
+            else fuList_.Add(Fu.Tsumo);
         }
         // 食い平和のロンアガリは副底を30符にする
         if (!config_.IsTsumo && fuuroList_.HasOpen && fuList_.Total == 0)
