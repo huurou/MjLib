@@ -86,6 +86,16 @@ public class FuTest
         var expected = new FuList { Fu.Base, Fu.Tsumo, Fu.ChuuchanAnko };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(30));
+
+        hand = TileKindList.Parse(man: "234456", pin: "66", sou: "123");
+        winTile = Sou1;
+        var fuuroList = new FuuroList { new(Daiminkan, TileKindList.Parse(sou: "4444")) };
+        winGroup = TileKindList.Parse(sou: "123");
+        handConfig = new HandConfig { IsTsumo = true, IsRinshan = true };
+        actual = FuCalculator.Calculate(HandDevider.Devide(hand)[0], winTile, winGroup, handConfig, fuuroList);
+        expected = new FuList { Fu.Base, Fu.Tsumo, Fu.ChuuchanMinkan };
+        Assert.That(actual, Is.EquivalentTo(expected));
+        Assert.That(actual.Total, Is.EqualTo(30));
     }
 
     [Test]
@@ -200,7 +210,7 @@ public class FuTest
         expected = new FuList { Fu.Base, Fu.Menzen, Fu.RoundWindToitsu };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(40));
-        
+
         hand = TileKindList.Parse(man: "123456", sou: "123678", honor: "44");
         devided = HandDevider.Devide(hand)[0];
         handConfig = new HandConfig { PlayerWind = Wind.East, RoundWind = Wind.North };

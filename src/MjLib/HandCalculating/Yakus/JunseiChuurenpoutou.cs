@@ -15,7 +15,7 @@ internal class JunseiChuurenpoutou : Yaku
 
     public static bool Valid(TileKindListList hand, TileKind winTile, HandConfig config)
     {
-        if (!config.Rurles.HasDaburuYakuman) return false;
+        if (!config.Rurles.DaburuYakuman) return false;
         var mans = hand.Where(x => x[0].IsMan);
         var pins = hand.Where(x => x[0].IsPin);
         var sous = hand.Where(x => x[0].IsSou);

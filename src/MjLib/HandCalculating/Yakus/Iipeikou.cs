@@ -15,7 +15,7 @@ internal class Iipeikou : Yaku
 
     public static bool Valid(TileKindListList hand, FuuroList fuuroList)
     {
-        if (!fuuroList.HasOpen) return false;
+        if (fuuroList.HasOpen) return false;
         var shuntsus = hand.Where(x => x.IsShuntsu);
         if (!shuntsus.Any()) return false;
         var count = shuntsus.Max(x => shuntsus.Count(x.Equals));

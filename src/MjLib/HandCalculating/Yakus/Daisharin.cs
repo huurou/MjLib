@@ -21,6 +21,6 @@ internal class Daisharin : Yaku
                 new () { Pin6, Pin6 },
                 new () { Pin7, Pin7 },
                 new () { Pin8, Pin8 },
-            }) && rules.HasDaisharin;
+            }) && rules.Daisharin;
     }
 }

@@ -15,7 +15,7 @@ internal class Kokushimusou13 : Yaku
 
     public static bool Valid(TileCountArray countArray, TileKind winTile, HandConfig config)
     {
-        return config.Rurles.HasDaburuYakuman
+        return config.Rurles.DaburuYakuman
             && countArray[winTile] == 2
             && TileKind.AllKind.Where(x => x.IsYaochuu).Aggregate(1, (x, y) => x * countArray[y]) == 2;
     }
