@@ -126,7 +126,7 @@ public class HandCalculatorTest
             Assert.That(actual.YakuList, Is.EquivalentTo(expected));
         });
 
-        fuuroList = new FuuroList { new(FuuroType.Daiminkan, TileKindList.Parse(sou: "4444")) };
+        fuuroList = new FuuroList { new(FuuroType.Minkan, TileKindList.Parse(sou: "4444")) };
         config = new HandConfig { IsTsumo = true, IsRinshan = true };
         actual = HandCalculator.Calculate(hand, winTile, fuuroList, config: config);
         expected = new YakuList { Yaku.Rinshan };
