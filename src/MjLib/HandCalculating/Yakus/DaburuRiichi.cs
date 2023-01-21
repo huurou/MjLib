@@ -10,8 +10,8 @@ internal class DaburuRiichi : Yaku
     public override int HanClosed => 2;
     public override bool IsYakuman => false;
 
-    public static bool Valid(HandConfig config_)
+    public static bool Valid(WinSituation situation_)
     {
-        return config_.IsDaburuRiichi;
+        return situation_.DaburuRiichi;
     }
 }

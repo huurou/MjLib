@@ -13,7 +13,7 @@ internal class Kokushimusou13 : Yaku
     public override int HanClosed => 26;
     public override bool IsYakuman => true;
 
-    public static bool Valid(TileCountArray countArray, TileKind winTile, OptionalRules rules)
+    public static bool Valid(TileCountArray countArray, TileKind winTile, GameRules rules)
     {
         return rules.DaburuYakuman
             && countArray[winTile] == 2

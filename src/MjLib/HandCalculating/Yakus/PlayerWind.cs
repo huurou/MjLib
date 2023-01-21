@@ -15,10 +15,10 @@ internal class PlayerWind : Yaku
     public override int HanClosed => 1;
     public override bool IsYakuman => false;
 
-    public static bool Valid(TileKindListList hand, FuuroList fuuroList_, HandConfig config_)
+    public static bool Valid(TileKindListList hand, FuuroList fuuroList_, WinSituation situation_)
     {
         return hand.Concat(fuuroList_.KindLists)
-                   .Where(x => (x.IsKoutsu || x.IsKantsu) && x[0] == WindToTileKind(config_.PlayerWind))
+                   .Where(x => (x.IsKoutsu || x.IsKantsu) && x[0] == WindToTileKind(situation_.Player))
                    .Any();
     }
 

@@ -12,8 +12,8 @@ internal class Tsumo : Yaku
     public override int HanClosed => 1;
     public override bool IsYakuman => false;
 
-    public static bool Valid(HandConfig config, FuuroList fuuroList)
+    public static bool Valid(WinSituation situation, FuuroList fuuroList)
     {
-        return config.IsTsumo && !fuuroList.HasOpen;
+        return situation.Tsumo && !fuuroList.HasOpen;
     }
 }

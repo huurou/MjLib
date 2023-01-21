@@ -10,8 +10,8 @@ internal class Renhou : Yaku
     public override int HanClosed => 5;
     public override bool IsYakuman => false;
 
-    public static bool Valid(HandConfig config, OptionalRules rules)
+    public static bool Valid(WinSituation situation, GameRules rules)
     {
-        return config.IsRenhou && !rules.RenhouAsYakuman;
+        return situation.Renhou && !rules.RenhouAsYakuman;
     }
 }

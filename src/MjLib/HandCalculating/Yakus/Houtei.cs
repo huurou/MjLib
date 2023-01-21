@@ -10,8 +10,8 @@ internal class Houtei : Yaku
     public override int HanClosed => 1;
     public override bool IsYakuman => false;
 
-    public static bool Valid(HandConfig config)
+    public static bool Valid(WinSituation situation)
     {
-        return config.IsHoutei;
+        return situation.Houtei;
     }
 }

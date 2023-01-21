@@ -21,7 +21,7 @@ internal static class HandCalculator
     /// <param name="fuuroList">副露のリスト</param>
     /// <param name="doraIndicators">ドラ表示牌</param>
     /// <param name="uradoraIndicators">裏ドラ表示牌</param>
-    /// <param name="config">あがった時の状況</param>
+    /// <param name="situation">和了した時の状況</param>
     /// <returns>結果</returns>
     /// <exception cref="NotImplementedException"></exception>
     public static HandResult Calculate(
@@ -30,18 +30,18 @@ internal static class HandCalculator
         FuuroList? fuuroList = null,
         TileKindList? doraIndicators = null,
         TileKindList? uradoraIndicators = null,
-        HandConfig? config = null,
-        OptionalRules? rules = null)
+        WinSituation? situation = null,
+        GameRules? rules = null)
     {
         winTile ??= TileKind.Man1;
         fuuroList ??= new();
         doraIndicators ??= new();
         uradoraIndicators ??= new();
-        config ??= new();
+        situation ??= new();
         rules ??= new();
         // 流し満貫は手牌の形に関係ないので特別にここで返す
-        if (EvaluateNagashimangan(config, rules, out var result)) return result;
-        if (CheckError(hand, winTile, fuuroList, config, out result)) return result;
+        if (EvaluateNagashimangan(situation, rules, out var result)) return result;
+        if (CheckError(hand, winTile, fuuroList, situation, out result)) return result;
         var countArray = hand.ToTileCountArray();
         var devidedHands = HandDevider.Devide(hand);
         var results = new List<HandResult>();
@@ -54,10 +54,10 @@ internal static class HandCalculator
                     ? Yaku.Kokushimusou13
                     : Yaku.Kokushimusou
             };
-            EvaluateCommon(yakuList, config, rules);
+            EvaluateCommon(yakuList, situation, rules);
             var fu = 0;
             var han = yakuList.Sum(x => x.HanClosed);
-            var score = ScoreCalcurator.Calculate(fu, han, config, rules, true);
+            var score = ScoreCalcurator.Calculate(fu, han, situation, rules, true);
             result = new(fu, han, score, yakuList, new());
         }
         else
@@ -68,9 +68,9 @@ internal static class HandCalculator
                 foreach (var winGroup in winGroups)
                 {
                     var yakuList = new YakuList();
-                    EvaluateCommon(yakuList, config, rules);
-                    var fuList = FuCalculator.Calculate(devidedHand, winTile, winGroup, fuuroList, config, rules);
-                    EvaluateYaku(yakuList, devidedHand, winTile, winGroup, fuuroList, fuList, config, rules);
+                    EvaluateCommon(yakuList, situation, rules);
+                    var fuList = FuCalculator.Calculate(devidedHand, winTile, winGroup, fuuroList, situation, rules);
+                    EvaluateYaku(yakuList, devidedHand, winTile, winGroup, fuuroList, fuList, situation, rules);
                     var yakumanList = new YakuList(yakuList.Where(x => x.IsYakuman));
                     if (yakumanList.Any())
                     {
@@ -78,7 +78,7 @@ internal static class HandCalculator
                     }
                     else if (yakuList.Any())
                     {
-                        AddDora(yakuList, doraIndicators, uradoraIndicators, config);
+                        AddDora(yakuList, doraIndicators, uradoraIndicators, situation);
                     }
                     var han = fuuroList.HasOpen ? yakuList.Sum(x => x.HanOpen) : yakuList.Sum(x => x.HanClosed);
                     if (han == 0)
@@ -88,7 +88,7 @@ internal static class HandCalculator
                     else
                     {
                         var fu = fuList.Total;
-                        var score = ScoreCalcurator.Calculate(fu, han, config, rules, yakumanList.Any());
+                        var score = ScoreCalcurator.Calculate(fu, han, situation, rules, yakumanList.Any());
                         results.Add(new(fu, han, score, yakuList, fuList));
                     }
                 }
@@ -100,13 +100,13 @@ internal static class HandCalculator
         return result;
     }
 
-    private static bool EvaluateNagashimangan(HandConfig config, OptionalRules rules, [NotNullWhen(true)] out HandResult? result)
+    private static bool EvaluateNagashimangan(WinSituation situation, GameRules rules, [NotNullWhen(true)] out HandResult? result)
     {
         result = null;
-        if (config.IsNagashimangan)
+        if (situation.Nagashimangan)
         {
             var (fu, han) = (30, Yaku.Nagashimangan.HanClosed);
-            var score = ScoreCalcurator.Calculate(fu, han, config, rules);
+            var score = ScoreCalcurator.Calculate(fu, han, situation, rules);
             var yakuList = new YakuList { Yaku.Nagashimangan };
             var fuList = new FuList();
             result = new(fu, han, score, yakuList, fuList);
@@ -115,55 +115,55 @@ internal static class HandCalculator
     }
 
     // エラーをチェックする
-    private static bool CheckError(TileKindList hand, TileKind winTile, FuuroList fuuroList, HandConfig config, [NotNullWhen(true)] out HandResult? result)
+    private static bool CheckError(TileKindList hand, TileKind winTile, FuuroList fuuroList, WinSituation situation, [NotNullWhen(true)] out HandResult? result)
     {
         result = null;
         if (!Agari.IsAgari(hand)) result = new("手牌がアガリ形ではありません。");
         if (!hand.Contains(winTile)) result = new("手牌にアガリ牌がありません。");
-        if (config.IsRiichi && fuuroList.HasOpen) result = new("リーチと非面前は両立できません。");
-        if (config.IsDaburuRiichi && fuuroList.HasOpen) result = new("ダブルリーチと非面前は両立できません。");
-        if (config.IsIppatsu && fuuroList.HasOpen) result = new("一発と非面前は両立できません。");
-        if (config.IsIppatsu && !config.IsRiichi && !config.IsDaburuRiichi) result = new("一発はリーチorダブルリーチ時にしか成立しません。");
-        if (config.IsChankan && config.IsTsumo) result = new("槍槓とツモアガリは両立できません。");
-        if (config.IsRinshan && !config.IsTsumo) result = new("嶺上開花とロンアガリは両立できません。");
-        if (config.IsHaitei && !config.IsTsumo) result = new("海底撈月とロンアガリは両立できません。");
-        if (config.IsHoutei && config.IsTsumo) result = new("河底撈魚とツモアガリは両立できません。");
-        if (config.IsHaitei && config.IsRinshan) result = new("海底撈月と嶺上開花は両立できません。");
-        if (config.IsHoutei && config.IsChankan) result = new("河底撈魚と槍槓は両立できません。");
-        if (config.IsTenhou && config.IsDealer) result = new("天和はプレイヤーが親の時のみ有効です。");
-        if (config.IsTenhou && !config.IsTsumo) result = new("天和とロンアガリは両立できません。");
-        if (config.IsTenhou && fuuroList.Any()) result = new("副露を伴う天和は無効です。");
-        if (config.IsChiihou && !config.IsDealer) result = new("地和はプレイヤーが子の時のみ有効です。");
-        if (config.IsChiihou && !config.IsTsumo) result = new("地和とロンアガリは両立できません。");
-        if (config.IsChiihou && fuuroList.Any()) result = new("副露を伴う地和は無効です。");
-        if (config.IsRenhou && config.IsDealer) result = new("人和はプレイヤーが子の時のみ有効です。");
-        if (config.IsRenhou && config.IsTsumo) result = new("人和とロンアガリは両立できません。");
-        if (config.IsRenhou && fuuroList.Any()) result = new("副露を伴う人和は無効です。");
+        if (situation.Riichi && fuuroList.HasOpen) result = new("リーチと非面前は両立できません。");
+        if (situation.DaburuRiichi && fuuroList.HasOpen) result = new("ダブルリーチと非面前は両立できません。");
+        if (situation.Ippatsu && fuuroList.HasOpen) result = new("一発と非面前は両立できません。");
+        if (situation.Ippatsu && !situation.Riichi && !situation.DaburuRiichi) result = new("一発はリーチorダブルリーチ時にしか成立しません。");
+        if (situation.Chankan && situation.Tsumo) result = new("槍槓とツモアガリは両立できません。");
+        if (situation.Rinshan && !situation.Tsumo) result = new("嶺上開花とロンアガリは両立できません。");
+        if (situation.Haitei && !situation.Tsumo) result = new("海底撈月とロンアガリは両立できません。");
+        if (situation.Houtei && situation.Tsumo) result = new("河底撈魚とツモアガリは両立できません。");
+        if (situation.Haitei && situation.Rinshan) result = new("海底撈月と嶺上開花は両立できません。");
+        if (situation.Houtei && situation.Chankan) result = new("河底撈魚と槍槓は両立できません。");
+        if (situation.Tenhou && situation.IsDealer) result = new("天和はプレイヤーが親の時のみ有効です。");
+        if (situation.Tenhou && !situation.Tsumo) result = new("天和とロンアガリは両立できません。");
+        if (situation.Tenhou && fuuroList.Any()) result = new("副露を伴う天和は無効です。");
+        if (situation.Chiihou && !situation.IsDealer) result = new("地和はプレイヤーが子の時のみ有効です。");
+        if (situation.Chiihou && !situation.Tsumo) result = new("地和とロンアガリは両立できません。");
+        if (situation.Chiihou && fuuroList.Any()) result = new("副露を伴う地和は無効です。");
+        if (situation.Renhou && situation.IsDealer) result = new("人和はプレイヤーが子の時のみ有効です。");
+        if (situation.Renhou && situation.Tsumo) result = new("人和とロンアガリは両立できません。");
+        if (situation.Renhou && fuuroList.Any()) result = new("副露を伴う人和は無効です。");
 
         return result is not null;
     }
 
     // 天和・地和・人和(役満)を判定する
-    private static void EvaluateCommon(YakuList yakuList, HandConfig config, OptionalRules rules)
+    private static void EvaluateCommon(YakuList yakuList, WinSituation situation, GameRules rules)
     {
-        if (RenhouYakuman.Valid(config, rules))
+        if (RenhouYakuman.Valid(situation, rules))
         {
             yakuList.Add(Yaku.RenhouYakuman);
         }
-        if (Tenhou.Valid(config))
+        if (Tenhou.Valid(situation))
         {
             yakuList.Add(Yaku.Tenhou);
         }
-        if (Chiihou.Valid(config))
+        if (Chiihou.Valid(situation))
         {
             yakuList.Add(Yaku.Chiihou);
         }
     }
 
     // 役を判定する
-    private static void EvaluateYaku(YakuList yakuList, TileKindListList hand, TileKind winTile, TileKindList winGroup, FuuroList fuuroList, FuList fuList, HandConfig config, OptionalRules rules)
+    private static void EvaluateYaku(YakuList yakuList, TileKindListList hand, TileKind winTile, TileKindList winGroup, FuuroList fuuroList, FuList fuList, WinSituation situation, GameRules rules)
     {
-        EvaluateFormless(yakuList, hand, fuuroList, config, rules);
+        EvaluateFormless(yakuList, hand, fuuroList, situation, rules);
         if (hand.Count == 7)
         {
             EvaluateChiitoisu(yakuList, hand, rules);
@@ -174,22 +174,22 @@ internal static class HandCalculator
         }
         if (hand.Concat(fuuroList.KindLists).Any(x => x.IsKoutsu || x.IsKantsu))
         {
-            EvaluateKoutsu(yakuList, hand, winTile, winGroup, fuuroList, config, rules);
+            EvaluateKoutsu(yakuList, hand, winTile, winGroup, fuuroList, situation, rules);
         }
     }
 
     // 形を問わない役を判定する
-    private static void EvaluateFormless(YakuList yakuList, TileKindListList hand, FuuroList fuuroList, HandConfig config, OptionalRules rules)
+    private static void EvaluateFormless(YakuList yakuList, TileKindListList hand, FuuroList fuuroList, WinSituation situation, GameRules rules)
     {
-        if (Tsumo.Valid(config, fuuroList))
+        if (Tsumo.Valid(situation, fuuroList))
         {
             yakuList.Add(Yaku.Tsumo);
         }
-        if (Riichi.Valid(config))
+        if (Riichi.Valid(situation))
         {
             yakuList.Add(Yaku.Riichi);
         }
-        if (DaburuRiichi.Valid(config))
+        if (DaburuRiichi.Valid(situation))
         {
             yakuList.Add(Yaku.DaburuRiichi);
         }
@@ -197,27 +197,27 @@ internal static class HandCalculator
         {
             yakuList.Add(Yaku.Tanyao);
         }
-        if (Ippatsu.Valid(config))
+        if (Ippatsu.Valid(situation))
         {
             yakuList.Add(Yaku.Ippatsu);
         }
-        if (Rinshan.Valid(config))
+        if (Rinshan.Valid(situation))
         {
             yakuList.Add(Yaku.Rinshan);
         }
-        if (Chankan.Valid(config))
+        if (Chankan.Valid(situation))
         {
             yakuList.Add(Yaku.Chankan);
         }
-        if (Haitei.Valid(config))
+        if (Haitei.Valid(situation))
         {
             yakuList.Add(Yaku.Haitei);
         }
-        if (Houtei.Valid(config))
+        if (Houtei.Valid(situation))
         {
             yakuList.Add(Yaku.Houtei);
         }
-        if (Renhou.Valid(config, rules))
+        if (Renhou.Valid(situation, rules))
         {
             yakuList.Add(Yaku.Renhou);
         }
@@ -244,7 +244,7 @@ internal static class HandCalculator
     }
 
     // 七対子形の役を判定する
-    private static void EvaluateChiitoisu(YakuList yakuList, TileKindListList hand, OptionalRules rules)
+    private static void EvaluateChiitoisu(YakuList yakuList, TileKindListList hand, GameRules rules)
     {
         if (Chiitoitsu.Valid(hand))
         {
@@ -291,13 +291,13 @@ internal static class HandCalculator
     }
 
     // 刻子が必要な役を判定する
-    private static void EvaluateKoutsu(YakuList yakuList, TileKindListList hand, TileKind winTile, TileKindList winGroup, FuuroList fuuroList, HandConfig config, OptionalRules rules)
+    private static void EvaluateKoutsu(YakuList yakuList, TileKindListList hand, TileKind winTile, TileKindList winGroup, FuuroList fuuroList, WinSituation situation, GameRules rules)
     {
         if (Toitoihou.Valid(hand, fuuroList))
         {
             yakuList.Add(Yaku.Toitoihou);
         }
-        if (Sanankou.Valid(hand, winGroup, fuuroList, config))
+        if (Sanankou.Valid(hand, winGroup, fuuroList, situation))
         {
             yakuList.Add(Yaku.Sanankou);
         }
@@ -321,11 +321,11 @@ internal static class HandCalculator
         {
             yakuList.Add(Yaku.Chun);
         }
-        if (PlayerWind.Valid(hand, fuuroList, config))
+        if (PlayerWind.Valid(hand, fuuroList, situation))
         {
             yakuList.Add(Yaku.PlayerWind);
         }
-        if (RoundWind.Valid(hand, fuuroList, config))
+        if (RoundWind.Valid(hand, fuuroList, situation))
         {
             yakuList.Add(Yaku.RoundWind);
         }
@@ -347,9 +347,9 @@ internal static class HandCalculator
                 ? Yaku.JunseiChuurenpoutou
                 : Yaku.Chuurenpoutou);
         }
-        if (Suuankou.Valid(hand, winGroup, fuuroList, config))
+        if (Suuankou.Valid(hand, winGroup, fuuroList, situation))
         {
-            yakuList.Add(SuuankouTanki.Valid(hand, winGroup, winTile, fuuroList, config, rules)
+            yakuList.Add(SuuankouTanki.Valid(hand, winGroup, winTile, fuuroList, situation, rules)
                 ? Yaku.SuuankouTanki
                 : Yaku.Suuankou);
         }
@@ -368,10 +368,10 @@ internal static class HandCalculator
     }
 
     // ドラを追加する
-    private static void AddDora(YakuList yakuList, TileKindList doraIndicators, TileKindList uradoraIndicators, HandConfig config)
+    private static void AddDora(YakuList yakuList, TileKindList doraIndicators, TileKindList uradoraIndicators, WinSituation situation)
     {
         yakuList.AddRange(Enumerable.Repeat(Yaku.Dora, doraIndicators.Select(TileKind.ToRealDora).Count()));
         yakuList.AddRange(Enumerable.Repeat(Yaku.Uradora, uradoraIndicators.Select(TileKind.ToRealDora).Count()));
-        yakuList.AddRange(Enumerable.Repeat(Yaku.Akadora, config.Akadora));
+        yakuList.AddRange(Enumerable.Repeat(Yaku.Akadora, situation.Akadora));
     }
 }

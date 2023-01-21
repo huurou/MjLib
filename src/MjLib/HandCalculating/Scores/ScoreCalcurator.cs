@@ -2,7 +2,7 @@
 
 internal static class ScoreCalcurator
 {
-    public static Score Calculate(int fu, int han, HandConfig config, OptionalRules rules, bool isYakuman = false)
+    public static Score Calculate(int fu, int han, WinSituation situation, GameRules rules, bool isYakuman = false)
     {
         var _han = han;
         // 数え役満
@@ -72,8 +72,8 @@ internal static class ScoreCalcurator
 
         return new()
         {
-            Main = config.IsTsumo ? doubleRounded : config.IsDealer ? sixRounded : fourRounded,
-            Sub = config.IsTsumo ? config.IsDealer ? doubleRounded : rounded : 0,
+            Main = situation.Tsumo ? doubleRounded : situation.IsDealer ? sixRounded : fourRounded,
+            Sub = situation.Tsumo ? situation.IsDealer ? doubleRounded : rounded : 0,
         };
     }
 }
