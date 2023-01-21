@@ -10,8 +10,8 @@ internal class Tenhou : Yaku
     public override int HanClosed => 13;
     public override bool IsYakuman => true;
 
-    public static bool Valid(HandConfig config)
+    public static bool Valid(WinSituation situation)
     {
-        return config.IsTenhou;
+        return situation.Tenhou;
     }
 }

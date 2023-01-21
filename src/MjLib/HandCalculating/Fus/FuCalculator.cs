@@ -11,8 +11,9 @@ internal static class FuCalculator
     private static TileKindListList hand_ = new();
     private static TileKind winTile_ = Man1;
     private static TileKindList winGroup_ = new();
-    private static HandConfig config_ = new();
     private static FuuroList fuuroList_ = new();
+    private static WinSituation situation_ = new();
+    private static GameRules rules_ = new();
 
     /// <summary>
     /// 符を計算します。
@@ -20,22 +21,24 @@ internal static class FuCalculator
     /// <param name="hand">分割された手牌 アガリ牌含む</param>
     /// <param name="winTile">アガリ牌</param>
     /// <param name="winGroup">アガリ牌を含む面子</param>
-    /// <param name="config">HandConfig</param>
     /// <param name="fuuroList">副露のリスト</param>
+    /// <param name="situation">和了したときの状況</param>
     /// <returns></returns>
     internal static FuList Calculate(
         TileKindListList hand,
         TileKind winTile,
         TileKindList winGroup,
-        HandConfig config,
-        FuuroList? fuuroList = null)
+        FuuroList? fuuroList = null,
+        WinSituation? situation = null,
+        GameRules? rules = null)
     {
         fuList_ = new();
         hand_ = hand;
         winTile_ = winTile;
         winGroup_ = winGroup;
-        config_ = config;
         fuuroList_ = fuuroList ?? new();
+        situation_ = situation ?? new();
+        rules_ = rules ?? new();
 
         if (hand_.Count == 7) return new() { Fu.Chiitoitsu };
         CalcJantou();
@@ -56,12 +59,12 @@ internal static class FuCalculator
             fuList_.Add(Fu.DragonToitsu);
         }
         // 自風牌符
-        if (WindToTileKind(config_.PlayerWind) == toitsuTile)
+        if (WindToTileKind(situation_.Player) == toitsuTile)
         {
             fuList_.Add(Fu.PlayerWindToitsu);
         }
         // 場風牌符
-        if (WindToTileKind(config_.RoundWind) == toitsuTile)
+        if (WindToTileKind(situation_.Round) == toitsuTile)
         {
             fuList_.Add(Fu.RoundWindToitsu);
         }
@@ -99,7 +102,7 @@ internal static class FuCalculator
             fuList_.Add(minko[0].IsChuuchan ? Fu.ChuuchanMinko : Fu.YaochuuMinko);
         }
         // シャンポン待ちロンアガリのとき明刻扱いになる
-        if (!config_.IsTsumo && winGroup_.IsKoutsu)
+        if (!situation_.Tsumo && winGroup_.IsKoutsu)
         {
             fuList_.Add(winGroup_[0].IsChuuchan ? Fu.ChuuchanMinko : Fu.YaochuuMinko);
         }
@@ -109,7 +112,7 @@ internal static class FuCalculator
             fuList_.Add(anko[0].IsChuuchan ? Fu.ChuuchanAnko : Fu.YaochuuAnko);
         }
         // シャンポン待ちツモアガリのとき暗刻扱いになる
-        if (config_.IsTsumo && winGroup_.IsKoutsu)
+        if (situation_.Tsumo && winGroup_.IsKoutsu)
         {
             fuList_.Add(winGroup_[0].IsChuuchan ? Fu.ChuuchanAnko : Fu.YaochuuAnko);
         }
@@ -128,13 +131,13 @@ internal static class FuCalculator
     private static void CalcBase()
     {
         // ピンヅモありで符が無くて面前でツモのときツモの2符を加えない
-        if (config_.IsTsumo)
+        if (situation_.Tsumo)
         {
-            if (config_.Rurles.Pinzumo && fuList_.Total == 0 && !fuuroList_.HasOpen) { }
+            if (rules_.Pinzumo && fuList_.Total == 0 && !fuuroList_.HasOpen) { }
             else fuList_.Add(Fu.Tsumo);
         }
         // 食い平和のロンアガリは副底を30符にする
-        if (!config_.IsTsumo && fuuroList_.HasOpen && fuList_.Total == 0)
+        if (!situation_.Tsumo && fuuroList_.HasOpen && fuList_.Total == 0)
         {
             fuList_.Add(Fu.OpenPinfuBase);
         }
@@ -142,7 +145,7 @@ internal static class FuCalculator
         {
             fuList_.Add(Fu.Base);
             // メンゼンロン
-            if (!config_.IsTsumo && !fuuroList_.HasOpen)
+            if (!situation_.Tsumo && !fuuroList_.HasOpen)
             {
                 fuList_.Add(Fu.Menzen);
             }

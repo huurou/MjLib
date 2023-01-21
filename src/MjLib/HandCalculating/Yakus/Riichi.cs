@@ -10,8 +10,8 @@ internal class Riichi : Yaku
     public override int HanClosed => 1;
     public override bool IsYakuman => false;
 
-    public static bool Valid(HandConfig config_)
+    public static bool Valid(WinSituation situation_)
     {
-        return config_.IsRiichi && !config_.IsDaburuRiichi;
+        return situation_.Riichi && !situation_.DaburuRiichi;
     }
 }

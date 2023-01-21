@@ -14,9 +14,9 @@ internal class Sanankou : Yaku
     public override int HanClosed => 2;
     public override bool IsYakuman => false;
 
-    public static bool Valid(TileKindListList hand, TileKindList winGroup, FuuroList fuuroList, HandConfig config)
+    public static bool Valid(TileKindListList hand, TileKindList winGroup, FuuroList fuuroList, WinSituation situation)
     {
-        var anko = config.IsTsumo
+        var anko = situation.Tsumo
             ? hand.Where(x => x.IsKoutsu)
             : hand.Where(x => x.IsKoutsu && x != winGroup);
         var ankan = fuuroList.Where(x => x.IsAnkan).Select(x => x.KindList);

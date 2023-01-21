@@ -3,7 +3,7 @@
 /// <summary>
 /// 点数に関わるルール
 /// </summary>
-internal class OptionalRules
+internal class GameRules
 {
     /// <summary>
     /// 喰いタンあり/なし
