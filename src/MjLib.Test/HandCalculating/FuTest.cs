@@ -89,7 +89,7 @@ public class FuTest
 
         hand = TileKindList.Parse(man: "234456", pin: "66", sou: "123");
         winTile = Sou1;
-        var fuuroList = new FuuroList { new(Daiminkan, TileKindList.Parse(sou: "4444")) };
+        var fuuroList = new FuuroList { new(Minkan, TileKindList.Parse(sou: "4444")) };
         winGroup = TileKindList.Parse(sou: "123");
         handConfig = new HandConfig { IsTsumo = true, IsRinshan = true };
         actual = FuCalculator.Calculate(HandDevider.Devide(hand)[0], winTile, winGroup, handConfig, fuuroList);
@@ -326,25 +326,25 @@ public class FuTest
         var winTile = Pin6;
         var winGroup = TileKindList.Parse(pin: "456");
         var handConfig = new HandConfig();
-        var fuuroList = new FuuroList { new(Daiminkan, TileKindList.Parse(pin: "2222")) };
+        var fuuroList = new FuuroList { new(Minkan, TileKindList.Parse(pin: "2222")) };
         var actual = FuCalculator.Calculate(devided, winTile, winGroup, handConfig, fuuroList);
         var expected = new FuList { Fu.Base, Fu.ChuuchanMinkan };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(30));
 
-        fuuroList = new FuuroList { new(Shouminkan, TileKindList.Parse(pin: "2222")) };
+        fuuroList = new FuuroList { new(Minkan, TileKindList.Parse(pin: "2222")) };
         actual = FuCalculator.Calculate(devided, winTile, winGroup, handConfig, fuuroList);
         expected = new FuList { Fu.Base, Fu.ChuuchanMinkan };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(30));
 
-        fuuroList = new FuuroList { new(Daiminkan, TileKindList.Parse(honor: "7777")) };
+        fuuroList = new FuuroList { new(Minkan, TileKindList.Parse(honor: "7777")) };
         actual = FuCalculator.Calculate(devided, winTile, winGroup, handConfig, fuuroList);
         expected = new FuList { Fu.Base, Fu.YaochuuMinkan };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(40));
 
-        fuuroList = new FuuroList { new(Shouminkan, TileKindList.Parse(sou: "1111")) };
+        fuuroList = new FuuroList { new(Minkan, TileKindList.Parse(sou: "1111")) };
         actual = FuCalculator.Calculate(devided, winTile, winGroup, handConfig, fuuroList);
         expected = new FuList { Fu.Base, Fu.YaochuuMinkan };
         Assert.That(actual, Is.EquivalentTo(expected));
