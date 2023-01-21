@@ -2,8 +2,6 @@
 
 internal class HandConfig
 {
-    public OptionalRules Rurles { get; init; } = new();
-
     /// <summary>
     /// ツモアガリかどうか
     /// </summary>

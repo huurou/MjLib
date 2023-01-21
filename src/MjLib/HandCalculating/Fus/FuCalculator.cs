@@ -11,8 +11,9 @@ internal static class FuCalculator
     private static TileKindListList hand_ = new();
     private static TileKind winTile_ = Man1;
     private static TileKindList winGroup_ = new();
-    private static HandConfig config_ = new();
     private static FuuroList fuuroList_ = new();
+    private static HandConfig config_ = new();
+    private static OptionalRules rules_ = new();
 
     /// <summary>
     /// 符を計算します。
@@ -20,22 +21,24 @@ internal static class FuCalculator
     /// <param name="hand">分割された手牌 アガリ牌含む</param>
     /// <param name="winTile">アガリ牌</param>
     /// <param name="winGroup">アガリ牌を含む面子</param>
-    /// <param name="config">HandConfig</param>
     /// <param name="fuuroList">副露のリスト</param>
+    /// <param name="config">HandConfig</param>
     /// <returns></returns>
     internal static FuList Calculate(
         TileKindListList hand,
         TileKind winTile,
         TileKindList winGroup,
-        HandConfig config,
-        FuuroList? fuuroList = null)
+        FuuroList? fuuroList = null,
+        HandConfig? config = null,
+        OptionalRules? rules = null)
     {
         fuList_ = new();
         hand_ = hand;
         winTile_ = winTile;
         winGroup_ = winGroup;
-        config_ = config;
         fuuroList_ = fuuroList ?? new();
+        config_ = config ?? new();
+        rules_ = rules ?? new();
 
         if (hand_.Count == 7) return new() { Fu.Chiitoitsu };
         CalcJantou();
@@ -130,7 +133,7 @@ internal static class FuCalculator
         // ピンヅモありで符が無くて面前でツモのときツモの2符を加えない
         if (config_.IsTsumo)
         {
-            if (config_.Rurles.Pinzumo && fuList_.Total == 0 && !fuuroList_.HasOpen) { }
+            if (rules_.Pinzumo && fuList_.Total == 0 && !fuuroList_.HasOpen) { }
             else fuList_.Add(Fu.Tsumo);
         }
         // 食い平和のロンアガリは副底を30符にする

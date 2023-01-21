@@ -2,17 +2,17 @@
 
 internal static class ScoreCalcurator
 {
-    public static Score Calculate(int fu, int han, HandConfig config, bool isYakuman = false)
+    public static Score Calculate(int fu, int han, HandConfig config, OptionalRules rules, bool isYakuman = false)
     {
         var _han = han;
         // 数え役満
         if (_han >= 13 && !isYakuman)
         {
-            if (config.Rurles.KazoeLimit == Kazoe.Limited)
+            if (rules.KazoeLimit == Kazoe.Limited)
             {
                 _han = 13;
             }
-            else if (config.Rurles.KazoeLimit == Kazoe.Sanbaiman)
+            else if (rules.KazoeLimit == Kazoe.Sanbaiman)
             {
                 _han = 12;
             }
@@ -28,7 +28,7 @@ internal static class ScoreCalcurator
             sixRounded = (int)((6 * basePoint + 99) / 100) * 100;
 
             var IsKiriage = false;
-            if (config.Rurles.Kiriage)
+            if (rules.Kiriage)
             {
                 if (_han == 4 && fu == 30)
                 {

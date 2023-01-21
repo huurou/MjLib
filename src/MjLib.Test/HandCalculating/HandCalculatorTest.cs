@@ -223,8 +223,9 @@ public class HandCalculatorTest
     {
         var hand = TileKindList.Parse(man: "234456", pin: "66", sou: "123444");
         var winTile = Sou4;
-        var config = new HandConfig { Rurles = new() { RenhouAsYakuman = false }, IsRenhou = true, PlayerWind = Wind.South };
-        var actual = HandCalculator.Calculate(hand, winTile, config: config);
+        var config = new HandConfig { IsRenhou = true, PlayerWind = Wind.South };
+        var rules = new OptionalRules { RenhouAsYakuman = false };
+        var actual = HandCalculator.Calculate(hand, winTile, config: config, rules: rules);
         var expected = new YakuList { Yaku.Renhou };
         Assert.Multiple(() =>
         {
@@ -233,12 +234,12 @@ public class HandCalculatorTest
             Assert.That(actual.YakuList, Is.EquivalentTo(expected));
         });
 
-        config = new HandConfig { Rurles = new() { RenhouAsYakuman = false }, IsRenhou = true, IsTsumo = true };
-        actual = HandCalculator.Calculate(hand, winTile, config: config);
+        config = new HandConfig { IsRenhou = true, IsTsumo = true };
+        actual = HandCalculator.Calculate(hand, winTile, config: config, rules: rules);
         Assert.That(actual.Error, Is.Not.Null);
 
-        config = new HandConfig { Rurles = new() { RenhouAsYakuman = false }, IsRenhou = true };
-        actual = HandCalculator.Calculate(hand, winTile, config: config);
+        config = new HandConfig { IsRenhou = true };
+        actual = HandCalculator.Calculate(hand, winTile, config: config, rules: rules);
         Assert.That(actual.Error, Is.Not.Null);
 
         hand = TileKindList.Parse(man: "234456", pin: "66", sou: "123");
@@ -326,11 +327,11 @@ public class HandCalculatorTest
             Assert.That(actual.YakuList, Is.EquivalentTo(expected));
         });
 
-        var config = new HandConfig { Rurles = new() { Kuitan = false } };
-        actual = HandCalculator.Calculate(hand, winTile, fuuroList, config:config);
+        var rules = new OptionalRules { Kuitan = false };
+        actual = HandCalculator.Calculate(hand, winTile, fuuroList, rules: rules);
         Assert.That(actual.Error, Is.Not.Null);
 
-        hand = TileKindList.Parse(man: "234567", pin: "55", sou: "234", honor:"222");
+        hand = TileKindList.Parse(man: "234567", pin: "55", sou: "234", honor: "222");
         actual = HandCalculator.Calculate(hand, winTile, fuuroList);
         Assert.That(actual.Error, Is.Not.Null);
     }
