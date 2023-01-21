@@ -27,7 +27,7 @@ internal class Fuuro
     /// <summary>
     /// 槓かどうか
     /// </summary>
-    public bool IsKan => Type is FuuroType.Ankan or FuuroType.Daiminkan or FuuroType.Shouminkan;
+    public bool IsKan => Type is FuuroType.Ankan or FuuroType.Minkan;
     /// <summary>
     /// 暗槓かどうか
     /// </summary>
@@ -35,7 +35,7 @@ internal class Fuuro
     /// <summary>
     /// 明槓かどうか
     /// </summary>
-    public bool IsMinkan => Type is FuuroType.Daiminkan or FuuroType.Shouminkan;
+    public bool IsMinkan => Type is FuuroType.Minkan;
     /// <summary>
     /// 抜きかどうか
     /// </summary>
@@ -43,7 +43,7 @@ internal class Fuuro
     /// <summary>
     /// 面前が崩れる副露かどうか
     /// </summary>
-    public bool IsOpen => Type is FuuroType.Chi or FuuroType.Pon or FuuroType.Shouminkan or FuuroType.Daiminkan;
+    public bool IsOpen => Type is FuuroType.Chi or FuuroType.Pon or FuuroType.Minkan;
 
     public Fuuro(FuuroType type, TileKindList kindList)
     {
@@ -58,8 +58,7 @@ internal class Fuuro
             FuuroType.Chi => "チー",
             FuuroType.Pon => "ポン",
             FuuroType.Ankan => "暗槓",
-            FuuroType.Daiminkan => "大明槓",
-            FuuroType.Shouminkan => "小明槓",
+            FuuroType.Minkan => "明槓",
             FuuroType.Nuki => "抜き",
             _ => "",
         };
@@ -85,13 +84,10 @@ internal enum FuuroType
     /// </summary>
     Ankan,
     /// <summary>
-    /// 大明槓
+    /// 明槓 大明槓または小明槓
     /// </summary>
-    Daiminkan,
+    Minkan,
     /// <summary>
-    /// 小明槓
-    /// </summary>
-    Shouminkan,
     /// <summary>
     /// 抜き
     /// </summary>
