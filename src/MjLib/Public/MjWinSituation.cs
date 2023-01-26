@@ -2,7 +2,7 @@
 
 namespace MjLib;
 
-public class MjWinSituation
+public record MjWinSituation
 {
     /// <summary>
     /// ツモアガリかどうか デフォルト:false

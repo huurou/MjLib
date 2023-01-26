@@ -2,16 +2,8 @@
 
 namespace MjLib;
 
-public class MjYaku
+public record MjYaku(int Id, int Han, string Name)
 {
-    public int Id { get; init; }
-    public int Han { get; init; }
-    public string Name { get; init; }
-
     internal MjYaku(Yaku yaku, bool open)
-    {
-        Id = yaku.Id;
-        Han = open ? yaku.HanOpen : yaku.HanClosed;
-        Name = yaku.Name;
-    }
+        : this(yaku.Id, open ? yaku.HanOpen : yaku.HanClosed, yaku.Name) { }
 }

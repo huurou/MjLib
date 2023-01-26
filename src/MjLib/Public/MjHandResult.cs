@@ -3,13 +3,13 @@ using MjLib.HandCalculating.Yakus;
 
 namespace MjLib;
 
-public class MjHandResult
+public record MjHandResult
 {
-    public int Fu { get; init; }
-    public int Han { get; init; }
-    public MjScore Score { get; init; }
-    public List<MjYaku> Yakus { get; init; }
-    public List<MjFu> Fus { get; init; }
+    public int Fu { get; }
+    public int Han { get; }
+    public MjScore Score { get; }
+    public List<MjYaku> Yakus { get; }
+    public List<MjFu> Fus { get; }
 
     internal MjHandResult(HandResult result, bool open)
     {
