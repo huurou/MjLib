@@ -100,12 +100,12 @@ internal class TileKindList : List<TileKind>, IEquatable<TileKindList>, ICompara
         return Parse(man, pin, sou, honor);
     }
 
-    public static TileKindList Parse(string man = "", string pin = "", string sou = "", string honor = "")
+    public static TileKindList Parse(string? man = null, string? pin = null, string? sou = null, string? honor = null)
     {
-        var mans = man.Select(x => new TileKind(int.Parse(x.ToString()) - 1));
-        var pins = pin.Select(x => new TileKind(int.Parse(x.ToString()) + 8));
-        var sous = sou.Select(x => new TileKind(int.Parse(x.ToString()) + 17));
-        var honors = honor.Select(x => new TileKind(int.Parse(x.ToString()) + 26));
+        var mans = (man ?? "").Select(x => new TileKind(int.Parse(x.ToString()) - 1));
+        var pins = (pin ?? "").Select(x => new TileKind(int.Parse(x.ToString()) + 8));
+        var sous = (sou ?? "").Select(x => new TileKind(int.Parse(x.ToString()) + 17));
+        var honors = (honor ?? "").Select(x => new TileKind(int.Parse(x.ToString()) + 26));
         return new(mans.Concat(pins).Concat(sous).Concat(honors));
     }
 

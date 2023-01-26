@@ -1,6 +1,6 @@
 ﻿namespace MjLib.HandCalculating.Yakus;
 
-internal class Ippatsu : Yaku
+internal record Ippatsu : Yaku
 {
     public Ippatsu(int id)
         : base(id) { }

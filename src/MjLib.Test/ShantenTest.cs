@@ -9,7 +9,7 @@ public class ShantenTest
     public void ForRegularTest()
     {
         var kindList = TileKindList.Parse(man: "567", pin: "11", sou: "111234567");
-        Assert.That(Shanten.CalculateForRegular(kindList), Is.EqualTo(Shanten.AGARI_STATE));
+        Assert.That(Shanten.CalculateForRegular(kindList), Is.EqualTo(Shanten.AGARI_SHANTEN));
 
         kindList = TileKindList.Parse(man: "567", pin: "11", sou: "111345677");
         Assert.That(Shanten.CalculateForRegular(kindList), Is.EqualTo(0));
@@ -33,7 +33,7 @@ public class ShantenTest
         Assert.That(Shanten.CalculateForRegular(kindList), Is.EqualTo(6));
 
         kindList = TileKindList.Parse(sou: "11123456788999");
-        Assert.That(Shanten.CalculateForRegular(kindList), Is.EqualTo(Shanten.AGARI_STATE));
+        Assert.That(Shanten.CalculateForRegular(kindList), Is.EqualTo(Shanten.AGARI_SHANTEN));
 
         kindList = TileKindList.Parse(sou: "11122245679999");
         Assert.That(Shanten.CalculateForRegular(kindList), Is.EqualTo(0));
@@ -61,7 +61,7 @@ public class ShantenTest
 
         // 同種の数牌3枚が存在するだが刻子として使わない手の判定
         kindList = TileKindList.Parse(pin: "11", sou: "345677788899");
-        Assert.That(Shanten.CalculateForRegular(kindList), Is.EqualTo(Shanten.AGARI_STATE));
+        Assert.That(Shanten.CalculateForRegular(kindList), Is.EqualTo(Shanten.AGARI_SHANTEN));
 
     }
 
@@ -82,7 +82,7 @@ public class ShantenTest
     public void ForChiitoitsuTest()
     {
         var kindList = TileKindList.Parse(man: "77", pin: "114477", sou: "114477");
-        Assert.That(Shanten.CalculateForChiitoitsu(kindList), Is.EqualTo(Shanten.AGARI_STATE));
+        Assert.That(Shanten.CalculateForChiitoitsu(kindList), Is.EqualTo(Shanten.AGARI_SHANTEN));
 
         kindList = TileKindList.Parse(man: "76", pin: "114477", sou: "114477");
         Assert.That(Shanten.CalculateForChiitoitsu(kindList), Is.EqualTo(0));
@@ -110,7 +110,7 @@ public class ShantenTest
     public void ForKokushiTest()
     {
         var kindList = TileKindList.Parse(man: "19", pin: "19", sou: "19", honor: "12345677");
-        Assert.That(Shanten.CalculateForKokushi(kindList), Is.EqualTo(Shanten.AGARI_STATE));
+        Assert.That(Shanten.CalculateForKokushi(kindList), Is.EqualTo(Shanten.AGARI_SHANTEN));
 
         kindList = TileKindList.Parse(man: "19", pin: "19", sou: "129", honor: "1234567");
         Assert.That(Shanten.CalculateForKokushi(kindList), Is.EqualTo(0));
@@ -141,7 +141,7 @@ public class ShantenTest
     public void ForOpenSetsTest()
     {
         var kindList = TileKindList.Parse(pin: "222567", sou: "44467778");
-        Assert.That(Shanten.Calculate(kindList), Is.EqualTo(Shanten.AGARI_STATE));
+        Assert.That(Shanten.Calculate(kindList), Is.EqualTo(Shanten.AGARI_SHANTEN));
 
         kindList = TileKindList.Parse(pin: "222567", sou: "44468");
         Assert.That(Shanten.Calculate(kindList), Is.EqualTo(0));
@@ -156,7 +156,7 @@ public class ShantenTest
         Assert.That(Shanten.Calculate(kindList), Is.EqualTo(0));
 
         kindList = TileKindList.Parse(sou: "88");
-        Assert.That(Shanten.Calculate(kindList), Is.EqualTo(Shanten.AGARI_STATE));
+        Assert.That(Shanten.Calculate(kindList), Is.EqualTo(Shanten.AGARI_SHANTEN));
     }
 
     [Test]

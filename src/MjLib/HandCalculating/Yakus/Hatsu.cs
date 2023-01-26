@@ -4,7 +4,7 @@ using MjLib.TileKinds;
 
 namespace MjLib.HandCalculating.Yakus;
 
-internal class Hatsu : Yaku
+internal record Hatsu : Yaku
 {
     public Hatsu(int id)
         : base(id) { }

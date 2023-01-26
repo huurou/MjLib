@@ -3,7 +3,7 @@ using MjLib.HandCalculating.Dividings;
 
 namespace MjLib.HandCalculating.Yakus;
 
-internal class Sanshokudoukou : Yaku
+internal record Sanshokudoukou : Yaku
 {
     public Sanshokudoukou(int id)
         : base(id) { }

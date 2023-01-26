@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace MjLib.HandCalculating.Yakus;
 
-internal class Ittsu : Yaku
+internal record Ittsu : Yaku
 {
     public Ittsu(int id)
         : base(id) { }

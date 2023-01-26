@@ -1,6 +1,6 @@
 ﻿namespace MjLib.HandCalculating.Yakus;
 
-internal class DaburuRiichi : Yaku
+internal record DaburuRiichi : Yaku
 {
     public DaburuRiichi(int id)
         : base(id) { }

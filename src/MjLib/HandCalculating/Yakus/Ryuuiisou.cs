@@ -4,7 +4,7 @@ using static MjLib.TileKinds.TileKind;
 
 namespace MjLib.HandCalculating.Yakus;
 
-internal class Ryuuiisou : Yaku
+internal record Ryuuiisou : Yaku
 {
     public Ryuuiisou(int id)
         : base(id) { }

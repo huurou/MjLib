@@ -2,7 +2,7 @@
 
 namespace MjLib.HandCalculating.Yakus;
 
-internal class Chinitsu : Yaku
+internal record Chinitsu : Yaku
 {
     public Chinitsu(int id)
         : base(id) { }
