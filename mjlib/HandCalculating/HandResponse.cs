@@ -7,14 +7,14 @@ namespace mjlib.HandCalculating
         public Score Score { get; }
         public int Han { get; }
         public int Fu { get; }
-        public List<YakuBase> Yakus { get; }
+        public List<Yaku> Yakus { get; }
         public string? Error { get; }
         public List<FuDetail> FuDetailSet { get; }
 
         public HandResult(Score? socre = null,
             int han = 0,
             int fu = 0,
-            List<YakuBase>? yaku = null,
+            List<Yaku>? yaku = null,
             string? error = null,
             List<FuDetail>? fuDetails = null)
         {

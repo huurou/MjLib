@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace mjlib.HandCalculating
 {
-    public abstract class YakuBase
+    public abstract class Yaku
     {
         public abstract int YakuId { get; }
         public abstract int TenhouId { get; }
