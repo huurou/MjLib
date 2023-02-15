@@ -30,8 +30,8 @@ namespace mjlib.HandCalculating
             }
             config ??= new();
 
-            var yakus = new List<YakuBase>();
-            var tileArray = tiles.ToTiles34();
+            var yakus = new List<Yaku>();
+            var countArray = tiles.ToTiles34();
             var openMelds = melds.Where(x => x.IsOpen).Select(x => x.KindList);
             var allMelds = melds.Select(x => x.KindList);
             var isOpenHand = openMelds.Any();
@@ -74,7 +74,7 @@ namespace mjlib.HandCalculating
                 return new HandResult(error: "Ippatsu can't be declared without riichi");
             }
 
-            var devidedHand = DivideHand(tileArray, melds);
+            var devidedHand = DivideHand(countArray, melds);
             var results = new List<HandResult>();
             foreach (var hand in devidedHand)
             {
@@ -89,12 +89,13 @@ namespace mjlib.HandCalculating
                 {
                     Score? score = null;
                     string? error = null;
-                    yakus = new List<YakuBase>();
+                    yakus = new List<Yaku>();
                     var han = 0;
                     var (fuDetails, fu) = CalculateFu(hand, winTile, winGroup, config, valuedTiles, melds);
                     var isPinfu = fuDetails.Count == 1 && !isChiitoi && !isOpenHand;
-                    var ponSets = hand.Where(x => x.IsPon);
-                    var chiSets = hand.Where(x => x.IsChi);
+                    var koutsus = hand.Where(x => x.IsPon);
+                    var shuntsus = hand.Where(x => x.IsChi);
+            #region YakuEvaluating
                     if (config.IsTsumo)
                     {
                         if (!isOpenHand)
@@ -198,7 +199,7 @@ namespace mjlib.HandCalculating
                     }
 
                     //順子が必要な役
-                    if (chiSets.Any())
+                    if (shuntsus.Any())
                     {
                         if (new Chanta().Valid(hand))
                         {
@@ -230,7 +231,7 @@ namespace mjlib.HandCalculating
                     }
 
                     //刻子が必要な役
-                    if (ponSets.Any())
+                    if (koutsus.Any())
                     {
                         if (new Toitoi().Valid(hand))
                         {
@@ -340,7 +341,7 @@ namespace mjlib.HandCalculating
                         }
                         if (melds.Count == 0 && new ChuurenPoutou().Valid(hand))
                         {
-                            if (tileArray[winTile.Value / 4] is 2
+                            if (countArray[winTile.Value / 4] is 2
                                 or 4)
                             {
                                 if (config.Rurles.HasDoubleYakuman)
@@ -362,7 +363,7 @@ namespace mjlib.HandCalculating
                             winTile, config.IsTsumo
                         }))
                         {
-                            if (tileArray[winTile.Value / 4] == 2)
+                            if (countArray[winTile.Value / 4] == 2)
                             {
                                 if (config.Rurles.HasDoubleYakuman)
                                 {
@@ -401,6 +402,7 @@ namespace mjlib.HandCalculating
                     {
                         yakus = yakumanList;
                     }
+                    #endregion
 
                     //翻を計算する
                     foreach (var item in yakus)
@@ -419,6 +421,7 @@ namespace mjlib.HandCalculating
                         error = "There are no yaku in the hand.";
                         score = null;
                     }
+                    #region YakuEvaluating
 
                     //役満にドラは付かない
                     if (yakumanList.Count == 0)
@@ -444,6 +447,7 @@ namespace mjlib.HandCalculating
                                 countOfAkaDora++;
                             }
                         }
+            #endregion YakuEvaluating
                         if (countOfDora != 0)
                         {
                             yakus.Add(new Dora { HanOpen = countOfDora, HanClosed = countOfDora });
@@ -462,9 +466,10 @@ namespace mjlib.HandCalculating
                     results.Add(new HandResult(score, han, fu, yakus, error, fuDetails));
                 }
             }
-            if (!isOpenHand && new KokushiMusou().Valid(null, new object[] { tileArray }))
+            if (!isOpenHand && new KokushiMusou().Valid(null, new object[] { countArray }))
             {
-                if (tileArray[winTile.Value / 4] == 2)
+            #region YakuEvaluating
+                if (countArray[winTile.Value / 4] == 2)
                 {
                     if (config.Rurles.HasDoubleYakuman)
                     {
@@ -491,6 +496,7 @@ namespace mjlib.HandCalculating
                 {
                     yakus.Add(new Chiihou());
                 }
+            #endregion YakuEvaluating
                 var han = 0;
                 foreach (var item in yakus)
                 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace mjlib.HandCalculating.YakuList.Yakuman
 {
-    internal class DaburuChuurenPoutou : YakuBase
+    internal class DaburuChuurenPoutou : Yaku
     {
         public override int YakuId => 49;
 
@@ -15,7 +15,7 @@ namespace mjlib.HandCalculating.YakuList.Yakuman
 
         public override string English => "Pure Nine Gates";
 
-        public override int HanOpen { get; set; } = 26;
+        public override int HanOpen { get; set; } = 0;
 
         public override int HanClosed { get; set; } = 26;
 

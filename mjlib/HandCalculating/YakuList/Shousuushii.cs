@@ -5,7 +5,7 @@ using static mjlib.Constants;
 
 namespace mjlib.HandCalculating.YakuList.Yakuman
 {
-    internal class Shousuushii : YakuBase
+    internal class Shousuushii : Yaku
     {
         public override int YakuId => 40;
 

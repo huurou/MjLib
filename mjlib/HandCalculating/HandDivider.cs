@@ -29,26 +29,26 @@ internal static class HandDivider
 
         foreach (var pair in pairs)
         {
-            var localTiles34 = new Tiles34(tiles34.Select(x => x));
+            var copiedArray = new Tiles34(tiles34.Select(x => x));
 
             //すでに鳴いている牌は形が決まっているので外す
             foreach (var openItem in openKindList)
             {
-                localTiles34[openItem.Value]--;
+                copiedArray[openItem.Value]--;
             }
 
             //雀頭候補を外す
-            localTiles34[pair.Value] -= 2;
+            copiedArray[pair.Value] -= 2;
 
-            var man = FindValidCombinations(localTiles34, 0, 8);
-            var pin = FindValidCombinations(localTiles34, 9, 17);
-            var sou = FindValidCombinations(localTiles34, 18, 26);
+            var man = FindValidCombinations(copiedArray, 0, 8);
+            var pin = FindValidCombinations(copiedArray, 9, 17);
+            var sou = FindValidCombinations(copiedArray, 18, 26);
 
             var honor = new List<IEnumerable<int>>();
             var honors = new List<IEnumerable<TileKindList>>();
             foreach (var x in HONOR_INDICES)
             {
-                if (localTiles34[x] == 3)
+                if (copiedArray[x] == 3)
                 {
                     honor.Add(Enumerable.Repeat(x, 3));
                 }

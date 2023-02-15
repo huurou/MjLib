@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace mjlib.HandCalculating.YakuList
 {
-    internal class Chun : YakuBase
+    internal class Chun : Yaku
     {
         public override int YakuId => 15;
 

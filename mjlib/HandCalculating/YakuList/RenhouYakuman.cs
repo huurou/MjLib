@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace mjlib.HandCalculating.YakuList.Yakuman
 {
-    internal class Chiihou : YakuBase
+    internal class RenhouYakuman : Yaku
     {
-        public override int YakuId => 51;
+        public override int YakuId => 52;
 
-        public override int TenhouId => 38;
+        public override int TenhouId => -1;
 
-        public override string Name => "Chiihou";
+        public override string Name => "Renhou";
 
-        public override string Japanese => "地和";
+        public override string Japanese => "人和";
 
-        public override string English => "Earthly Hand";
+        public override string English => "Hand of Man";
 
         public override int HanOpen { get; set; } = 13;
 

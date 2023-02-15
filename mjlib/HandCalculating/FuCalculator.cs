@@ -55,7 +55,7 @@ namespace mjlib.HandCalculating
         public const string CLOSED_TERMINAL_KAN = "closed_terminal_kan";
         public const string OPEN_TERMINAL_KAN = "open_terminal_kan";
 
-        public static (List<FuDetail>, int) CalculateFu(IList<TileKindList> devidedHand,
+        public static (List<FuDetail>, int) CalculateFu(IList<TileKindList> hand,
             Tile winTile,
             TileKindList winGroup,
             HandConfig config,
@@ -72,7 +72,7 @@ namespace mjlib.HandCalculating
                 melds = new List<Meld>();
             }
             var fuDetails = new List<FuDetail>();
-            if (devidedHand.Count == 7)
+            if (hand.Count == 7)
             {
                 fuDetails = new List<FuDetail>
                 {
@@ -80,26 +80,26 @@ namespace mjlib.HandCalculating
                 };
                 return (fuDetails, 25);
             }
-            var pair = devidedHand.Where(x => x.IsPair).ElementAt(0);
-            var ponSets = devidedHand.Where(x => x.IsPon);
+            var pair = hand.Where(x => x.IsPair).ElementAt(0);
+            var ponSets = hand.Where(x => x.IsPon);
 
             var openMeldsCopy = melds.Where(x => x.Type == MeldType.Chi)
                                          .Select(x => x.KindList)
                                          .ToList();
-            var closedChiSets = new List<TileKindList>();
-            foreach (var x in devidedHand)
+            var handShuntsus = new List<TileKindList>();
+            foreach (var x in hand)
             {
-                if (!openMeldsCopy.Contains(x))
-                {
-                    closedChiSets.Add(x);
-                }
-                else
+                if (openMeldsCopy.Contains(x))
                 {
                     openMeldsCopy.Remove(x);
                 }
+                else
+                {
+                    handShuntsus.Add(x);
+                }
             }
 
-            if (closedChiSets.Contains(winGroup))
+            if (handShuntsus.Contains(winGroup))
             {
                 var tileIndex = winTileKind.Simplify;
                 //ペンチャン
@@ -208,7 +208,8 @@ namespace mjlib.HandCalculating
         //点パネ
         private static int RoundFu(IList<FuDetail> fuDetails)
         {
-            var fu = fuDetails.Select(x => x.Fu).Sum();
+            //var fu = fuDetails.Select(x => x.Fu).Sum();
+            var fu = fuDetails.Sum(x => x.Fu);
             return (fu + 9) / 10 * 10;
         }
     }

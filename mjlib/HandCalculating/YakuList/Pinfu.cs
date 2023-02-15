@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace mjlib.HandCalculating.YakuList
 {
-    internal class Pinfu : YakuBase
+    internal class Pinfu : Yaku
     {
         public override int YakuId => 10;
         public override int TenhouId => 7;

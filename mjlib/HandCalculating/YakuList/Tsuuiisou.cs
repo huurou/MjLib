@@ -4,17 +4,17 @@ using System.Linq;
 
 namespace mjlib.HandCalculating.YakuList.Yakuman
 {
-    internal class Ryuuiisou : YakuBase
+    internal class Tsuuiisou : Yaku
     {
-        public override int YakuId => 41;
+        public override int YakuId => 43;
 
-        public override int TenhouId => 43;
+        public override int TenhouId => 42;
 
-        public override string Name => "Ryuuiisou";
+        public override string Name => "Tsuuiisou";
 
-        public override string Japanese => "緑一色";
+        public override string Japanese => "字一色";
 
-        public override string English => "All Green";
+        public override string English => "All Honors";
 
         public override int HanOpen { get; set; } = 13;
 
@@ -25,12 +25,8 @@ namespace mjlib.HandCalculating.YakuList.Yakuman
         public override bool Valid(IEnumerable<TileKindList>? hand, params object[] args)
         {
             if (hand is null) return false;
-            var green_indices = new List<int>
-            {
-                19, 20, 21, 23, 25, Constants.HATSU
-            };
             var indices = hand.Aggregate((x, y) => x.AddRange(y));
-            return indices.All(x => green_indices.Contains(x.Value));
+            return indices.All(x => Constants.HONOR_INDICES.Contains(x.Value));
         }
     }
 }
