@@ -3,20 +3,20 @@
 /// <summary>
 /// 点数に関わるルール
 /// </summary>
-internal class OptionalRules
+internal class GameRules
 {
     /// <summary>
     /// 喰いタンあり/なし
     /// </summary>
-    public bool HasOpenTanyao { get; init; } = true;
+    public bool Kuitan { get; init; } = true;
 
     /// <summary>
     /// ダブル役満あり/なし
     /// </summary>
-    public bool HasDoubleYakuman { get; init; }=true;
+    public bool DaburuYakuman { get; init; } = true;
 
     /// <summary>
-    /// 数え役満あり/なし
+    /// 数え役満
     /// </summary>
     public Kazoe KazoeLimit { get; init; } = Kazoe.Limited;
 
@@ -38,6 +38,21 @@ internal class OptionalRules
     /// <summary>
     /// 大車輪あり/なし
     /// </summary>
-    public bool HasDaisharin { get; init; } = false;
+    public bool Daisharin { get; init; } = false;
+}
 
+internal enum Kazoe
+{
+    /// <summary>
+    /// 13翻以上は全て数え役満
+    /// </summary>
+    Limited = 0,
+    /// <summary>
+    /// 13翻以上は全て三倍満
+    /// </summary>
+    Sanbaiman = 1,
+    /// <summary>
+    /// 13翻以上は13翻ごとに数え役満が重なる
+    /// </summary>
+    Nolimit = 2
 }

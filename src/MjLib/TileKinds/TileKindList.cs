@@ -122,7 +122,9 @@ internal class TileKindList : List<TileKind>, IEquatable<TileKindList>, ICompara
     public static bool operator ==(TileKindList? x, TileKindList? y) => x?.Equals(y) ?? y is null;
 
     public static bool operator !=(TileKindList? x, TileKindList? y) => !(x == y);
+
     public static bool operator >(TileKindList x, TileKindList y) => x.CompareTo(y) > 0;
+
     public static bool operator <(TileKindList x, TileKindList y) => x.CompareTo(y) < 0;
 
     public bool Equals(TileKindList? other)

@@ -17,8 +17,8 @@ public class FuTest
         var devided = HandDevider.Devide(hand)[0];
         var winTile = Pin6;
         var winGroup = TileKindList.Parse(pin: "66");
-        var handConfig = new HandConfig();
-        var actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig);
+        var situation = new WinSituation();
+        var actual = FuCalculator.Calculate(devided, winTile, winGroup, situation: situation);
         var expected = new FuList { Fu.Chiitoitsu };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(25));
@@ -31,9 +31,9 @@ public class FuTest
         var devided = HandDevider.Devide(hand)[0];
         var winTile = Sou6;
         var winGroup = TileKindList.Parse(pin: "678");
-        var handConfig = new HandConfig();
+        var situation = new WinSituation();
         var fuuroList = new FuuroList { new(Pon, TileKindList.Parse(man: "222")) };
-        var actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig, fuuroList);
+        var actual = FuCalculator.Calculate(devided, winTile, winGroup, fuuroList, situation);
         var expected = new FuList { Fu.Base, Fu.ChuuchanMinko };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(30));
@@ -46,14 +46,14 @@ public class FuTest
         var devided = HandDevider.Devide(hand)[0];
         var winTile = Pin6;
         var winGroup = TileKindList.Parse(pin: "456");
-        var handConfig = new HandConfig();
-        var actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig);
+        var situation = new WinSituation();
+        var actual = FuCalculator.Calculate(devided, winTile, winGroup, situation: situation);
         var expected = new FuList { Fu.Base, Fu.Menzen };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(30));
 
         winGroup = TileKindList.Parse(pin: "66");
-        actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig);
+        actual = FuCalculator.Calculate(devided, winTile, winGroup, situation: situation);
         expected = new FuList { Fu.Base, Fu.Menzen, Fu.Tanki };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(40));
@@ -66,9 +66,9 @@ public class FuTest
         var devided = HandDevider.Devide(hand)[0];
         var winTile = Sou6;
         var winGroup = TileKindList.Parse(sou: "678");
-        var handConfig = new HandConfig();
+        var situation = new WinSituation();
         var fuuroList = new FuuroList { new(Chi, TileKindList.Parse(sou: "234")) };
-        var actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig, fuuroList);
+        var actual = FuCalculator.Calculate(devided, winTile, winGroup, fuuroList, situation);
         var expected = new FuList { Fu.OpenPinfuBase };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(30));
@@ -81,9 +81,19 @@ public class FuTest
         var devided = HandDevider.Devide(hand)[0];
         var winTile = Sou6;
         var winGroup = TileKindList.Parse(sou: "678");
-        var handConfig = new HandConfig { IsTsumo = true };
-        var actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig);
+        var situation = new WinSituation { Tsumo = true };
+        var actual = FuCalculator.Calculate(devided, winTile, winGroup, situation: situation);
         var expected = new FuList { Fu.Base, Fu.Tsumo, Fu.ChuuchanAnko };
+        Assert.That(actual, Is.EquivalentTo(expected));
+        Assert.That(actual.Total, Is.EqualTo(30));
+
+        hand = TileKindList.Parse(man: "234456", pin: "66", sou: "123");
+        winTile = Sou1;
+        var fuuroList = new FuuroList { new(Minkan, TileKindList.Parse(sou: "4444")) };
+        winGroup = TileKindList.Parse(sou: "123");
+        situation = new WinSituation { Tsumo = true, Rinshan = true };
+        actual = FuCalculator.Calculate(HandDevider.Devide(hand)[0], winTile, winGroup, fuuroList, situation);
+        expected = new FuList { Fu.Base, Fu.Tsumo, Fu.ChuuchanMinkan };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(30));
     }
@@ -95,8 +105,8 @@ public class FuTest
         var devided = HandDevider.Devide(hand)[0];
         var winTile = Sou6;
         var winGroup = TileKindList.Parse(sou: "678");
-        var handConfig = new HandConfig { IsTsumo = true };
-        var actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig);
+        var situation = new WinSituation { Tsumo = true };
+        var actual = FuCalculator.Calculate(devided, winTile, winGroup, situation: situation);
         var expected = new FuList { Fu.Base };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(20));
@@ -109,8 +119,9 @@ public class FuTest
         var devided = HandDevider.Devide(hand)[0];
         var winTile = Sou6;
         var winGroup = TileKindList.Parse(sou: "678");
-        var handConfig = new HandConfig { Rurles = new() { Pinzumo = false }, IsTsumo = true };
-        var actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig);
+        var situation = new WinSituation { Tsumo = true };
+        var rules = new GameRules { Pinzumo = false };
+        var actual = FuCalculator.Calculate(devided, winTile, winGroup, situation: situation, rules: rules);
         var expected = new FuList { Fu.Base, Fu.Tsumo };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(30));
@@ -123,8 +134,8 @@ public class FuTest
         var devided = HandDevider.Devide(hand)[0];
         var winTile = Sou6;
         var winGroup = TileKindList.Parse(sou: "678");
-        var handConfig = new HandConfig { IsTsumo = true };
-        var actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig);
+        var situation = new WinSituation { Tsumo = true };
+        var actual = FuCalculator.Calculate(devided, winTile, winGroup, situation: situation);
         var expected = new FuList { Fu.Base, Fu.Tsumo, Fu.YaochuuAnko };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(30));
@@ -137,8 +148,8 @@ public class FuTest
         var devided = HandDevider.Devide(hand)[0];
         var winTile = Sou3;
         var winGroup = TileKindList.Parse(sou: "123");
-        var handConfig = new HandConfig();
-        var actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig);
+        var situation = new WinSituation();
+        var actual = FuCalculator.Calculate(devided, winTile, winGroup, situation: situation);
         var expected = new FuList { Fu.Base, Fu.Menzen, Fu.Penchan };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(40));
@@ -147,7 +158,7 @@ public class FuTest
         devided = HandDevider.Devide(hand)[0];
         winTile = Sou7;
         winGroup = TileKindList.Parse(sou: "789");
-        actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig);
+        actual = FuCalculator.Calculate(devided, winTile, winGroup, situation: situation);
         expected = new FuList { Fu.Base, Fu.Menzen, Fu.Penchan };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(40));
@@ -160,8 +171,8 @@ public class FuTest
         var devided = HandDevider.Devide(hand)[0];
         var winTile = Sou6;
         var winGroup = TileKindList.Parse(sou: "567");
-        var handConfig = new HandConfig();
-        var actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig);
+        var situation = new WinSituation();
+        var actual = FuCalculator.Calculate(devided, winTile, winGroup, situation: situation);
         var expected = new FuList { Fu.Base, Fu.Menzen, Fu.Kanchan };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(40));
@@ -174,8 +185,8 @@ public class FuTest
         var devided = HandDevider.Devide(hand)[0];
         var winTile = Pin1;
         var winGroup = TileKindList.Parse(pin: "11");
-        var handConfig = new HandConfig();
-        var actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig);
+        var situation = new WinSituation();
+        var actual = FuCalculator.Calculate(devided, winTile, winGroup, situation: situation);
         var expected = new FuList { Fu.Base, Fu.Menzen, Fu.Tanki };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(40));
@@ -188,39 +199,39 @@ public class FuTest
         var devided = HandDevider.Devide(hand)[0];
         var winTile = Sou6;
         var winGroup = TileKindList.Parse(sou: "678");
-        var handConfig = new HandConfig { PlayerWind = Wind.East, RoundWind = Wind.South };
-        var actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig);
+        var situation = new WinSituation { Player = Wind.East, Round = Wind.South };
+        var actual = FuCalculator.Calculate(devided, winTile, winGroup, situation: situation);
         var expected = new FuList { Fu.Base, Fu.Menzen, Fu.PlayerWindToitsu };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(40));
 
         hand = TileKindList.Parse(man: "123456", sou: "123678", honor: "22");
         devided = HandDevider.Devide(hand)[0];
-        actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig);
+        actual = FuCalculator.Calculate(devided, winTile, winGroup, situation: situation);
         expected = new FuList { Fu.Base, Fu.Menzen, Fu.RoundWindToitsu };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(40));
-        
+
         hand = TileKindList.Parse(man: "123456", sou: "123678", honor: "44");
         devided = HandDevider.Devide(hand)[0];
-        handConfig = new HandConfig { PlayerWind = Wind.East, RoundWind = Wind.North };
-        actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig);
+        situation = new WinSituation { Player = Wind.East, Round = Wind.North };
+        actual = FuCalculator.Calculate(devided, winTile, winGroup, situation: situation);
         expected = new FuList { Fu.Base, Fu.Menzen, Fu.RoundWindToitsu };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(40));
 
         hand = TileKindList.Parse(man: "123456", sou: "123678", honor: "33");
         devided = HandDevider.Devide(hand)[0];
-        handConfig = new HandConfig { PlayerWind = Wind.West, RoundWind = Wind.West };
-        actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig);
+        situation = new WinSituation { Player = Wind.West, Round = Wind.West };
+        actual = FuCalculator.Calculate(devided, winTile, winGroup, situation: situation);
         expected = new FuList { Fu.Base, Fu.Menzen, Fu.PlayerWindToitsu, Fu.RoundWindToitsu };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(40));
 
         hand = TileKindList.Parse(man: "123456", sou: "123678", honor: "55");
         devided = HandDevider.Devide(hand)[0];
-        handConfig = new HandConfig();
-        actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig);
+        situation = new WinSituation();
+        actual = FuCalculator.Calculate(devided, winTile, winGroup, situation: situation);
         expected = new FuList { Fu.Base, Fu.Menzen, Fu.DragonToitsu };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(40));
@@ -233,15 +244,15 @@ public class FuTest
         var devided = HandDevider.Devide(hand)[0];
         var winTile = Pin6;
         var winGroup = TileKindList.Parse(pin: "456");
-        var handConfig = new HandConfig();
+        var situation = new WinSituation();
         var fuuroList = new FuuroList { new(Pon, TileKindList.Parse(sou: "222")) };
-        var actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig, fuuroList);
+        var actual = FuCalculator.Calculate(devided, winTile, winGroup, fuuroList, situation);
         var expected = new FuList { Fu.Base, Fu.ChuuchanMinko };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(30));
 
         fuuroList = new FuuroList { new(Pon, TileKindList.Parse(sou: "999")) };
-        actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig, fuuroList);
+        actual = FuCalculator.Calculate(devided, winTile, winGroup, fuuroList, situation);
         expected = new FuList { Fu.Base, Fu.YaochuuMinko };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(30));
@@ -250,8 +261,8 @@ public class FuTest
         devided = HandDevider.Devide(hand)[0];
         winTile = Pin4;
         winGroup = TileKindList.Parse(pin: "444");
-        handConfig = new HandConfig();
-        actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig);
+        situation = new WinSituation();
+        actual = FuCalculator.Calculate(devided, winTile, winGroup, situation: situation);
         expected = new FuList { Fu.Base, Fu.Menzen, Fu.ChuuchanMinko };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(40));
@@ -260,8 +271,8 @@ public class FuTest
         devided = HandDevider.Devide(hand)[0];
         winTile = Pin1;
         winGroup = TileKindList.Parse(pin: "111");
-        handConfig = new HandConfig();
-        actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig);
+        situation = new WinSituation();
+        actual = FuCalculator.Calculate(devided, winTile, winGroup, situation: situation);
         expected = new FuList { Fu.Base, Fu.Menzen, Fu.YaochuuMinko };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(40));
@@ -274,15 +285,15 @@ public class FuTest
         var devided = HandDevider.Devide(hand)[0];
         var winTile = Sou6;
         var winGroup = TileKindList.Parse(pin: "678");
-        var handConfig = new HandConfig();
-        var actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig);
+        var situation = new WinSituation();
+        var actual = FuCalculator.Calculate(devided, winTile, winGroup, situation: situation);
         var expected = new FuList { Fu.Base, Fu.Menzen, Fu.ChuuchanAnko };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(40));
 
         hand = TileKindList.Parse(man: "123456", pin: "11", sou: "678", honor: "111");
         devided = HandDevider.Devide(hand)[0];
-        actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig);
+        actual = FuCalculator.Calculate(devided, winTile, winGroup, situation: situation);
         expected = new FuList { Fu.Base, Fu.Menzen, Fu.YaochuuAnko };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(40));
@@ -291,8 +302,8 @@ public class FuTest
         devided = HandDevider.Devide(hand)[0];
         winTile = Sou2;
         winGroup = TileKindList.Parse(sou: "222");
-        handConfig = new HandConfig { IsTsumo = true };
-        actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig);
+        situation = new WinSituation { Tsumo = true };
+        actual = FuCalculator.Calculate(devided, winTile, winGroup, situation: situation);
         expected = new FuList { Fu.Base, Fu.Tsumo, Fu.ChuuchanAnko };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(30));
@@ -301,8 +312,8 @@ public class FuTest
         devided = HandDevider.Devide(hand)[0];
         winTile = Sou1;
         winGroup = TileKindList.Parse(sou: "111");
-        handConfig = new HandConfig { IsTsumo = true };
-        actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig);
+        situation = new WinSituation { Tsumo = true };
+        actual = FuCalculator.Calculate(devided, winTile, winGroup, situation: situation);
         expected = new FuList { Fu.Base, Fu.Tsumo, Fu.YaochuuAnko };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(30));
@@ -315,27 +326,27 @@ public class FuTest
         var devided = HandDevider.Devide(hand)[0];
         var winTile = Pin6;
         var winGroup = TileKindList.Parse(pin: "456");
-        var handConfig = new HandConfig();
-        var fuuroList = new FuuroList { new(Daiminkan, TileKindList.Parse(pin: "2222")) };
-        var actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig, fuuroList);
+        var situation = new WinSituation();
+        var fuuroList = new FuuroList { new(Minkan, TileKindList.Parse(pin: "2222")) };
+        var actual = FuCalculator.Calculate(devided, winTile, winGroup, fuuroList, situation);
         var expected = new FuList { Fu.Base, Fu.ChuuchanMinkan };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(30));
 
-        fuuroList = new FuuroList { new(Shouminkan, TileKindList.Parse(pin: "2222")) };
-        actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig, fuuroList);
+        fuuroList = new FuuroList { new(Minkan, TileKindList.Parse(pin: "2222")) };
+        actual = FuCalculator.Calculate(devided, winTile, winGroup, fuuroList, situation);
         expected = new FuList { Fu.Base, Fu.ChuuchanMinkan };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(30));
 
-        fuuroList = new FuuroList { new(Daiminkan, TileKindList.Parse(honor: "7777")) };
-        actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig, fuuroList);
+        fuuroList = new FuuroList { new(Minkan, TileKindList.Parse(honor: "7777")) };
+        actual = FuCalculator.Calculate(devided, winTile, winGroup, fuuroList, situation);
         expected = new FuList { Fu.Base, Fu.YaochuuMinkan };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(40));
 
-        fuuroList = new FuuroList { new(Shouminkan, TileKindList.Parse(sou: "1111")) };
-        actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig, fuuroList);
+        fuuroList = new FuuroList { new(Minkan, TileKindList.Parse(sou: "1111")) };
+        actual = FuCalculator.Calculate(devided, winTile, winGroup, fuuroList, situation);
         expected = new FuList { Fu.Base, Fu.YaochuuMinkan };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(40));
@@ -348,15 +359,15 @@ public class FuTest
         var devided = HandDevider.Devide(hand)[0];
         var winTile = Pin6;
         var winGroup = TileKindList.Parse(pin: "456");
-        var handConfig = new HandConfig();
+        var situation = new WinSituation();
         var fuuroList = new FuuroList { new(Ankan, TileKindList.Parse(pin: "2222")) };
-        var actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig, fuuroList);
+        var actual = FuCalculator.Calculate(devided, winTile, winGroup, fuuroList, situation);
         var expected = new FuList { Fu.Base, Fu.Menzen, Fu.ChuuchanAnkan };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(50));
 
         fuuroList = new FuuroList { new(Ankan, TileKindList.Parse(honor: "7777")) };
-        actual = FuCalculator.Calc(devided, winTile, winGroup, handConfig, fuuroList);
+        actual = FuCalculator.Calculate(devided, winTile, winGroup, fuuroList, situation);
         expected = new FuList { Fu.Base, Fu.Menzen, Fu.YaochuuAnkan };
         Assert.That(actual, Is.EquivalentTo(expected));
         Assert.That(actual.Total, Is.EqualTo(70));

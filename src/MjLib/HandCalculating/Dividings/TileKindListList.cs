@@ -6,10 +6,6 @@ namespace MjLib.HandCalculating.Dividings;
 [DebuggerDisplay("{ToString()}")]
 internal class TileKindListList : List<TileKindList>, IEquatable<TileKindListList>
 {
-    public TileKindList Toitsu => this.Where(x => x.IsToitsu).First();
-    public IEnumerable<TileKindList> Shuntsus => this.Where(x => x.IsShuntsu);
-    public IEnumerable<TileKindList> Koutsus => this.Where(x => x.IsKoutsu);
-
     public TileKindListList()
         : base() { }
 
@@ -30,5 +26,15 @@ internal class TileKindListList : List<TileKindList>, IEquatable<TileKindListLis
     public bool Equals(TileKindListList? other)
     {
         return other is TileKindListList x && x.SequenceEqual(this);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return Equals(obj as TileKindListList);
+    }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
     }
 }

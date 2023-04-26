@@ -30,7 +30,7 @@ internal static class Agari
     // 国士無双のアガリ形かどうか
     private static bool IsAgariForKokushi()
     {
-        return AllKind.Where(x => x.IsYaochuu).Aggregate(1, (result, current) => result * countArray_[current]) == 2;
+        return AllKind.Where(x => x.IsYaochuu).Aggregate(1, (x, y) => x * countArray_[y]) == 2;
     }
 
     // 七対子のアガリ形かどうか
