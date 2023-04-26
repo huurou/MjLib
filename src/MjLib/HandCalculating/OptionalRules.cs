@@ -8,15 +8,15 @@ internal class OptionalRules
     /// <summary>
     /// 喰いタンあり/なし
     /// </summary>
-    public bool HasOpenTanyao { get; init; } = true;
+    public bool Kuitan { get; init; } = true;
 
     /// <summary>
     /// ダブル役満あり/なし
     /// </summary>
-    public bool HasDoubleYakuman { get; init; }=true;
+    public bool DaburuYakuman { get; init; } = true;
 
     /// <summary>
-    /// 数え役満あり/なし
+    /// 数え役満
     /// </summary>
     public Kazoe KazoeLimit { get; init; } = Kazoe.Limited;
 
@@ -38,6 +38,5 @@ internal class OptionalRules
     /// <summary>
     /// 大車輪あり/なし
     /// </summary>
-    public bool HasDaisharin { get; init; } = false;
-
+    public bool Daisharin { get; init; } = false;
 }
