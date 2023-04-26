@@ -1,6 +1,6 @@
 ﻿using MjLib.HandCalculating.Yakus;
 
-namespace MjLib;
+namespace MjLib.API;
 
 public record MjYaku(int Id, int Han, string Name)
 {

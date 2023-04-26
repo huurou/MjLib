@@ -1,4 +1,5 @@
-﻿using MjLib.HandCalculating.Scores;
+﻿using MjLib.HandCalculating.Fus;
+using MjLib.HandCalculating.Scores;
 using MjLib.HandCalculating.Yakus;
 
 namespace MjLib.HandCalculating.Hands;

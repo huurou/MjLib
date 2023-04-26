@@ -1,6 +1,6 @@
 ﻿using MjLib.HandCalculating.Scores;
 
-namespace MjLib;
+namespace MjLib.API;
 
 /// <summary>
 /// 点数 <para/>

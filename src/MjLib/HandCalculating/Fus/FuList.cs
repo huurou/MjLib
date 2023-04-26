@@ -1,7 +1,6 @@
-﻿using MjLib.HandCalculating.Fus;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
-namespace MjLib.HandCalculating;
+namespace MjLib.HandCalculating.Fus;
 
 [DebuggerDisplay("{ToString()}")]
 internal class FuList : List<Fu>

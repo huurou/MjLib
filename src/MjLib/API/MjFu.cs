@@ -1,6 +1,6 @@
 ﻿using MjLib.HandCalculating.Fus;
 
-namespace MjLib;
+namespace MjLib.API;
 
 public record MjFu(int Id, int Value, string Reason)
 {

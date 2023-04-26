@@ -1,6 +1,6 @@
 ﻿using MjLib.TileKinds;
 
-namespace MjLib;
+namespace MjLib.API;
 
 /// <summary>
 /// 牌の集合

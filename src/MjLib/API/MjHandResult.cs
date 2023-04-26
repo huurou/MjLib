@@ -1,7 +1,7 @@
 ﻿using MjLib.HandCalculating.Hands;
 using MjLib.HandCalculating.Yakus;
 
-namespace MjLib;
+namespace MjLib.API;
 
 public record MjHandResult
 {

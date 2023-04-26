@@ -1,7 +1,10 @@
 ﻿using MjLib.HandCalculating;
 
-namespace MjLib;
+namespace MjLib.API;
 
+/// <summary>
+/// 和了したときの状況
+/// </summary>
 public record MjWinSituation
 {
     /// <summary>
@@ -67,12 +70,12 @@ public record MjWinSituation
     /// <summary>
     /// 自風 デフォルト:East
     /// </summary>
-    public MjWind Player { get; init; } = MjWind.East;
+    public MjWind PlayerWind { get; init; } = MjWind.East;
 
     /// <summary>
     /// 場風 デフォルト:East
     /// </summary>
-    public MjWind Round { get; init; } = MjWind.East;
+    public MjWind RoundWind { get; init; } = MjWind.East;
 
     /// <summary>
     /// 赤ドラの枚数 デフォルト:0
@@ -95,8 +98,8 @@ public record MjWinSituation
             Tenhou = Tenhou,
             Chiihou = Chiihou,
             Renhou = Renhou,
-            Player = (Wind)Player,
-            Round = (Wind)Round,
+            Player = (Wind)PlayerWind,
+            Round = (Wind)RoundWind,
             Akadora = Akadora,
         };
     }
