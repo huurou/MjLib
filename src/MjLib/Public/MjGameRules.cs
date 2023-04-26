@@ -2,7 +2,7 @@
 
 namespace MjLib;
 
-public class MjGameRules
+public record MjGameRules
 {
     /// <summary>
     /// 喰いタンあり/なし
