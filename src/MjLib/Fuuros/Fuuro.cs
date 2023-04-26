@@ -5,17 +5,10 @@ namespace MjLib.Fuuros;
 /// <summary>
 /// 副露
 /// </summary>
-internal class Fuuro
+/// <param name="Type">副露種別</param>
+/// <param name="KindList">牌種類</param>
+internal record Fuuro(FuuroType Type, TileKindList KindList)
 {
-    /// <summary>
-    /// 種別
-    /// </summary>
-    public FuuroType Type { get; }
-    /// <summary>
-    /// 副露
-    /// </summary>
-    public TileKindList KindList { get; }
-
     /// <summary>
     /// チーかどうか
     /// </summary>
@@ -44,12 +37,6 @@ internal class Fuuro
     /// 面前が崩れる副露かどうか
     /// </summary>
     public bool IsOpen => Type is FuuroType.Chi or FuuroType.Pon or FuuroType.Minkan;
-
-    public Fuuro(FuuroType type, TileKindList kindList)
-    {
-        Type = type;
-        KindList = kindList;
-    }
 
     public override string ToString()
     {

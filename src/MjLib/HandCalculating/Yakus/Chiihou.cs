@@ -1,6 +1,6 @@
 ﻿namespace MjLib.HandCalculating.Yakus;
 
-internal class Chiihou : Yaku
+internal record Chiihou : Yaku
 {
     public Chiihou(int id)
         : base(id) { }

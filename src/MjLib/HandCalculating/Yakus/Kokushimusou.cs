@@ -3,7 +3,7 @@ using MjLib.TileKinds;
 
 namespace MjLib.HandCalculating.Yakus;
 
-internal class Kokushimusou : Yaku
+internal record Kokushimusou : Yaku
 {
     public Kokushimusou(int id)
         : base(id) { }

@@ -3,7 +3,7 @@
 /// <summary>
 /// 牌種別
 /// </summary>
-internal class TileKind : ValueObject<TileKind>, IComparable<TileKind>
+internal record TileKind :IComparable<TileKind>
 {
     public static TileKind Man1 { get; } = new(MAN1);
     public static TileKind Man2 { get; } = new(MAN2);
@@ -175,17 +175,4 @@ internal class TileKind : ValueObject<TileKind>, IComparable<TileKind>
         return other is TileKind x ? -x.Id.CompareTo(Id) : 1;
     }
 
-    #region ValueObject<T>の実装
-
-    public override bool EqualsCore(ValueObject<TileKind>? other)
-    {
-        return other is TileKind x && x.Id == Id;
-    }
-
-    public override int GetHashCodeCore()
-    {
-        return new { Id }.GetHashCode();
-    }
-
-    #endregion ValueObject<T>の実装
 }

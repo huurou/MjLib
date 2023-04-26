@@ -3,7 +3,7 @@ using MjLib.HandCalculating.Fus;
 
 namespace MjLib.HandCalculating.Yakus;
 
-internal class Pinfu : Yaku
+internal record Pinfu : Yaku
 {
     public Pinfu(int id)
         : base(id) { }

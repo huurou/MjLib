@@ -2,7 +2,7 @@
 
 namespace MjLib.HandCalculating.Yakus;
 
-internal class Tsuuiisou : Yaku
+internal record Tsuuiisou : Yaku
 {
     public Tsuuiisou(int id)
         : base(id) { }

@@ -1,6 +1,6 @@
 ﻿namespace MjLib.HandCalculating.Yakus;
 
-internal class Rinshan : Yaku
+internal record Rinshan : Yaku
 {
     public Rinshan(int id)
         : base(id) { }

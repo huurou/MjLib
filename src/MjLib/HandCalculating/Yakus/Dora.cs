@@ -1,6 +1,6 @@
 ﻿namespace MjLib.HandCalculating.Yakus;
 
-internal class Dora : Yaku
+internal record Dora : Yaku
 {
     public Dora(int id)
         : base(id) { }

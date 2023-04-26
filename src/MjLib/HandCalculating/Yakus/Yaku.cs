@@ -1,6 +1,6 @@
 ﻿namespace MjLib.HandCalculating.Yakus;
 
-internal abstract class Yaku : ValueObject<Yaku>
+internal abstract record Yaku(int Id)
 {
     // 状況による役
     public static Riichi Riichi { get; }
@@ -131,33 +131,13 @@ internal abstract class Yaku : ValueObject<Yaku>
         Akadora = new(id++);
     }
 
-    public int Id { get; }
     public abstract string Name { get; }
     public abstract int HanOpen { get; }
     public abstract int HanClosed { get; }
     public abstract bool IsYakuman { get; }
 
-    protected Yaku(int id)
-    {
-        Id = id;
-    }
-
     public override string ToString()
     {
         return Name;
     }
-
-    #region ValueObject<T>の実装
-
-    public override bool EqualsCore(ValueObject<Yaku>? other)
-    {
-        return other is Yaku x && x.Id == Id;
-    }
-
-    public override int GetHashCodeCore()
-    {
-        return new { Id }.GetHashCode();
-    }
-
-    #endregion ValueObject<T>の実装
 }

@@ -6,7 +6,7 @@ namespace MjLib.Shantens;
 
 internal static class Shanten
 {
-    public const int AGARI_STATE = -1;
+    public const int AGARI_SHANTEN = -1;
 
     private static TileCountArray countArray_ = new();
     private static int mentsuCount_;
@@ -121,7 +121,7 @@ internal static class Shanten
 
     private static void Run(int id)
     {
-        if (minShanten_ == AGARI_STATE) return;
+        if (minShanten_ == AGARI_SHANTEN) return;
         // 牌が存在するインデックスまで移動する
         while (countArray_[id] == 0)
         {
@@ -284,7 +284,7 @@ internal static class Shanten
         {
             shanten += mentsuKouho - 4;
         }
-        if (shanten != AGARI_STATE && shanten < jidahaiCount_)
+        if (shanten != AGARI_SHANTEN && shanten < jidahaiCount_)
         {
             shanten = jidahaiCount_;
         }

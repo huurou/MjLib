@@ -5,7 +5,7 @@ using static MjLib.TileKinds.TileKind;
 
 namespace MjLib.HandCalculating.Yakus;
 
-internal class RoundWind : Yaku
+internal record RoundWind : Yaku
 {
     public RoundWind(int id)
         : base(id) { }

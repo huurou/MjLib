@@ -1,6 +1,6 @@
 ﻿namespace MjLib.HandCalculating.Yakus;
 
-internal class Tenhou : Yaku
+internal record Tenhou : Yaku
 {
     public Tenhou(int id)
         : base(id) { }

@@ -2,7 +2,7 @@
 
 namespace MjLib.HandCalculating.Yakus;
 
-internal class Honrouto : Yaku
+internal record Honrouto : Yaku
 {
     public Honrouto(int id)
         : base(id) { }

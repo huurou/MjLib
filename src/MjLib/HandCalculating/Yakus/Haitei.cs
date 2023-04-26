@@ -1,6 +1,6 @@
 ﻿namespace MjLib.HandCalculating.Yakus;
 
-internal class Haitei : Yaku
+internal record Haitei : Yaku
 {
     public Haitei(int id)
         : base(id) { }
