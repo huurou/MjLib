@@ -15,7 +15,7 @@ internal record Ryanpeikou : Yaku
 
     public static bool Valid(TileKindListList hand, FuuroList fuuroList)
     {
-        if (!fuuroList.HasOpen) return false;
+        if (fuuroList.HasOpen) return false;
         var shuntsus = hand.Where(x => x.IsShuntsu);
         var counts = shuntsus.Select(x => shuntsus.Count(x.Equals));
         return counts.Count(x => x >= 2) == 4;

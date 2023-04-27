@@ -351,6 +351,7 @@ public class HandCalculatorTest
         });
 
         hand = TileKindList.Parse(man: "22", pin: "223344", sou: "444");
+        winTile = Pin2;
         var fuuroList = new FuuroList { new(FuuroType.Chi, TileKindList.Parse(sou: "123")) };
         actual = HandCalculator.Calculate(hand, winTile, fuuroList);
         Assert.That(actual.Error, Is.Not.Null);
@@ -358,13 +359,14 @@ public class HandCalculatorTest
 
     #endregion 1翻
 
+    #region 2翻
+
     [Test]
     public void ChiitoitsuTest()
     {
         var hand = TileKindList.Parse(man: "113355", pin: "11", sou: "113355");
         var winTile = Pin1;
-        var situation = new WinSituation { };
-        var actual = HandCalculator.Calculate(hand, winTile, situation: situation);
+        var actual = HandCalculator.Calculate(hand, winTile);
         var expected = new YakuList { Yaku.Chiitoitsu };
         Assert.Multiple(() =>
         {
@@ -372,5 +374,37 @@ public class HandCalculatorTest
             Assert.That(actual.Han, Is.EqualTo(2));
             Assert.That(actual.YakuList, Is.EquivalentTo(expected));
         });
+
+        hand = TileKindList.Parse(man: "11335555", pin: "1133", sou: "11");
+        winTile = Sou1;
+        actual = HandCalculator.Calculate(hand, winTile);
+        Assert.That(actual.Error, Is.Not.Null);
     }
+
+    #endregion 2翻
+
+    #region 3翻
+
+    [Test]
+    public void RyanpeikouTest()
+    {
+        var hand = TileKindList.Parse(man: "22", pin: "223344", sou: "112233");
+        var winTile = Pin3;
+        var actual = HandCalculator.Calculate(hand, winTile);
+        var expected = new YakuList { Yaku.Ryanpeikou };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual.Error, Is.Null);
+            Assert.That(actual.Han, Is.EqualTo(3));
+            Assert.That(actual.Fu, Is.EqualTo(40));
+            Assert.That(actual.YakuList, Is.EquivalentTo(expected));
+        });
+
+        hand = TileKindList.Parse(man: "22", pin: "223344", sou: "123");
+        var fuuroList = new FuuroList { new(FuuroType.Chi, TileKindList.Parse(sou: "123")) };
+        actual = HandCalculator.Calculate(hand, winTile, fuuroList);
+        Assert.That(actual.Error, Is.Not.Null);
+    }
+
+    #endregion 3翻
 }
