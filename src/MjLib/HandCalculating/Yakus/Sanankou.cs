@@ -20,6 +20,6 @@ internal record Sanankou : Yaku
             ? hand.Where(x => x.IsKoutsu)
             : hand.Where(x => x.IsKoutsu && x != winGroup);
         var ankan = fuuroList.Where(x => x.IsAnkan).Select(x => x.KindList);
-        return ankan.Count() + ankan.Count() == 3;
+        return anko.Count() + ankan.Count() == 3;
     }
 }

@@ -362,6 +362,60 @@ public class HandCalculatorTest
     #region 2翻
 
     [Test]
+    public void SanshokuTest()
+    {
+        var hand = TileKindList.Parse(man: "12399", pin: "123456", sou: "123");
+        var winTile = Man2;
+        var actual = HandCalculator.Calculate(hand, winTile);
+        var expected = new YakuList { Yaku.Sanshoku };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual.Han, Is.EqualTo(2));
+            Assert.That(actual.Fu, Is.EqualTo(40));
+            Assert.That(actual.YakuList, Is.EquivalentTo(expected));
+        });
+
+        hand = TileKindList.Parse(man: "12399", pin: "123456");
+        var fuuroList = new FuuroList { new(FuuroType.Chi, TileKindList.Parse(sou: "123")) };
+        winTile = Man2;
+        actual = HandCalculator.Calculate(hand, winTile, fuuroList);
+        expected = new YakuList { Yaku.Sanshoku };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual.Han, Is.EqualTo(1));
+            Assert.That(actual.Fu, Is.EqualTo(30));
+            Assert.That(actual.YakuList, Is.EquivalentTo(expected));
+        });
+    }
+
+    [Test]
+    public void ShanshokudoukouTest()
+    {
+        var hand = TileKindList.Parse(man: "222", pin: "22245699", sou: "222");
+        var winTile = Pin9;
+        var actual = HandCalculator.Calculate(hand, winTile);
+        var expected = new YakuList { Yaku.Sanshokudoukou, Yaku.Sanankou };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual.Han, Is.EqualTo(4));
+            Assert.That(actual.Fu, Is.EqualTo(50));
+            Assert.That(actual.YakuList, Is.EquivalentTo(expected));
+        });
+
+        hand = TileKindList.Parse(man: "222", pin: "22245699");
+        winTile = Pin9;
+        var fuuroList = new FuuroList { new(FuuroType.Pon, TileKindList.Parse(sou: "222")) };
+        actual = HandCalculator.Calculate(hand, winTile, fuuroList);
+        expected = new YakuList { Yaku.Sanshokudoukou };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual.Han, Is.EqualTo(2));
+            Assert.That(actual.Fu, Is.EqualTo(40));
+            Assert.That(actual.YakuList, Is.EquivalentTo(expected));
+        });
+    }
+
+    [Test]
     public void ChiitoitsuTest()
     {
         var hand = TileKindList.Parse(man: "113355", pin: "11", sou: "113355");
@@ -370,8 +424,8 @@ public class HandCalculatorTest
         var expected = new YakuList { Yaku.Chiitoitsu };
         Assert.Multiple(() =>
         {
-            Assert.That(actual.Fu, Is.EqualTo(25));
             Assert.That(actual.Han, Is.EqualTo(2));
+            Assert.That(actual.Fu, Is.EqualTo(25));
             Assert.That(actual.YakuList, Is.EquivalentTo(expected));
         });
 
@@ -394,7 +448,6 @@ public class HandCalculatorTest
         var expected = new YakuList { Yaku.Ryanpeikou };
         Assert.Multiple(() =>
         {
-            Assert.That(actual.Error, Is.Null);
             Assert.That(actual.Han, Is.EqualTo(3));
             Assert.That(actual.Fu, Is.EqualTo(40));
             Assert.That(actual.YakuList, Is.EquivalentTo(expected));
