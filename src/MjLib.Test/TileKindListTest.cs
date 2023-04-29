@@ -9,7 +9,7 @@ public class TileKindListTest
     [Test]
     public void GetIsolationsTest()
     {
-        var kindList = TileKindList.Parse(man: "25", pin: "15678", sou: "1369", honor: "124");
+        var kindList = new TileKindList(man: "25", pin: "15678", sou: "1369", honor: "124");
         var isolatations = kindList.GetIsolations();
         Assert.That(isolatations, Does.Not.Contain(Man1));
         Assert.That(isolatations, Does.Not.Contain(Man2));
@@ -50,7 +50,7 @@ public class TileKindListTest
     [Test]
     public void ToTileCountArrayTest()
     {
-        var kindList = TileKindList.Parse(man: "122333444456789", pin: "123455666777788889", sou: "123456778889999", honor: "1123334555567");
+        var kindList = new TileKindList(man: "122333444456789", pin: "123455666777788889", sou: "123456778889999", honor: "1123334555567");
         var actual = kindList.ToTileCountArray();
         var expected = new TileCountArray(new[] { 1, 2, 3, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 4, 4, 1, 1, 1, 1, 1, 1, 1, 2, 3, 4, 2, 1, 3, 1, 4, 1, 1 });
         Assert.That(actual, Is.EqualTo(expected));
@@ -60,12 +60,12 @@ public class TileKindListTest
     public void ParseOneLineTest()
     {
         var oneline = "123456789m123456789p123456789s1234567z";
-        var actual = TileKindList.Parse(oneline);
+        var actual = new TileKindList(oneline);
         var expected = new TileKindList(new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33 });
         Assert.That(actual, Is.EqualTo(expected));
 
         oneline = "1111m2222p3333s4444z";
-        actual = TileKindList.Parse(oneline);
+        actual = new TileKindList(oneline);
         expected = new TileKindList(new[] { 0, 0, 0, 0, 10, 10, 10, 10, 20, 20, 20, 20, 30, 30, 30, 30 });
         Assert.That(actual, Is.EqualTo(expected));
     }
@@ -73,11 +73,11 @@ public class TileKindListTest
     [Test]
     public void ParseLinesTest()
     {
-        var actual = TileKindList.Parse(man: "123456789", pin: "123456789", sou: "123456789", honor: "1234567");
+        var actual = new TileKindList(man: "123456789", pin: "123456789", sou: "123456789", honor: "1234567");
         var expected = new TileKindList(new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33 });
         Assert.That(actual, Is.EqualTo(expected));
 
-        actual = TileKindList.Parse(man: "1111", pin: "2222", sou: "3333", honor: "4444");
+        actual = new TileKindList(man: "1111", pin: "2222", sou: "3333", honor: "4444");
         expected = new TileKindList(new[] { 0, 0, 0, 0, 10, 10, 10, 10, 20, 20, 20, 20, 30, 30, 30, 30 });
         Assert.That(actual, Is.EqualTo(expected));
     }
@@ -109,7 +109,7 @@ public class TileKindListTest
     public void ExceptionTest()
     {
         // 同種牌5枚
-        var kindList = TileKindList.Parse(pin: "45566777778999");
+        var kindList = new TileKindList(pin: "45566777778999");
         Assert.That(() => { var a = kindList.ToTileCountArray(); }, Throws.ArgumentException);
     }
 }

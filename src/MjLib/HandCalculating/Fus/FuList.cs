@@ -2,7 +2,6 @@
 
 namespace MjLib.HandCalculating.Fus;
 
-[DebuggerDisplay("{ToString()}")]
 internal class FuList : List<Fu>
 {
     public int Total => Contains(Fu.Chiitoitsu)

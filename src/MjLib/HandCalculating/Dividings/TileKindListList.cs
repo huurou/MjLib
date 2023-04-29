@@ -3,20 +3,26 @@ using System.Diagnostics;
 
 namespace MjLib.HandCalculating.Dividings;
 
-[DebuggerDisplay("{ToString()}")]
 internal class TileKindListList : List<TileKindList>, IEquatable<TileKindListList>
 {
     public TileKindListList()
-        : base() { }
+    {
+    }
 
     public TileKindListList(IEnumerable<TileKindList> kindLists)
-        : base(kindLists) { }
+    {
+        AddRange(kindLists);
+    }
 
     public TileKindListList(params TileKindList[] kindLists)
-        : this(kindLists.AsEnumerable()) { }
+    {
+        AddRange(kindLists);
+    }
 
     public TileKindListList(params string[] sets)
-        : this(sets.Select(TileKindList.Parse)) { }
+    {
+        AddRange(sets.Select(x => new TileKindList(x)));
+    }
 
     public override string ToString()
     {

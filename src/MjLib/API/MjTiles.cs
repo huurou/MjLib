@@ -21,11 +21,11 @@ public class MjTiles
 
     public MjTiles(IEnumerable<int> tiles)
     {
-        KindList = new TileKindList(tiles);
+        KindList = new(tiles);
     }
 
     public MjTiles(string? man = null, string? pin = null, string? sou = null, string? honor = null)
     {
-        KindList = TileKindList.Parse(man, pin, sou, honor);
+        KindList = new(man, pin, sou, honor);
     }
 }

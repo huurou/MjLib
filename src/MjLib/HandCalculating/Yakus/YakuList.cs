@@ -2,7 +2,6 @@
 
 namespace MjLib.HandCalculating.Yakus;
 
-[DebuggerDisplay("{ToString()}")]
 internal class YakuList : List<Yaku>
 {
     public int HanOpen => this.Sum(x => x.HanOpen);

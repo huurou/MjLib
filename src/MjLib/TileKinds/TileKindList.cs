@@ -4,7 +4,6 @@ using static MjLib.TileKinds.TileKind;
 
 namespace MjLib.TileKinds;
 
-[DebuggerDisplay("{ToString()}")]
 internal class TileKindList : List<TileKind>, IEquatable<TileKindList>, IComparable<TileKindList>
 {
     /// <summary>
@@ -25,13 +24,18 @@ internal class TileKindList : List<TileKind>, IEquatable<TileKindList>, ICompara
     public bool IsKantsu => Count == 4 && this[0] == this[1] && this[1] == this[2] && this[2] == this[3];
 
     public TileKindList()
-        : base() { }
+    {
+    }
 
     public TileKindList(IEnumerable<TileKind> kinds)
-        : base(kinds) { }
+    {
+        AddRange(kinds);
+    }
 
     public TileKindList(IEnumerable<int> ids)
-        : this(ids.Select(x => new TileKind(x))) { }
+    {
+        AddRange(ids.Select(x => new TileKind(x)));
+    }
 
     public TileKindList(TileCountArray countArray)
     {
@@ -41,21 +45,17 @@ internal class TileKindList : List<TileKind>, IEquatable<TileKindList>, ICompara
         }
     }
 
-    /// <summary>
-    /// 自身及び隣り合った牌を除いたTileKindListを取得する
-    /// </summary>
-    /// <returns></returns>
-    public TileKindList GetIsolations()
+    public TileKindList(string? man = null, string? pin = null, string? sou = null, string? honor = null)
     {
-        return ToTileCountArray().GetIsolations();
+        AddRange(Parse(man, pin, sou, honor));
     }
 
-    public TileCountArray ToTileCountArray()
+    public TileKindList(string oneLine = "")
     {
-        return new(this);
+        AddRange(Parse(oneLine));
     }
 
-    public static TileKindList Parse(string oneLine = "")
+    private static IEnumerable<TileKind> Parse(string oneLine = "")
     {
         var man = "";
         var pin = "";
@@ -100,13 +100,27 @@ internal class TileKindList : List<TileKind>, IEquatable<TileKindList>, ICompara
         return Parse(man, pin, sou, honor);
     }
 
-    public static TileKindList Parse(string? man = null, string? pin = null, string? sou = null, string? honor = null)
+    private static IEnumerable<TileKind> Parse(string? man = null, string? pin = null, string? sou = null, string? honor = null)
     {
         var mans = (man ?? "").Select(x => new TileKind(int.Parse(x.ToString()) - 1));
         var pins = (pin ?? "").Select(x => new TileKind(int.Parse(x.ToString()) + 8));
         var sous = (sou ?? "").Select(x => new TileKind(int.Parse(x.ToString()) + 17));
         var honors = (honor ?? "").Select(x => new TileKind(int.Parse(x.ToString()) + 26));
-        return new(mans.Concat(pins).Concat(sous).Concat(honors));
+        return mans.Concat(pins).Concat(sous).Concat(honors);
+    }
+
+    /// <summary>
+    /// 自身及び隣り合った牌を除いたTileKindListを取得する
+    /// </summary>
+    /// <returns></returns>
+    public TileKindList GetIsolations()
+    {
+        return ToTileCountArray().GetIsolations();
+    }
+
+    public TileCountArray ToTileCountArray()
+    {
+        return new(this);
     }
 
     public string ToOneLine()
@@ -153,6 +167,7 @@ internal class TileKindList : List<TileKind>, IEquatable<TileKindList>, ICompara
     {
         return obj is TileKindList x && Equals(x);
     }
+
     public override int GetHashCode()
     {
         return base.GetHashCode();

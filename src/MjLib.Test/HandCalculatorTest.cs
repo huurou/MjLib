@@ -3,6 +3,7 @@ using MjLib.HandCalculating;
 using MjLib.HandCalculating.Hands;
 using MjLib.HandCalculating.Yakus;
 using MjLib.TileKinds;
+using static MjLib.Fuuros.FuuroType;
 using static MjLib.TileKinds.TileKind;
 
 namespace MjLib.Test.HandCalculating;
@@ -16,8 +17,8 @@ public class HandCalculatorTest
     private TileKindList? uradoraIndicators_;
     private WinSituation? situation_;
     private GameRules? rules_;
-    private HandResult actual_ = new("");
-    private YakuList expected_ = new();
+    private HandResult? actual_;
+    private YakuList? expected_;
 
     [SetUp]
     public void Setup()
@@ -29,6 +30,8 @@ public class HandCalculatorTest
         uradoraIndicators_ = null;
         situation_ = null;
         rules_ = null;
+        actual_ = null;
+        expected_ = null;
     }
 
     private HandResult Calc()
@@ -41,12 +44,12 @@ public class HandCalculatorTest
     [Test]
     public void InvalidHandTest()
     {
-        hand_ = TileKindList.Parse(man: "234456", pin: "66", sou: "123445");
+        hand_ = new(man: "234456", pin: "66", sou: "123445");
         winTile_ = Sou4;
         actual_ = Calc();
         Assert.That(actual_, Is.Not.Null);
 
-        hand_ = TileKindList.Parse(man: "234456", pin: "66", sou: "123444");
+        hand_ = new(man: "234456", pin: "66", sou: "123444");
         winTile_ = Pin4;
         actual_ = Calc();
         Assert.That(actual_.Error, Is.Not.Null);
@@ -57,11 +60,11 @@ public class HandCalculatorTest
     [Test]
     public void RiichiTest()
     {
-        hand_ = TileKindList.Parse(man: "234456", pin: "66", sou: "123444");
+        hand_ = new(man: "234456", pin: "66", sou: "123444");
         winTile_ = Sou4;
-        situation_ = new WinSituation { Riichi = true };
+        situation_ = new() { Riichi = true };
         actual_ = Calc();
-        expected_ = new YakuList { Yaku.Riichi };
+        expected_ = new() { Yaku.Riichi };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Fu, Is.EqualTo(40));
@@ -69,8 +72,8 @@ public class HandCalculatorTest
             Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
         });
 
-        hand_ = TileKindList.Parse(man: "234456", pin: "66", sou: "444");
-        fuuroList_ = new FuuroList { new(FuuroType.Chi, TileKindList.Parse(sou: "123")) };
+        hand_ = new(man: "234456", pin: "66", sou: "444");
+        fuuroList_ = new() { new(Chi, new(sou: "123")) };
         actual_ = Calc();
         Assert.That(actual_.Error, Is.Not.Null);
     }
@@ -78,11 +81,11 @@ public class HandCalculatorTest
     [Test]
     public void DaburuRiichiTest()
     {
-        hand_ = TileKindList.Parse(man: "234456", pin: "66", sou: "123444");
+        hand_ = new(man: "234456", pin: "66", sou: "123444");
         winTile_ = Sou4;
-        situation_ = new WinSituation { DaburuRiichi = true };
+        situation_ = new() { DaburuRiichi = true };
         actual_ = Calc();
-        expected_ = new YakuList { Yaku.DaburuRiichi };
+        expected_ = new() { Yaku.DaburuRiichi };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Fu, Is.EqualTo(40));
@@ -90,8 +93,8 @@ public class HandCalculatorTest
             Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
         });
 
-        hand_ = TileKindList.Parse(man: "234456", pin: "66", sou: "444");
-        fuuroList_ = new FuuroList { new(FuuroType.Chi, TileKindList.Parse(sou: "123")) };
+        hand_ = new(man: "234456", pin: "66", sou: "444");
+        fuuroList_ = new() { new(Chi, new(sou: "123")) };
         actual_ = Calc();
         Assert.That(actual_.Error, Is.Not.Null);
     }
@@ -99,11 +102,11 @@ public class HandCalculatorTest
     [Test]
     public void TsumoTest()
     {
-        hand_ = TileKindList.Parse(man: "234456", pin: "66", sou: "123444");
+        hand_ = new(man: "234456", pin: "66", sou: "123444");
         winTile_ = Sou4;
-        situation_ = new WinSituation { Tsumo = true };
+        situation_ = new() { Tsumo = true };
         actual_ = Calc();
-        expected_ = new YakuList { Yaku.Tsumo };
+        expected_ = new() { Yaku.Tsumo };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Fu, Is.EqualTo(30));
@@ -111,8 +114,8 @@ public class HandCalculatorTest
             Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
         });
 
-        hand_ = TileKindList.Parse(man: "234456", pin: "66", sou: "444");
-        fuuroList_ = new FuuroList { new(FuuroType.Chi, TileKindList.Parse(sou: "123")) };
+        hand_ = new(man: "234456", pin: "66", sou: "444");
+        fuuroList_ = new() { new(Chi, new(sou: "123")) };
         actual_ = Calc();
         Assert.That(actual_.Error, Is.Not.Null);
     }
@@ -120,11 +123,11 @@ public class HandCalculatorTest
     [Test]
     public void IppatsuTest()
     {
-        hand_ = TileKindList.Parse(man: "234456", pin: "66", sou: "123444");
+        hand_ = new(man: "234456", pin: "66", sou: "123444");
         winTile_ = Sou4;
-        situation_ = new WinSituation { Riichi = true, Ippatsu = true };
+        situation_ = new() { Riichi = true, Ippatsu = true };
         actual_ = Calc();
-        expected_ = new YakuList { Yaku.Riichi, Yaku.Ippatsu };
+        expected_ = new() { Yaku.Riichi, Yaku.Ippatsu };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Fu, Is.EqualTo(40));
@@ -132,8 +135,8 @@ public class HandCalculatorTest
             Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
         });
 
-        hand_ = TileKindList.Parse(man: "234456", pin: "66", sou: "444");
-        fuuroList_ = new FuuroList { new(FuuroType.Chi, TileKindList.Parse(sou: "123")) };
+        hand_ = new(man: "234456", pin: "66", sou: "444");
+        fuuroList_ = new() { new(Chi, new(sou: "123")) };
         situation_ = new() { Riichi = false, Ippatsu = true };
         actual_ = Calc();
         Assert.That(actual_.Error, Is.Not.Null);
@@ -142,12 +145,12 @@ public class HandCalculatorTest
     [Test]
     public void RinshanTest()
     {
-        hand_ = TileKindList.Parse(man: "234456", pin: "66", sou: "123");
+        hand_ = new(man: "234456", pin: "66", sou: "123");
         winTile_ = Sou1;
-        fuuroList_ = new() { new(FuuroType.Ankan, TileKindList.Parse(sou: "4444")) };
+        fuuroList_ = new() { new(Ankan, new(sou: "4444")) };
         situation_ = new() { Tsumo = true, Rinshan = true };
         actual_ = Calc();
-        expected_ = new YakuList { Yaku.Tsumo, Yaku.Rinshan };
+        expected_ = new() { Yaku.Tsumo, Yaku.Rinshan };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Fu, Is.EqualTo(40));
@@ -155,10 +158,10 @@ public class HandCalculatorTest
             Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
         });
 
-        fuuroList_ = new() { new(FuuroType.Minkan, TileKindList.Parse(sou: "4444")) };
+        fuuroList_ = new() { new(Minkan, new(sou: "4444")) };
         situation_ = new() { Tsumo = true, Rinshan = true };
         actual_ = Calc();
-        expected_ = new YakuList { Yaku.Rinshan };
+        expected_ = new() { Yaku.Rinshan };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Fu, Is.EqualTo(30));
@@ -166,7 +169,7 @@ public class HandCalculatorTest
             Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
         });
 
-        situation_ = new WinSituation { Rinshan = true };
+        situation_ = new() { Rinshan = true };
         actual_ = Calc();
         Assert.That(actual_.Error, Is.Not.Null);
     }
@@ -174,11 +177,11 @@ public class HandCalculatorTest
     [Test]
     public void ChankanTest()
     {
-        hand_ = TileKindList.Parse(man: "234456", pin: "66", sou: "123444");
+        hand_ = new(man: "234456", pin: "66", sou: "123444");
         winTile_ = Sou4;
-        situation_ = new WinSituation { Chankan = true };
+        situation_ = new() { Chankan = true };
         actual_ = Calc();
-        expected_ = new YakuList { Yaku.Chankan };
+        expected_ = new() { Yaku.Chankan };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Fu, Is.EqualTo(40));
@@ -186,7 +189,7 @@ public class HandCalculatorTest
             Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
         });
 
-        situation_ = new WinSituation { Chankan = true, Tsumo = true };
+        situation_ = new() { Chankan = true, Tsumo = true };
         actual_ = Calc();
         Assert.That(actual_.Error, Is.Not.Null);
     }
@@ -194,11 +197,11 @@ public class HandCalculatorTest
     [Test]
     public void HaiteiTest()
     {
-        hand_ = TileKindList.Parse(man: "234456", pin: "66", sou: "123444");
+        hand_ = new(man: "234456", pin: "66", sou: "123444");
         winTile_ = Sou4;
-        situation_ = new WinSituation { Haitei = true, Tsumo = true };
+        situation_ = new() { Haitei = true, Tsumo = true };
         actual_ = Calc();
-        expected_ = new YakuList { Yaku.Tsumo, Yaku.Haitei };
+        expected_ = new() { Yaku.Tsumo, Yaku.Haitei };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Fu, Is.EqualTo(30));
@@ -206,7 +209,7 @@ public class HandCalculatorTest
             Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
         });
 
-        situation_ = new WinSituation { Haitei = true, Tsumo = false };
+        situation_ = new() { Haitei = true, Tsumo = false };
         actual_ = Calc();
         Assert.That(actual_.Error, Is.Not.Null);
     }
@@ -214,11 +217,11 @@ public class HandCalculatorTest
     [Test]
     public void HouteiTest()
     {
-        hand_ = TileKindList.Parse(man: "234456", pin: "66", sou: "123444");
+        hand_ = new(man: "234456", pin: "66", sou: "123444");
         winTile_ = Sou4;
-        situation_ = new WinSituation { Houtei = true, Tsumo = false };
+        situation_ = new() { Houtei = true, Tsumo = false };
         actual_ = Calc();
-        expected_ = new YakuList { Yaku.Houtei };
+        expected_ = new() { Yaku.Houtei };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Fu, Is.EqualTo(40));
@@ -226,7 +229,7 @@ public class HandCalculatorTest
             Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
         });
 
-        situation_ = new WinSituation { Houtei = true, Tsumo = true };
+        situation_ = new() { Houtei = true, Tsumo = true };
         actual_ = Calc();
         Assert.That(actual_.Error, Is.Not.Null);
     }
@@ -234,11 +237,11 @@ public class HandCalculatorTest
     [Test]
     public void NagashimanganTest()
     {
-        hand_ = TileKindList.Parse(man: "234456", pin: "66", sou: "123444");
+        hand_ = new(man: "234456", pin: "66", sou: "123444");
         winTile_ = Sou4;
-        situation_ = new WinSituation { Nagashimangan = true };
+        situation_ = new() { Nagashimangan = true };
         actual_ = Calc();
-        expected_ = new YakuList { Yaku.Nagashimangan };
+        expected_ = new() { Yaku.Nagashimangan };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Fu, Is.EqualTo(30));
@@ -250,12 +253,12 @@ public class HandCalculatorTest
     [Test]
     public void RenhouTest()
     {
-        hand_ = TileKindList.Parse(man: "234456", pin: "66", sou: "123444");
+        hand_ = new(man: "234456", pin: "66", sou: "123444");
         winTile_ = Sou4;
-        situation_ = new WinSituation { Renhou = true, Player = Wind.South };
-        var rules = new GameRules { RenhouAsYakuman = false };
+        situation_ = new() { Renhou = true, Player = Wind.South };
+        rules_ = new() { RenhouAsYakuman = false };
         actual_ = Calc();
-        expected_ = new YakuList { Yaku.Renhou };
+        expected_ = new() { Yaku.Renhou };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Fu, Is.EqualTo(40));
@@ -263,16 +266,16 @@ public class HandCalculatorTest
             Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
         });
 
-        situation_ = new WinSituation { Renhou = true, Tsumo = true };
+        situation_ = new() { Renhou = true, Tsumo = true };
         actual_ = Calc();
         Assert.That(actual_.Error, Is.Not.Null);
 
-        situation_ = new WinSituation { Renhou = true };
+        situation_ = new() { Renhou = true };
         actual_ = Calc();
         Assert.That(actual_.Error, Is.Not.Null);
 
-        hand_ = TileKindList.Parse(man: "234456", pin: "66", sou: "123");
-        fuuroList_ = new FuuroList { new(FuuroType.Pon, TileKindList.Parse(sou: "444")) };
+        hand_ = new(man: "234456", pin: "66", sou: "123");
+        fuuroList_ = new() { new(Pon, new(sou: "444")) };
         actual_ = Calc();
         Assert.That(actual_.Error, Is.Not.Null);
     }
@@ -284,10 +287,10 @@ public class HandCalculatorTest
     [Test]
     public void PinfuTest()
     {
-        hand_ = TileKindList.Parse(man: "123456", pin: "55", sou: "123456");
+        hand_ = new(man: "123456", pin: "55", sou: "123456");
         winTile_ = Man6;
         actual_ = Calc();
-        expected_ = new YakuList { Yaku.Pinfu };
+        expected_ = new() { Yaku.Pinfu };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Fu, Is.EqualTo(30));
@@ -295,9 +298,9 @@ public class HandCalculatorTest
             Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
         });
 
-        hand_ = TileKindList.Parse(man: "123456", sou: "123456", honor: "22");
+        hand_ = new(man: "123456", sou: "123456", honor: "22");
         actual_ = Calc();
-        expected_ = new YakuList { Yaku.Pinfu };
+        expected_ = new() { Yaku.Pinfu };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Fu, Is.EqualTo(30));
@@ -317,18 +320,18 @@ public class HandCalculatorTest
         actual_ = Calc();
         Assert.That(actual_.Error, Is.Not.Null);
 
-        hand_ = TileKindList.Parse(man: "123456", sou: "123456", honor: "11");
+        hand_ = new(man: "123456", sou: "123456", honor: "11");
         winTile_ = Man1;
         actual_ = Calc();
         Assert.That(actual_.Error, Is.Not.Null);
 
-        hand_ = TileKindList.Parse(man: "123456", pin: "55", sou: "123444");
+        hand_ = new(man: "123456", pin: "55", sou: "123444");
         winTile_ = Man6;
         actual_ = Calc();
         Assert.That(actual_.Error, Is.Not.Null);
 
-        hand_ = TileKindList.Parse(man: "456", pin: "55", sou: "123456");
-        fuuroList_ = new FuuroList { new(FuuroType.Chi, TileKindList.Parse(man: "123")) };
+        hand_ = new(man: "456", pin: "55", sou: "123456");
+        fuuroList_ = new() { new(Chi, new(man: "123")) };
         actual_ = Calc();
         Assert.That(actual_.Error, Is.Not.Null);
     }
@@ -336,10 +339,10 @@ public class HandCalculatorTest
     [Test]
     public void TanyaoTest()
     {
-        hand_ = TileKindList.Parse(man: "234567", pin: "55", sou: "234555");
+        hand_ = new(man: "234567", pin: "55", sou: "234555");
         winTile_ = Man7;
         actual_ = Calc();
-        expected_ = new YakuList { Yaku.Tanyao };
+        expected_ = new() { Yaku.Tanyao };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Fu, Is.EqualTo(40));
@@ -347,7 +350,7 @@ public class HandCalculatorTest
             Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
         });
 
-        fuuroList_ = new FuuroList { new(FuuroType.Chi, TileKindList.Parse(man: "234")) };
+        fuuroList_ = new() { new(Chi, new(man: "234")) };
         actual_ = Calc();
         Assert.Multiple(() =>
         {
@@ -356,11 +359,11 @@ public class HandCalculatorTest
             Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
         });
 
-        rules_ = new GameRules { Kuitan = false };
+        rules_ = new() { Kuitan = false };
         actual_ = Calc();
         Assert.That(actual_.Error, Is.Not.Null);
 
-        hand_ = TileKindList.Parse(man: "234567", pin: "55", sou: "234", honor: "222");
+        hand_ = new(man: "234567", pin: "55", sou: "234", honor: "222");
         actual_ = Calc();
         Assert.That(actual_.Error, Is.Not.Null);
     }
@@ -368,10 +371,10 @@ public class HandCalculatorTest
     [Test]
     public void IipeikouTest()
     {
-        hand_ = TileKindList.Parse(man: "22", pin: "223344", sou: "123444");
+        hand_ = new(man: "22", pin: "223344", sou: "123444");
         winTile_ = Pin2;
         actual_ = Calc();
-        expected_ = new YakuList { Yaku.Iipeikou };
+        expected_ = new() { Yaku.Iipeikou };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Fu, Is.EqualTo(40));
@@ -379,9 +382,9 @@ public class HandCalculatorTest
             Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
         });
 
-        hand_ = TileKindList.Parse(man: "22", pin: "223344", sou: "444");
+        hand_ = new(man: "22", pin: "223344", sou: "444");
         winTile_ = Pin2;
-        fuuroList_ = new FuuroList { new(FuuroType.Chi, TileKindList.Parse(sou: "123")) };
+        fuuroList_ = new() { new(Chi, new(sou: "123")) };
         actual_ = Calc();
         Assert.That(actual_.Error, Is.Not.Null);
     }
@@ -393,10 +396,10 @@ public class HandCalculatorTest
     [Test]
     public void SanshokuTest()
     {
-        hand_ = TileKindList.Parse(man: "12399", pin: "123456", sou: "123");
+        hand_ = new(man: "12399", pin: "123456", sou: "123");
         winTile_ = Man2;
         actual_ = Calc();
-        expected_ = new YakuList { Yaku.Sanshoku };
+        expected_ = new() { Yaku.Sanshoku };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Han, Is.EqualTo(2));
@@ -404,11 +407,11 @@ public class HandCalculatorTest
             Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
         });
 
-        hand_ = TileKindList.Parse(man: "12399", pin: "123456");
+        hand_ = new(man: "12399", pin: "123456");
         winTile_ = Man2;
-        fuuroList_ = new FuuroList { new(FuuroType.Chi, TileKindList.Parse(sou: "123")) };
+        fuuroList_ = new() { new(Chi, new(sou: "123")) };
         actual_ = Calc();
-        expected_ = new YakuList { Yaku.Sanshoku };
+        expected_ = new() { Yaku.Sanshoku };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Han, Is.EqualTo(1));
@@ -420,15 +423,15 @@ public class HandCalculatorTest
     [Test]
     public void ToitoihouTest()
     {
-        hand_ = TileKindList.Parse(man: "333", pin: "44555");
+        hand_ = new(man: "333", pin: "44555");
         winTile_ = Pin5;
-        fuuroList_ = new FuuroList
+        fuuroList_ = new()
         {
-            new(FuuroType.Pon, TileKindList.Parse(sou:"111")),
-            new(FuuroType.Pon, TileKindList.Parse(sou:"333")),
+            new(Pon, new(sou:"111")),
+            new(Pon, new(sou:"333")),
         };
         actual_ = Calc();
-        expected_ = new YakuList { Yaku.Toitoihou };
+        expected_ = new() { Yaku.Toitoihou };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Han, Is.EqualTo(2));
@@ -436,12 +439,12 @@ public class HandCalculatorTest
             Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
         });
 
-        hand_ = TileKindList.Parse(man: "333", pin: "44555", sou: "111");
+        hand_ = new(man: "333", pin: "44555", sou: "111");
         winTile_ = Pin5;
-        fuuroList_ = new FuuroList { new(FuuroType.Pon, TileKindList.Parse(sou: "333")) };
-        situation_ = new WinSituation { Tsumo = true };
+        fuuroList_ = new() { new(Pon, new(sou: "333")) };
+        situation_ = new() { Tsumo = true };
         actual_ = Calc();
-        expected_ = new YakuList { Yaku.Toitoihou, Yaku.Sanankou };
+        expected_ = new() { Yaku.Toitoihou, Yaku.Sanankou };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Han, Is.EqualTo(4));
@@ -453,10 +456,10 @@ public class HandCalculatorTest
     [Test]
     public void ShanshokudoukouTest()
     {
-        hand_ = TileKindList.Parse(man: "222", pin: "22245699", sou: "222");
+        hand_ = new(man: "222", pin: "22245699", sou: "222");
         winTile_ = Pin9;
         actual_ = Calc();
-        expected_ = new YakuList { Yaku.Sanshokudoukou, Yaku.Sanankou };
+        expected_ = new() { Yaku.Sanshokudoukou, Yaku.Sanankou };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Han, Is.EqualTo(4));
@@ -464,11 +467,11 @@ public class HandCalculatorTest
             Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
         });
 
-        hand_ = TileKindList.Parse(man: "222", pin: "22245699");
+        hand_ = new(man: "222", pin: "22245699");
         winTile_ = Pin9;
-        fuuroList_ = new FuuroList { new(FuuroType.Pon, TileKindList.Parse(sou: "222")) };
+        fuuroList_ = new() { new(Pon, new(sou: "222")) };
         actual_ = Calc();
-        expected_ = new YakuList { Yaku.Sanshokudoukou };
+        expected_ = new() { Yaku.Sanshokudoukou };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Han, Is.EqualTo(2));
@@ -476,11 +479,11 @@ public class HandCalculatorTest
             Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
         });
 
-        hand_ = TileKindList.Parse(man: "222", pin: "22245699");
+        hand_ = new(man: "222", pin: "22245699");
         winTile_ = Pin9;
-        fuuroList_ = new FuuroList { new(FuuroType.Minkan, TileKindList.Parse(sou: "2222")) };
+        fuuroList_ = new() { new(Minkan, new(sou: "2222")) };
         actual_ = Calc();
-        expected_ = new YakuList { Yaku.Sanshokudoukou };
+        expected_ = new() { Yaku.Sanshokudoukou };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Han, Is.EqualTo(2));
@@ -492,10 +495,10 @@ public class HandCalculatorTest
     [Test]
     public void ChiitoitsuTest()
     {
-        hand_ = TileKindList.Parse(man: "113355", pin: "11", sou: "113355");
+        hand_ = new(man: "113355", pin: "11", sou: "113355");
         winTile_ = Pin1;
         actual_ = Calc();
-        expected_ = new YakuList { Yaku.Chiitoitsu };
+        expected_ = new() { Yaku.Chiitoitsu };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Han, Is.EqualTo(2));
@@ -503,7 +506,7 @@ public class HandCalculatorTest
             Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
         });
 
-        hand_ = TileKindList.Parse(man: "11335555", pin: "1133", sou: "11");
+        hand_ = new(man: "11335555", pin: "1133", sou: "11");
         winTile_ = Sou1;
         actual_ = Calc();
         Assert.That(actual_.Error, Is.Not.Null);
@@ -516,10 +519,10 @@ public class HandCalculatorTest
     [Test]
     public void RyanpeikouTest()
     {
-        hand_ = TileKindList.Parse(man: "22", pin: "223344", sou: "112233");
+        hand_ = new(man: "22", pin: "223344", sou: "112233");
         winTile_ = Pin3;
         actual_ = Calc();
-        expected_ = new YakuList { Yaku.Ryanpeikou };
+        expected_ = new() { Yaku.Ryanpeikou };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Han, Is.EqualTo(3));
@@ -527,8 +530,8 @@ public class HandCalculatorTest
             Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
         });
 
-        hand_ = TileKindList.Parse(man: "22", pin: "223344", sou: "123");
-        fuuroList_ = new FuuroList { new(FuuroType.Chi, TileKindList.Parse(sou: "123")) };
+        hand_ = new(man: "22", pin: "223344", sou: "123");
+        fuuroList_ = new() { new(Chi, new(sou: "123")) };
         actual_ = Calc();
         Assert.That(actual_.Error, Is.Not.Null);
     }

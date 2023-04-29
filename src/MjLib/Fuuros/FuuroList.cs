@@ -3,7 +3,6 @@ using System.Diagnostics;
 
 namespace MjLib.Fuuros;
 
-[DebuggerDisplay("{ToString()}")]
 internal class FuuroList : List<Fuuro>
 {
     public bool HasOpen => this.Any(x => x.IsOpen);
