@@ -1,6 +1,5 @@
 ﻿using MjLib.Fuuros;
 using MjLib.HandCalculating.Dividings;
-using System.Diagnostics.CodeAnalysis;
 
 namespace MjLib.HandCalculating.Yakus;
 
@@ -28,29 +27,10 @@ internal record Ittsu : Yaku
         {
             if (suit.Count() < 3) continue;
             var casted = suit.Select(x => x.Select(y => y.Number));
-            return casted.Contains(new[] { 1, 2, 3 }, IntEnumerableEqualityComparer.Singleton)
-                && casted.Contains(new[] { 4, 5, 6 }, IntEnumerableEqualityComparer.Singleton)
-                && casted.Contains(new[] { 7, 8, 9 }, IntEnumerableEqualityComparer.Singleton);
+            return casted.Any(x => x.SequenceEqual(new[] { 1, 2, 3 })) &&
+                casted.Any(x => x.SequenceEqual(new[] { 4, 5, 6 })) &&
+                casted.Any(x => x.SequenceEqual(new[] { 7, 8, 9 }));
         }
         return false;
-    }
-
-    private class IntEnumerableEqualityComparer : IEqualityComparer<IEnumerable<int>>
-    {
-        public static IntEnumerableEqualityComparer Singleton { get; } = new();
-
-        private IntEnumerableEqualityComparer()
-        { }
-
-        public bool Equals(IEnumerable<int>? x, IEnumerable<int>? y)
-        {
-            return (x is null && y is null) ||
-                (x is not null && y is not null && x.SequenceEqual(y));
-        }
-
-        public int GetHashCode([DisallowNull] IEnumerable<int> obj)
-        {
-            return obj.GetHashCode();
-        }
     }
 }

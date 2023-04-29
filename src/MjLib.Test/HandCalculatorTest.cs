@@ -442,7 +442,7 @@ public class HandCalculatorTest
     public void WindTest()
     {
         hand_ = new(man: "23422", sou: "234567", honor: "111");
-        winTile_ = Ton;
+        winTile_ = Man2;
         actual_ = Calc();
         expected_ = new() { Yaku.PlayerWind, Yaku.RoundWind };
         Assert.Multiple(() =>
@@ -452,15 +452,37 @@ public class HandCalculatorTest
             Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
         });
 
-        hand_ = new(man: "23422", sou: "234567", honor: "111");
-        winTile_ = Ton;
-        situation_ = new() { Round = Wind.West };
+        hand_ = new(man: "23422", sou: "234567", honor: "222");
+        winTile_ = Man2;
+        situation_ = new() { Player = Wind.South, Round = Wind.South};
         actual_ = Calc();
-        expected_ = new() { Yaku.PlayerWind };
+        expected_ = new() { Yaku.PlayerWind, Yaku.RoundWind };
         Assert.Multiple(() =>
         {
             Assert.That(actual_.Fu, Is.EqualTo(40));
-            Assert.That(actual_.Han, Is.EqualTo(1));
+            Assert.That(actual_.Han, Is.EqualTo(2));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+        hand_ = new(man: "23422", sou: "234567", honor: "333");
+        winTile_ = Man2;
+        situation_ = new() { Player = Wind.West, Round = Wind.West };
+        actual_ = Calc();
+        expected_ = new() { Yaku.PlayerWind, Yaku.RoundWind };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Fu, Is.EqualTo(40));
+            Assert.That(actual_.Han, Is.EqualTo(2));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+        hand_ = new(man: "23422", sou: "234567", honor: "444");
+        winTile_ = Man2;
+        situation_ = new() { Player = Wind.North, Round = Wind.North};
+        actual_ = Calc();
+        expected_ = new() { Yaku.PlayerWind, Yaku.RoundWind };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Fu, Is.EqualTo(40));
+            Assert.That(actual_.Han, Is.EqualTo(2));
             Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
         });
     }
