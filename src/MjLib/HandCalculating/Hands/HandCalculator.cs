@@ -130,10 +130,10 @@ internal static class HandCalculator
         if (situation.Houtei && situation.Tsumo) result = new("河底撈魚とツモアガリは両立できません。");
         if (situation.Haitei && situation.Rinshan) result = new("海底撈月と嶺上開花は両立できません。");
         if (situation.Houtei && situation.Chankan) result = new("河底撈魚と槍槓は両立できません。");
-        if (situation.Tenhou && situation.IsDealer) result = new("天和はプレイヤーが親の時のみ有効です。");
+        if (situation.Tenhou && !situation.IsDealer) result = new("天和はプレイヤーが親の時のみ有効です。");
         if (situation.Tenhou && !situation.Tsumo) result = new("天和とロンアガリは両立できません。");
         if (situation.Tenhou && fuuroList.Any()) result = new("副露を伴う天和は無効です。");
-        if (situation.Chiihou && !situation.IsDealer) result = new("地和はプレイヤーが子の時のみ有効です。");
+        if (situation.Chiihou && situation.IsDealer) result = new("地和はプレイヤーが子の時のみ有効です。");
         if (situation.Chiihou && !situation.Tsumo) result = new("地和とロンアガリは両立できません。");
         if (situation.Chiihou && fuuroList.Any()) result = new("副露を伴う地和は無効です。");
         if (situation.Renhou && situation.IsDealer) result = new("人和はプレイヤーが子の時のみ有効です。");
