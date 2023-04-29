@@ -3,7 +3,7 @@
 namespace MjLib.Fuuros;
 
 /// <summary>
-/// 副露
+/// 副露 槓子はTileKind4個のTileKindListを渡してください
 /// </summary>
 /// <param name="Type">副露種別</param>
 /// <param name="KindList">牌種類</param>
