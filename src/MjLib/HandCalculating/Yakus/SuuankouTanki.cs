@@ -21,7 +21,7 @@ internal record SuuankouTanki : Yaku
         var anko = situation.Tsumo
             ? hand.Where(x => x.IsKoutsu)
             : hand.Where(x => x.IsKoutsu && x != winGroup);
-        var ankan = fuuroList.Where(x => x.IsAnkan).Select(x => x.KindList);
+        var ankan = fuuroList.Where(x => x.IsAnkan).Select(x => x.TileKindList);
         return jantou[0] == winTile && anko.Count() + ankan.Count() == 4;
     }
 }

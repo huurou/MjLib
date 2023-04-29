@@ -221,7 +221,7 @@ internal static class HandCalculator
         {
             yakuList.Add(Yaku.Renhou);
         }
-        if (Honitsu.Valid(hand))
+        if (Honitsu.Valid(hand, fuuroList))
         {
             yakuList.Add(Yaku.Honitsu);
         }

@@ -421,6 +421,55 @@ public class HandCalculatorTest
     }
 
     [Test]
+    public void ChantaTest()
+    {
+        hand_=new(man:"123789",sou:"123",honor:"22333");
+        winTile_ = Sha;
+        actual_ = Calc();
+        expected_ = new() { Yaku.Chanta };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Han, Is.EqualTo(2));
+            Assert.That(actual_.Fu, Is.EqualTo(40));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+
+        hand_ = new(man: "123789", honor: "22333");
+        winTile_ = Sha;
+        fuuroList_ = new() { new(Chi, new(sou: "123")) };
+        actual_ = Calc();
+        expected_ = new() { Yaku.Chanta };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Han, Is.EqualTo(1));
+            Assert.That(actual_.Fu, Is.EqualTo(30));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+    }
+
+    [Test]
+    public void HonroutouTest()
+    {
+        hand_ = new(man: "111", sou: "999", honor: "11222");
+        winTile_ = Nan;
+        fuuroList_ = new() { new(Pon, new(sou: "111")) };
+        actual_ = Calc();
+        expected_ = new() { Yaku.Honroto, Yaku.Toitoihou };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Han, Is.EqualTo(4));
+            Assert.That(actual_.Fu, Is.EqualTo(50));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+
+        hand_ = new(man: "1199", pin: "11", honor: "22334466");
+        winTile_ = Man1;
+        fuuroList_ = null;
+        actual_ = Calc();
+        expected_ = new() { Yaku.Honroto, Yaku.Chiitoitsu };
+    }
+
+    [Test]
     public void ToitoihouTest()
     {
         hand_ = new(man: "333", pin: "44555");
@@ -449,6 +498,44 @@ public class HandCalculatorTest
         {
             Assert.That(actual_.Han, Is.EqualTo(4));
             Assert.That(actual_.Fu, Is.EqualTo(40));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+    }
+
+    [Test]
+    public void SanankouTest()
+    {
+        hand_ = new(man: "333", pin: "44555", sou: "444");
+        winTile_ = Pin5;
+        fuuroList_ = new() { new(Chi, new(sou: "123")) };
+        situation_ = new() { Tsumo = true };
+        actual_ = Calc();
+        expected_ = new() { Yaku.Sanankou };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Han, Is.EqualTo(2));
+            Assert.That(actual_.Fu, Is.EqualTo(40));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+    }
+
+    [Test]
+    public void SankantsuTest()
+    {
+        hand_ = new(man: "123", pin: "44");
+        winTile_ = Man3;
+        fuuroList_ = new()
+        {
+            new(Minkan,new(sou:"1111")),
+            new(Minkan,new(sou:"3333")),
+            new(Minkan,new(pin:"6666")),
+        };
+        actual_ = Calc();
+        expected_ = new() { Yaku.Sankantsu };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Han, Is.EqualTo(2));
+            Assert.That(actual_.Fu, Is.EqualTo(60));
             Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
         });
     }
@@ -510,6 +597,21 @@ public class HandCalculatorTest
         winTile_ = Sou1;
         actual_ = Calc();
         Assert.That(actual_.Error, Is.Not.Null);
+    }
+
+    [Test]
+    public void ShousangenTest()
+    {
+        hand_ = new(man: "345", sou: "123", honor: "55666777");
+        winTile_ = TileKind.Chun;
+        actual_ = Calc();
+        expected_ = new() { Yaku.Shousangen, Yaku.Hatsu, Yaku.Chun };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Han, Is.EqualTo(4));
+            Assert.That(actual_.Fu, Is.EqualTo(50));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
     }
 
     #endregion 2翻

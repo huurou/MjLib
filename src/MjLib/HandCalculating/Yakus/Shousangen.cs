@@ -16,7 +16,7 @@ internal record Shousangen : Yaku
     public static bool Valid(TileKindListList hand, FuuroList fuuroList)
     {
         return hand.Where(x => (x.IsToitsu || x.IsKoutsu) && x[0].IsDragon)
-            .Concat(fuuroList.Where(x => (x.IsPon || x.IsKan) && x.KindList[0].IsDragon).Select(x => x.KindList))
+            .Concat(fuuroList.Where(x => (x.IsPon || x.IsKan) && x.TileKindList[0].IsDragon).Select(x => x.TileKindList))
             .Count() == 3;
     }
 }

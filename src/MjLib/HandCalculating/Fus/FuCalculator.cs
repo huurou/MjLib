@@ -97,7 +97,7 @@ internal static class FuCalculator
     private static void CalcMentsu()
     {
         //副露の明刻
-        foreach (var minko in fuuroList_.Where(x => x.IsPon).Select(x => x.KindList))
+        foreach (var minko in fuuroList_.Where(x => x.IsPon).Select(x => x.TileKindList))
         {
             fuList_.Add(minko[0].IsChuuchan ? Fu.ChuuchanMinko : Fu.YaochuuMinko);
         }
@@ -117,12 +117,12 @@ internal static class FuCalculator
             fuList_.Add(winGroup_[0].IsChuuchan ? Fu.ChuuchanAnko : Fu.YaochuuAnko);
         }
         // 明槓
-        foreach (var minkan in fuuroList_.Where(x => x.IsMinkan).Select(x => x.KindList))
+        foreach (var minkan in fuuroList_.Where(x => x.IsMinkan).Select(x => x.TileKindList))
         {
             fuList_.Add(minkan[0].IsChuuchan ? Fu.ChuuchanMinkan : Fu.YaochuuMinkan);
         }
         // 暗槓
-        foreach (var ankan in fuuroList_.Where(x => x.IsAnkan).Select(x => x.KindList))
+        foreach (var ankan in fuuroList_.Where(x => x.IsAnkan).Select(x => x.TileKindList))
         {
             fuList_.Add(ankan[0].IsChuuchan ? Fu.ChuuchanAnkan : Fu.YaochuuAnkan);
         }

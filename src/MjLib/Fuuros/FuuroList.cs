@@ -1,18 +1,20 @@
 ﻿using MjLib.TileKinds;
-using System.Diagnostics;
 
 namespace MjLib.Fuuros;
 
 internal class FuuroList : List<Fuuro>
 {
     public bool HasOpen => this.Any(x => x.IsOpen);
-    public IEnumerable<TileKindList> KindLists => this.Select(x => x.KindList);
+    public IEnumerable<TileKindList> KindLists => this.Select(x => x.TileKindList);
 
     public FuuroList()
-        : base() { }
+    {
+    }
 
     public FuuroList(IEnumerable<Fuuro> fuuros)
-        : base(fuuros) { }
+    {
+        AddRange(fuuros);
+    }
 
     public override string ToString()
     {

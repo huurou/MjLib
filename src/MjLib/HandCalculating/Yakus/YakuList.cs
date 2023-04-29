@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace MjLib.HandCalculating.Yakus;
+﻿namespace MjLib.HandCalculating.Yakus;
 
 internal class YakuList : List<Yaku>
 {
@@ -8,10 +6,13 @@ internal class YakuList : List<Yaku>
     public int HanClosed => this.Sum(x => x.HanClosed);
 
     public YakuList()
-        : base() { }
+    {
+    }
 
     public YakuList(IEnumerable<Yaku> yakus)
-        : base(yakus) { }
+    {
+        AddRange(yakus);
+    }
 
     public override string ToString()
     {

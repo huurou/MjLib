@@ -3,11 +3,11 @@
 namespace MjLib.Fuuros;
 
 /// <summary>
-/// 副露 槓子はTileKind4個のTileKindListを渡してください
+/// 副露 槓子は
 /// </summary>
 /// <param name="Type">副露種別</param>
-/// <param name="KindList">牌種類</param>
-internal record Fuuro(FuuroType Type, TileKindList KindList)
+/// <param name="TileKindList">牌種類</param>
+internal record Fuuro(FuuroType Type, TileKindList TileKindList)
 {
     /// <summary>
     /// チーかどうか
@@ -49,7 +49,7 @@ internal record Fuuro(FuuroType Type, TileKindList KindList)
             FuuroType.Nuki => "抜き",
             _ => "",
         };
-        return $"{typeStr} {KindList}";
+        return $"{typeStr} {TileKindList}";
     }
 }
 
