@@ -33,7 +33,6 @@ internal static class HandCalculator
         WinSituation? situation = null,
         GameRules? rules = null)
     {
-        winTile ??= TileKind.Man1;
         fuuroList ??= new();
         doraIndicators ??= new();
         uradoraIndicators ??= new();
@@ -54,6 +53,16 @@ internal static class HandCalculator
                     ? Yaku.Kokushimusou13
                     : Yaku.Kokushimusou
             };
+            EvaluateCommon(yakuList, situation, rules);
+            var fu = 0;
+            var han = yakuList.Sum(x => x.HanClosed);
+            var score = ScoreCalcurator.Calculate(fu, han, situation, rules, true);
+            result = new(fu, han, score, yakuList, new());
+        }
+        // 天和はあがり牌なし
+        else if (winTile is null)
+        {
+            var yakuList = new YakuList();
             EvaluateCommon(yakuList, situation, rules);
             var fu = 0;
             var han = yakuList.Sum(x => x.HanClosed);
@@ -115,11 +124,11 @@ internal static class HandCalculator
     }
 
     // エラーをチェックする
-    private static bool CheckError(TileKindList hand, TileKind winTile, FuuroList fuuroList, WinSituation situation, [NotNullWhen(true)] out HandResult? result)
+    private static bool CheckError(TileKindList hand, TileKind? winTile, FuuroList fuuroList, WinSituation situation, [NotNullWhen(true)] out HandResult? result)
     {
         result = null;
         if (!Agari.IsAgari(hand)) result = new("手牌がアガリ形ではありません。");
-        if (!hand.Contains(winTile)) result = new("手牌にアガリ牌がありません。");
+        if (!situation.Tenhou && winTile is not null && !hand.Contains(winTile)) result = new("手牌にアガリ牌がありません。");
         if (situation.Riichi && fuuroList.HasOpen) result = new("リーチと非面前は両立できません。");
         if (situation.DaburuRiichi && fuuroList.HasOpen) result = new("ダブルリーチと非面前は両立できません。");
         if (situation.Ippatsu && fuuroList.HasOpen) result = new("一発と非面前は両立できません。");

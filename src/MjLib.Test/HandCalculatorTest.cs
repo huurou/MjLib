@@ -454,7 +454,7 @@ public class HandCalculatorTest
 
         hand_ = new(man: "23422", sou: "234567", honor: "222");
         winTile_ = Man2;
-        situation_ = new() { Player = Wind.South, Round = Wind.South};
+        situation_ = new() { Player = Wind.South, Round = Wind.South };
         actual_ = Calc();
         expected_ = new() { Yaku.PlayerWind, Yaku.RoundWind };
         Assert.Multiple(() =>
@@ -476,7 +476,7 @@ public class HandCalculatorTest
         });
         hand_ = new(man: "23422", sou: "234567", honor: "444");
         winTile_ = Man2;
-        situation_ = new() { Player = Wind.North, Round = Wind.North};
+        situation_ = new() { Player = Wind.North, Round = Wind.North };
         actual_ = Calc();
         expected_ = new() { Yaku.PlayerWind, Yaku.RoundWind };
         Assert.Multiple(() =>
@@ -965,4 +965,28 @@ public class HandCalculatorTest
     }
 
     #endregion ドラ
+
+    #region 状況による役満
+
+    [Test]
+    public void TenhouTest()
+    {
+        hand_ = new(man: "234456", pin: "66", sou: "123444");
+        situation_ = new() { Tsumo = true, Tenhou = true };
+        actual_ = Calc();
+        expected_ = new() { Yaku.Tenhou };
+        Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+
+        hand_ = new(man: "234456", pin: "66", sou: "123444");
+        situation_ = new() { Tsumo = false, Tenhou = true };
+        actual_ = Calc();
+        Assert.That(actual_.Error, Is.Not.Null);
+
+        hand_ = new(man: "234456", pin: "66", sou: "123444");
+        situation_ = new() { Player = Wind.South, Tenhou = true };
+        actual_ = Calc();
+        Assert.That(actual_.Error, Is.Not.Null);
+    }
+
+    #endregion 状況による役満
 }
