@@ -78,7 +78,7 @@ internal static class HandCalculator
                     }
                     else if (yakuList.Any())
                     {
-                        AddDora(yakuList, doraIndicators, uradoraIndicators, situation);
+                        AddDora(yakuList, devidedHand, doraIndicators, uradoraIndicators, situation);
                     }
                     var han = fuuroList.HasOpen ? yakuList.Sum(x => x.HanOpen) : yakuList.Sum(x => x.HanClosed);
                     if (han == 0)
@@ -368,10 +368,11 @@ internal static class HandCalculator
     }
 
     // ドラを追加する
-    private static void AddDora(YakuList yakuList, TileKindList doraIndicators, TileKindList uradoraIndicators, WinSituation situation)
+    private static void AddDora(YakuList yakuList, TileKindListList devidedHand, TileKindList doraIndicators, TileKindList uradoraIndicators, WinSituation situation)
     {
-        yakuList.AddRange(Enumerable.Repeat(Yaku.Dora, doraIndicators.Select(TileKind.ToRealDora).Count()));
-        yakuList.AddRange(Enumerable.Repeat(Yaku.Uradora, uradoraIndicators.Select(TileKind.ToRealDora).Count()));
+        var hand = devidedHand.SelectMany(y => y);
+        yakuList.AddRange(Enumerable.Repeat(Yaku.Dora, doraIndicators.Select(TileKind.ToRealDora).Sum(x => hand.Count(y => x == y))));
+        yakuList.AddRange(Enumerable.Repeat(Yaku.Uradora, uradoraIndicators.Select(TileKind.ToRealDora).Sum(x => hand.Count(y => x == y))));
         yakuList.AddRange(Enumerable.Repeat(Yaku.Akadora, situation.Akadora));
     }
 }

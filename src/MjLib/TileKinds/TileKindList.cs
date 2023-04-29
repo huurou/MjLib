@@ -1,5 +1,4 @@
 ﻿using MjLib.TileCountArrays;
-using System.Diagnostics;
 using static MjLib.TileKinds.TileKind;
 
 namespace MjLib.TileKinds;
@@ -30,6 +29,14 @@ internal class TileKindList : List<TileKind>, IEquatable<TileKindList>, ICompara
     public TileKindList(IEnumerable<TileKind> kinds)
     {
         AddRange(kinds);
+    }
+
+    public TileKindList(params TileKind[] kinds)
+    {
+        if (kinds is not null)
+        {
+            AddRange(kinds);
+        }
     }
 
     public TileKindList(IEnumerable<int> ids)

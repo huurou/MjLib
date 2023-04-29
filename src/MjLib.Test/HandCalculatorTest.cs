@@ -20,6 +20,8 @@ public class HandCalculatorTest
     private HandResult? actual_;
     private YakuList? expected_;
 
+    #region ヘルパー
+
     [SetUp]
     public void Setup()
     {
@@ -54,6 +56,8 @@ public class HandCalculatorTest
         actual_ = Calc();
         Assert.That(actual_.Error, Is.Not.Null);
     }
+
+    #endregion ヘルパー
 
     #region 状況による役
 
@@ -389,6 +393,78 @@ public class HandCalculatorTest
         Assert.That(actual_.Error, Is.Not.Null);
     }
 
+    [Test]
+    public void HakuTest()
+    {
+        hand_ = new(man: "23422", pin: "234567", honor: "555");
+        winTile_ = TileKind.Haku;
+        actual_ = Calc();
+        expected_ = new() { Yaku.Haku };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Fu, Is.EqualTo(40));
+            Assert.That(actual_.Han, Is.EqualTo(1));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+    }
+
+    [Test]
+    public void HatsuTest()
+    {
+        hand_ = new(man: "23422", sou: "234567", honor: "666");
+        winTile_ = TileKind.Hatsu;
+        actual_ = Calc();
+        expected_ = new() { Yaku.Hatsu };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Fu, Is.EqualTo(40));
+            Assert.That(actual_.Han, Is.EqualTo(1));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+    }
+
+    [Test]
+    public void ChunTest()
+    {
+        hand_ = new(pin: "23422", sou: "234567", honor: "777");
+        winTile_ = TileKind.Chun;
+        actual_ = Calc();
+        expected_ = new() { Yaku.Chun };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Fu, Is.EqualTo(40));
+            Assert.That(actual_.Han, Is.EqualTo(1));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+    }
+
+    [Test]
+    public void WindTest()
+    {
+        hand_ = new(man: "23422", sou: "234567", honor: "111");
+        winTile_ = Ton;
+        actual_ = Calc();
+        expected_ = new() { Yaku.PlayerWind, Yaku.RoundWind };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Fu, Is.EqualTo(40));
+            Assert.That(actual_.Han, Is.EqualTo(2));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+
+        hand_ = new(man: "23422", sou: "234567", honor: "111");
+        winTile_ = Ton;
+        situation_ = new() { Round = Wind.West };
+        actual_ = Calc();
+        expected_ = new() { Yaku.PlayerWind };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Fu, Is.EqualTo(40));
+            Assert.That(actual_.Han, Is.EqualTo(1));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+    }
+
     #endregion 1翻
 
     #region 2翻
@@ -421,9 +497,36 @@ public class HandCalculatorTest
     }
 
     [Test]
+    public void Ittsu()
+    {
+        hand_ = new(man: "123456789", sou: "123", honor: "22");
+        winTile_ = Sou3;
+        actual_ = Calc();
+        expected_ = new() { Yaku.Ittsu };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Han, Is.EqualTo(2));
+            Assert.That(actual_.Fu, Is.EqualTo(40));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+
+        hand_ = new(man: "456789", sou: "123", honor: "22");
+        winTile_ = Sou3;
+        fuuroList_ = new() { new(Chi, new(man: "123")) };
+        actual_ = Calc();
+        expected_ = new() { Yaku.Ittsu };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Han, Is.EqualTo(1));
+            Assert.That(actual_.Fu, Is.EqualTo(30));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+    }
+
+    [Test]
     public void ChantaTest()
     {
-        hand_=new(man:"123789",sou:"123",honor:"22333");
+        hand_ = new(man: "123789", sou: "123", honor: "22333");
         winTile_ = Sha;
         actual_ = Calc();
         expected_ = new() { Yaku.Chanta };
@@ -619,6 +722,60 @@ public class HandCalculatorTest
     #region 3翻
 
     [Test]
+    public void HonitsuTest()
+    {
+        hand_ = new(man: "123455667", honor: "22333");
+        winTile_ = Nan;
+        actual_ = Calc();
+        expected_ = new() { Yaku.Honitsu };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Han, Is.EqualTo(3));
+            Assert.That(actual_.Fu, Is.EqualTo(40));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+
+        hand_ = new(man: "455667", honor: "22333");
+        winTile_ = Nan;
+        fuuroList_ = new() { new(Chi, new(man: "123")) };
+        actual_ = Calc();
+        expected_ = new() { Yaku.Honitsu };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Han, Is.EqualTo(2));
+            Assert.That(actual_.Fu, Is.EqualTo(30));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+    }
+
+    [Test]
+    public void JunchanTest()
+    {
+        hand_ = new(man: "123789", pin: "12399", sou: "789");
+        winTile_ = Man2;
+        actual_ = Calc();
+        expected_ = new() { Yaku.Junchan };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Han, Is.EqualTo(3));
+            Assert.That(actual_.Fu, Is.EqualTo(40));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+
+        hand_ = new(man: "123789", pin: "12399");
+        winTile_ = Man2;
+        fuuroList_ = new() { new(Chi, new(sou: "789")) };
+        actual_ = Calc();
+        expected_ = new() { Yaku.Junchan };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Han, Is.EqualTo(2));
+            Assert.That(actual_.Fu, Is.EqualTo(30));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+    }
+
+    [Test]
     public void RyanpeikouTest()
     {
         hand_ = new(man: "22", pin: "223344", sou: "112233");
@@ -639,4 +796,151 @@ public class HandCalculatorTest
     }
 
     #endregion 3翻
+
+    #region 6翻
+
+    [Test]
+    public void ChinitsuTest()
+    {
+        hand_ = new(man: "11234567678789");
+        winTile_ = Man1;
+        actual_ = Calc();
+        expected_ = new() { Yaku.Chinitsu };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Han, Is.EqualTo(6));
+            Assert.That(actual_.Fu, Is.EqualTo(40));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+
+        hand_ = new(man: "11234567789");
+        winTile_ = Man1;
+        fuuroList_ = new() { new(Chi, new(man: "678")) };
+        actual_ = Calc();
+        expected_ = new() { Yaku.Chinitsu };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Han, Is.EqualTo(5));
+            Assert.That(actual_.Fu, Is.EqualTo(30));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+    }
+
+    #endregion 6翻
+
+    #region ドラ
+
+    [Test]
+    public void DoraTest()
+    {
+        hand_ = new(man: "123456", pin: "33", sou: "123456");
+        winTile_ = Man6;
+        fuuroList_ = null;
+        doraIndicators_ = new(Man1, Pin2);
+        actual_ = Calc();
+        expected_ = new()
+        {
+            Yaku.Pinfu,
+            Yaku.Dora,
+            Yaku.Dora,
+            Yaku.Dora,
+        };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Han, Is.EqualTo(4));
+            Assert.That(actual_.Fu, Is.EqualTo(30));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+
+        hand_ = new(man: "123456", sou: "123456", honor: "22");
+        winTile_ = Man6;
+        doraIndicators_ = new(Ton);
+        actual_ = Calc();
+        expected_ = new()
+        {
+            Yaku.Pinfu,
+            Yaku.Dora,
+            Yaku.Dora,
+        };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Han, Is.EqualTo(3));
+            Assert.That(actual_.Fu, Is.EqualTo(30));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+
+        // ドラ被り
+        hand_ = new(man: "123456", pin: "33", sou: "123456");
+        winTile_ = Man6;
+        doraIndicators_ = new(Sou4, Sou4);
+        actual_ = Calc();
+        expected_ = new()
+        {
+            Yaku.Pinfu,
+            Yaku.Dora,
+            Yaku.Dora,
+        };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Han, Is.EqualTo(3));
+            Assert.That(actual_.Fu, Is.EqualTo(30));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+
+        // ドラのみは役なし判定
+        hand_ = new(man: "456789", sou: "345", honor: "55");
+        winTile_ = Sou5;
+        fuuroList_ = new() { new(Chi, new(sou: "678")) };
+        doraIndicators_ = new(Sou5);
+        actual_ = Calc();
+        Assert.That(actual_.Error, Is.Not.Null);
+    }
+
+    [Test]
+    public void UradoraTest()
+    {
+        hand_ = new(man: "123456", pin: "33", sou: "123456");
+        winTile_ = Man6;
+        fuuroList_ = null;
+        uradoraIndicators_ = new(Man1, Pin2);
+        actual_ = Calc();
+        expected_ = new()
+        {
+            Yaku.Pinfu,
+            Yaku.Uradora,
+            Yaku.Uradora,
+            Yaku.Uradora,
+        };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Han, Is.EqualTo(4));
+            Assert.That(actual_.Fu, Is.EqualTo(30));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+    }
+
+    [Test]
+    public void AkadoraTest()
+    {
+        // 赤ドラはMjLibで管理せずアプリケーションに教えてもらう
+        hand_ = new(man: "123456", pin: "33", sou: "123456");
+        winTile_ = Man6;
+        fuuroList_ = null;
+        situation_ = new() { Akadora = 2 };
+        actual_ = Calc();
+        expected_ = new()
+        {
+            Yaku.Pinfu,
+            Yaku.Akadora,
+            Yaku.Akadora,
+        };
+        Assert.Multiple(() =>
+        {
+            Assert.That(actual_.Han, Is.EqualTo(3));
+            Assert.That(actual_.Fu, Is.EqualTo(30));
+            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        });
+    }
+
+    #endregion ドラ
 }
