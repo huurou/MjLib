@@ -1,6 +1,6 @@
 ﻿using MjLib.HandCalculating;
 
-namespace MjLib.API;
+namespace MjLib;
 
 public record MjGameRules
 {

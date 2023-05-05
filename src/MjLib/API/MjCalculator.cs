@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
-namespace MjLib.API;
+namespace MjLib;
 
 internal static class Common
 {

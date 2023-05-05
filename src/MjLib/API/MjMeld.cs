@@ -1,6 +1,6 @@
 ﻿using MjLib.Fuuros;
 
-namespace MjLib.API;
+namespace MjLib;
 
 /// <summary>
 /// 副露

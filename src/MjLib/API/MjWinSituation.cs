@@ -1,6 +1,6 @@
 ﻿using MjLib.HandCalculating;
 
-namespace MjLib.API;
+namespace MjLib;
 
 /// <summary>
 /// 和了したときの状況
