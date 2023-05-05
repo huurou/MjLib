@@ -20,8 +20,6 @@ public class HandCalculatorTest
     private HandResult? actual_;
     private YakuList? expected_;
 
-    #region ヘルパー
-
     [SetUp]
     public void Setup()
     {
@@ -46,18 +44,14 @@ public class HandCalculatorTest
     [Test]
     public void InvalidHandTest()
     {
-        hand_ = new(man: "234456", pin: "66", sou: "123445");
-        winTile_ = Sou4;
-        actual_ = Calc();
-        Assert.That(actual_, Is.Not.Null);
+        Assert_InvalidHand(
+            new(man: "234456", pin: "66", sou: "123445"),
+            Sou4);
 
-        hand_ = new(man: "234456", pin: "66", sou: "123444");
-        winTile_ = Pin4;
-        actual_ = Calc();
-        Assert.That(actual_.Error, Is.Not.Null);
+        Assert_InvalidHand(
+            new(man: "234456", pin: "66", sou: "123444"),
+            Pin4);
     }
-
-    #endregion ヘルパー
 
     #region 状況による役
 
@@ -494,16 +488,12 @@ public class HandCalculatorTest
     [Test]
     public void SanshokuTest()
     {
-        hand_ = new(man: "12399", pin: "123456", sou: "123");
-        winTile_ = Man2;
-        actual_ = Calc();
-        expected_ = new() { Yaku.Sanshoku };
-        Assert.Multiple(() =>
-        {
-            Assert.That(actual_.Han, Is.EqualTo(2));
-            Assert.That(actual_.Fu, Is.EqualTo(40));
-            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
-        });
+        Assert_YakuScore(
+            new(man: "12399", pin: "123456", sou: "123"),
+            Man2,
+            40,
+            2,
+            new() { Yaku.Sanshoku });
 
         hand_ = new(man: "12399", pin: "123456");
         winTile_ = Man2;
@@ -746,75 +736,55 @@ public class HandCalculatorTest
     [Test]
     public void HonitsuTest()
     {
-        hand_ = new(man: "123455667", honor: "22333");
-        winTile_ = Nan;
-        actual_ = Calc();
-        expected_ = new() { Yaku.Honitsu };
-        Assert.Multiple(() =>
-        {
-            Assert.That(actual_.Han, Is.EqualTo(3));
-            Assert.That(actual_.Fu, Is.EqualTo(40));
-            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
-        });
+        Assert_YakuScore(
+            new(man: "123455667", honor: "22333"),
+            Nan,
+            40,
+            3,
+            new() { Yaku.Honitsu });
 
-        hand_ = new(man: "455667", honor: "22333");
-        winTile_ = Nan;
-        fuuroList_ = new() { new(Chi, new(man: "123")) };
-        actual_ = Calc();
-        expected_ = new() { Yaku.Honitsu };
-        Assert.Multiple(() =>
-        {
-            Assert.That(actual_.Han, Is.EqualTo(2));
-            Assert.That(actual_.Fu, Is.EqualTo(30));
-            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
-        });
+        Assert_YakuScore(
+            new(man: "455667", honor: "22333"),
+            Nan,
+            new() { new(Chi, new(man: "123")) },
+            30,
+            2,
+            new() { Yaku.Honitsu });
     }
 
     [Test]
     public void JunchanTest()
     {
-        hand_ = new(man: "123789", pin: "12399", sou: "789");
-        winTile_ = Man2;
-        actual_ = Calc();
-        expected_ = new() { Yaku.Junchan };
-        Assert.Multiple(() =>
-        {
-            Assert.That(actual_.Han, Is.EqualTo(3));
-            Assert.That(actual_.Fu, Is.EqualTo(40));
-            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
-        });
+        Assert_YakuScore(
+            new(man: "123789", pin: "12399", sou: "789"),
+            Man2,
+            40,
+            3,
+            new() { Yaku.Junchan });
 
-        hand_ = new(man: "123789", pin: "12399");
-        winTile_ = Man2;
-        fuuroList_ = new() { new(Chi, new(sou: "789")) };
-        actual_ = Calc();
-        expected_ = new() { Yaku.Junchan };
-        Assert.Multiple(() =>
-        {
-            Assert.That(actual_.Han, Is.EqualTo(2));
-            Assert.That(actual_.Fu, Is.EqualTo(30));
-            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
-        });
+        Assert_YakuScore(
+            new(man: "123789", pin: "12399"),
+            Man2,
+            new() { new(Chi, new(sou: "789")) },
+            30,
+            2,
+            new() { Yaku.Junchan });
     }
 
     [Test]
     public void RyanpeikouTest()
     {
-        hand_ = new(man: "22", pin: "223344", sou: "112233");
-        winTile_ = Pin3;
-        actual_ = Calc();
-        expected_ = new() { Yaku.Ryanpeikou };
-        Assert.Multiple(() =>
-        {
-            Assert.That(actual_.Han, Is.EqualTo(3));
-            Assert.That(actual_.Fu, Is.EqualTo(40));
-            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
-        });
+        Assert_YakuScore(
+            new(man: "22", pin: "223344", sou: "112233"),
+            Pin3,
+            40,
+            3,
+            new() { Yaku.Ryanpeikou });
 
-        hand_ = new(man: "22", pin: "223344", sou: "123");
-        fuuroList_ = new() { new(Chi, new(sou: "123")) };
-        actual_ = Calc();
-        Assert.That(actual_.Error, Is.Not.Null);
+        Assert_InvalidHand(
+            new(man: "22", pin: "223344", sou: "112233"),
+            Pin3,
+            new FuuroList() { new(Chi, new(sou: "123")) });
     }
 
     #endregion 3翻
@@ -824,28 +794,20 @@ public class HandCalculatorTest
     [Test]
     public void ChinitsuTest()
     {
-        hand_ = new(man: "11234567678789");
-        winTile_ = Man1;
-        actual_ = Calc();
-        expected_ = new() { Yaku.Chinitsu };
-        Assert.Multiple(() =>
-        {
-            Assert.That(actual_.Han, Is.EqualTo(6));
-            Assert.That(actual_.Fu, Is.EqualTo(40));
-            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
-        });
+        Assert_YakuScore(
+            new(man: "11234566777889"),
+            Man1,
+            40,
+            6,
+            new() { Yaku.Chinitsu });
 
-        hand_ = new(man: "11234567789");
-        winTile_ = Man1;
-        fuuroList_ = new() { new(Chi, new(man: "678")) };
-        actual_ = Calc();
-        expected_ = new() { Yaku.Chinitsu };
-        Assert.Multiple(() =>
-        {
-            Assert.That(actual_.Han, Is.EqualTo(5));
-            Assert.That(actual_.Fu, Is.EqualTo(30));
-            Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
-        });
+        Assert_YakuScore(
+            new(man: "11234567789"),
+            Man1,
+            new() { new(Chi, new(man: "678")) },
+            30,
+            5,
+            new() { Yaku.Chinitsu });
     }
 
     #endregion 6翻
@@ -971,22 +933,188 @@ public class HandCalculatorTest
     [Test]
     public void TenhouTest()
     {
-        hand_ = new(man: "234456", pin: "66", sou: "123444");
-        situation_ = new() { Tsumo = true, Tenhou = true };
-        actual_ = Calc();
-        expected_ = new() { Yaku.Tenhou };
-        Assert.That(actual_.YakuList, Is.EquivalentTo(expected_));
+        Assert_YakuScore(
+            new(man: "234456", pin: "66", sou: "123444"),
+            new WinSituation() { Tsumo = true, Tenhou = true },
+            13,
+            new() { Yaku.Tenhou });
 
-        hand_ = new(man: "234456", pin: "66", sou: "123444");
-        situation_ = new() { Tsumo = false, Tenhou = true };
-        actual_ = Calc();
-        Assert.That(actual_.Error, Is.Not.Null);
+        // 天和はプレイヤーが親の時のみ有効です。
+        Assert_InvalidHand(
+            new(man: "234456", pin: "66", sou: "123444"),
+            new WinSituation() { Tenhou = true, Player = Wind.South });
 
-        hand_ = new(man: "234456", pin: "66", sou: "123444");
-        situation_ = new() { Player = Wind.South, Tenhou = true };
-        actual_ = Calc();
-        Assert.That(actual_.Error, Is.Not.Null);
+        // 天和とロンアガリは両立できません。
+        Assert_InvalidHand(
+            new(man: "234456", pin: "66", sou: "123444"),
+            new WinSituation() { Tsumo = false, Tenhou = true });
+
+        // 副露を伴う天和は無効です。
+        Assert_InvalidHand(
+            new(man: "234456", pin: "66", sou: "123"),
+            new FuuroList() { new(Pon, new(sou: "444")) },
+            new WinSituation() { Tsumo = true, Tenhou = true });
+    }
+
+    [Test]
+    public void 地和Test()
+    {
+        Assert_YakuScore(
+            new(man: "234456", pin: "66", sou: "123444"),
+            Man2,
+            new WinSituation() { Tsumo = true, Chiihou = true, Player = Wind.South },
+            13,
+            new() { Yaku.Chiihou });
+
+        // 地和はプレイヤーが子の時のみ有効です。
+        Assert_InvalidHand(
+            new(man: "234456", pin: "66", sou: "123444"),
+            Man2,
+            new WinSituation() { Tsumo = true, Chiihou = true, Player = Wind.East });
+
+        // 地和とロンアガリは両立できません。
+        Assert_InvalidHand(
+            new(man: "234456", pin: "66", sou: "123444"),
+            Man2,
+            new WinSituation() { Tsumo = false, Chiihou = true, Player = Wind.South });
+
+        // 副露を伴う地和は無効です。
+        Assert_InvalidHand(
+            new(man: "234456", pin: "66", sou: "123"),
+            Man2,
+            new() { new(Pon, new(sou: "444")) },
+            new() { Tsumo = true, Chiihou = true, Player = Wind.East });
     }
 
     #endregion 状況による役満
+
+    #region ヘルパー
+
+    private static void Assert_YakuScore(
+        TileKindList hand,
+        TileKind? winTile,
+        FuuroList? fuuroList,
+        TileKindList? doraIndicators,
+        TileKindList? uradoraIndicators,
+        WinSituation? situation,
+        GameRules? rules,
+        int? expectedFu,
+        int expectedHan,
+        YakuList expectedYakuList)
+    {
+        var actual = HandCalculator.Calculate(hand, winTile, fuuroList, doraIndicators, uradoraIndicators, situation, rules);
+        Assert.Multiple(
+            () =>
+            {
+                if (expectedFu is not null)
+                {
+                    Assert.That(actual.Fu, Is.EqualTo(expectedFu));
+                }
+                Assert.That(actual.Han, Is.EqualTo(expectedHan));
+                Assert.That(actual.YakuList, Is.EquivalentTo(expectedYakuList));
+            }
+        );
+    }
+
+    private static void Assert_YakuScore(
+        TileKindList hand,
+        TileKind winTile,
+        int expectedFu,
+        int expectedHan,
+        YakuList expectedYakuList)
+    {
+        Assert_YakuScore(hand, winTile, null, null, null, null, null, expectedFu, expectedHan, expectedYakuList);
+    }
+
+    private static void Assert_YakuScore(
+        TileKindList hand,
+        TileKind winTile,
+        FuuroList fuuroList,
+        int expectedFu,
+        int expectedHan,
+        YakuList expectedYakuList)
+    {
+        Assert_YakuScore(hand, winTile, fuuroList, null, null, null, null, expectedFu, expectedHan, expectedYakuList);
+    }
+
+    private static void Assert_YakuScore(
+        TileKindList hand,
+        WinSituation situation,
+        int expectedHan,
+        YakuList expectedYakuList)
+    {
+        Assert_YakuScore(hand, null, null, null, null, situation, null, null, expectedHan, expectedYakuList);
+    }
+
+    private static void Assert_YakuScore(
+        TileKindList hand,
+        TileKind winTile,
+        WinSituation situation,
+        int expectedHan,
+        YakuList expectedYakuList)
+    {
+        Assert_YakuScore(hand, winTile, null, null, null, situation, null, null, expectedHan, expectedYakuList);
+    }
+
+    private static void Assert_InvalidHand(
+        TileKindList hand,
+        TileKind? winTile,
+        FuuroList? fuuroList,
+        TileKindList? doraIndicators,
+        TileKindList? uradoraIndicators,
+        WinSituation? situation,
+        GameRules? rules)
+    {
+        var actual = HandCalculator.Calculate(hand, winTile, fuuroList, doraIndicators, uradoraIndicators, situation, rules);
+        Assert.That(actual.Error, Is.Not.Null);
+    }
+
+    private static void Assert_InvalidHand(
+        TileKindList hand,
+        TileKind winTile)
+    {
+        Assert_InvalidHand(hand, winTile, null, null, null, null, null);
+    }
+
+    private static void Assert_InvalidHand(
+        TileKindList hand,
+        TileKind winTile,
+        FuuroList fuuroList)
+    {
+        Assert_InvalidHand(hand, winTile, fuuroList, null, null, null, null);
+    }
+
+    private static void Assert_InvalidHand(
+        TileKindList hand,
+        WinSituation situation)
+    {
+        Assert_InvalidHand(hand, null, null, null, null, situation, null);
+    }
+
+    private static void Assert_InvalidHand(
+        TileKindList hand,
+        FuuroList fuuroList,
+        WinSituation situation)
+    {
+        Assert_InvalidHand(hand, null, fuuroList, null, null, situation, null);
+    }
+
+    private static void Assert_InvalidHand(
+        TileKindList hand,
+        TileKind? winTile,
+        WinSituation situation)
+    {
+        Assert_InvalidHand(hand, winTile, null, null, null, situation, null);
+    }
+
+    private static void Assert_InvalidHand(
+        TileKindList hand,
+        TileKind? winTile,
+        FuuroList fuuroList,
+        WinSituation situation)
+    {
+        Assert_InvalidHand(hand, winTile, fuuroList, null, null, situation, null);
+    }
+
+    #endregion ヘルパー
 }
