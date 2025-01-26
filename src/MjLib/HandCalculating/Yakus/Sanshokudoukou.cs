@@ -13,9 +13,9 @@ internal record Sanshokudoukou : Yaku
     public override int HanClosed => 2;
     public override bool IsYakuman => false;
 
-    public static bool Valid(TileKindListList hand, FuuroList fuuroList)
+    public static bool Valid(TileListList hand, FuuroList fuuroList)
     {
-        var koutsus = hand.Concat(fuuroList.KindLists).Where(x => x.IsKoutsu || x.IsKantsu).Select(x => x.Take(3).ToList());
+        var koutsus = hand.Concat(fuuroList.TileLists).Where(x => x.IsKoutsu || x.IsKantsu).Select(x => x.Take(3).ToList());
         if (koutsus.Count() < 3) return false;
         var mans = koutsus.Where(x => x[0].IsMan);
         var pins = koutsus.Where(x => x[0].IsPin);

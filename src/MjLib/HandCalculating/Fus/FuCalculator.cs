@@ -1,17 +1,17 @@
 ﻿using MjLib.Fuuros;
 using MjLib.HandCalculating.Dividings;
 using MjLib.TileKinds;
-using static MjLib.TileKinds.TileKind;
+using static MjLib.TileKinds.Tile;
 
 namespace MjLib.HandCalculating.Fus;
 
 internal static class FuCalculator
 {
-    private static FuList fuList_ = new();
-    private static TileKindListList hand_ = new();
-    private static TileKind winTile_ = Man1;
-    private static TileKindList winGroup_ = new();
-    private static FuuroList fuuroList_ = new();
+    private static FuList fuList_ = [];
+    private static TileListList hand_ = [];
+    private static Tile winTile_ = Man1;
+    private static TileList winGroup_ = [];
+    private static FuuroList fuuroList_ = [];
     private static WinSituation situation_ = new();
     private static GameRules rules_ = new();
 
@@ -25,22 +25,22 @@ internal static class FuCalculator
     /// <param name="situation">和了したときの状況</param>
     /// <returns></returns>
     internal static FuList Calculate(
-        TileKindListList hand,
-        TileKind winTile,
-        TileKindList winGroup,
+        TileListList hand,
+        Tile winTile,
+        TileList winGroup,
         FuuroList? fuuroList = null,
         WinSituation? situation = null,
         GameRules? rules = null)
     {
-        fuList_ = new();
+        fuList_ = [];
         hand_ = hand;
         winTile_ = winTile;
         winGroup_ = winGroup;
-        fuuroList_ = fuuroList ?? new();
+        fuuroList_ = fuuroList ?? [];
         situation_ = situation ?? new();
         rules_ = rules ?? new();
 
-        if (hand_.Count == 7) return new() { Fu.Chiitoitsu };
+        if (hand_.Count == 7) return [Fu.Chiitoitsu];
         CalcJantou();
         CalcWait();
         CalcMentsu();
@@ -97,7 +97,7 @@ internal static class FuCalculator
     private static void CalcMentsu()
     {
         //副露の明刻
-        foreach (var minko in fuuroList_.Where(x => x.IsPon).Select(x => x.TileKindList))
+        foreach (var minko in fuuroList_.Where(x => x.IsPon).Select(x => x.Tiles))
         {
             fuList_.Add(minko[0].IsChuuchan ? Fu.ChuuchanMinko : Fu.YaochuuMinko);
         }
@@ -117,12 +117,12 @@ internal static class FuCalculator
             fuList_.Add(winGroup_[0].IsChuuchan ? Fu.ChuuchanAnko : Fu.YaochuuAnko);
         }
         // 明槓
-        foreach (var minkan in fuuroList_.Where(x => x.IsMinkan).Select(x => x.TileKindList))
+        foreach (var minkan in fuuroList_.Where(x => x.IsMinkan).Select(x => x.Tiles))
         {
             fuList_.Add(minkan[0].IsChuuchan ? Fu.ChuuchanMinkan : Fu.YaochuuMinkan);
         }
         // 暗槓
-        foreach (var ankan in fuuroList_.Where(x => x.IsAnkan).Select(x => x.TileKindList))
+        foreach (var ankan in fuuroList_.Where(x => x.IsAnkan).Select(x => x.Tiles))
         {
             fuList_.Add(ankan[0].IsChuuchan ? Fu.ChuuchanAnkan : Fu.YaochuuAnkan);
         }
@@ -152,7 +152,7 @@ internal static class FuCalculator
         }
     }
 
-    private static TileKind WindToTileKind(Wind wind)
+    private static Tile WindToTileKind(Wind wind)
     {
         return wind switch
         {

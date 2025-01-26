@@ -7,11 +7,11 @@ namespace MjLib;
 /// </summary>
 public class MjTiles
 {
-    internal TileKindList KindList { get; }
+    internal TileList KindList { get; }
 
     public MjTiles()
     {
-        KindList = new();
+        KindList = [];
     }
 
     public MjTiles(int tile)

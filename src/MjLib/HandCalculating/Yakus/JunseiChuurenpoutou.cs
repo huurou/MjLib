@@ -13,7 +13,7 @@ internal record JunseiChuurenpoutou : Yaku
     public override int HanClosed => 26;
     public override bool IsYakuman => true;
 
-    public static bool Valid(TileKindListList hand, TileKind winTile, GameRules rules)
+    public static bool Valid(TileListList hand, Tile winTile, GameRules rules)
     {
         if (!rules.DaburuYakuman) return false;
         var mans = hand.Where(x => x[0].IsMan);

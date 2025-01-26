@@ -3,42 +3,42 @@
 /// <summary>
 /// 牌種別
 /// </summary>
-internal record TileKind :IComparable<TileKind>
+internal record Tile :IComparable<Tile>
 {
-    public static TileKind Man1 { get; } = new(MAN1);
-    public static TileKind Man2 { get; } = new(MAN2);
-    public static TileKind Man3 { get; } = new(MAN3);
-    public static TileKind Man4 { get; } = new(MAN4);
-    public static TileKind Man5 { get; } = new(MAN5);
-    public static TileKind Man6 { get; } = new(MAN6);
-    public static TileKind Man7 { get; } = new(MAN7);
-    public static TileKind Man8 { get; } = new(MAN8);
-    public static TileKind Man9 { get; } = new(MAN9);
-    public static TileKind Pin1 { get; } = new(PIN1);
-    public static TileKind Pin2 { get; } = new(PIN2);
-    public static TileKind Pin3 { get; } = new(PIN3);
-    public static TileKind Pin4 { get; } = new(PIN4);
-    public static TileKind Pin5 { get; } = new(PIN5);
-    public static TileKind Pin6 { get; } = new(PIN6);
-    public static TileKind Pin7 { get; } = new(PIN7);
-    public static TileKind Pin8 { get; } = new(PIN8);
-    public static TileKind Pin9 { get; } = new(PIN9);
-    public static TileKind Sou1 { get; } = new(SOU1);
-    public static TileKind Sou2 { get; } = new(SOU2);
-    public static TileKind Sou3 { get; } = new(SOU3);
-    public static TileKind Sou4 { get; } = new(SOU4);
-    public static TileKind Sou5 { get; } = new(SOU5);
-    public static TileKind Sou6 { get; } = new(SOU6);
-    public static TileKind Sou7 { get; } = new(SOU7);
-    public static TileKind Sou8 { get; } = new(SOU8);
-    public static TileKind Sou9 { get; } = new(SOU9);
-    public static TileKind Ton { get; } = new(TON);
-    public static TileKind Nan { get; } = new(NAN);
-    public static TileKind Sha { get; } = new(SHA);
-    public static TileKind Pei { get; } = new(PEI);
-    public static TileKind Haku { get; } = new(HAKU);
-    public static TileKind Hatsu { get; } = new(HATSU);
-    public static TileKind Chun { get; } = new(CHUN);
+    public static Tile Man1 { get; } = new(MAN1);
+    public static Tile Man2 { get; } = new(MAN2);
+    public static Tile Man3 { get; } = new(MAN3);
+    public static Tile Man4 { get; } = new(MAN4);
+    public static Tile Man5 { get; } = new(MAN5);
+    public static Tile Man6 { get; } = new(MAN6);
+    public static Tile Man7 { get; } = new(MAN7);
+    public static Tile Man8 { get; } = new(MAN8);
+    public static Tile Man9 { get; } = new(MAN9);
+    public static Tile Pin1 { get; } = new(PIN1);
+    public static Tile Pin2 { get; } = new(PIN2);
+    public static Tile Pin3 { get; } = new(PIN3);
+    public static Tile Pin4 { get; } = new(PIN4);
+    public static Tile Pin5 { get; } = new(PIN5);
+    public static Tile Pin6 { get; } = new(PIN6);
+    public static Tile Pin7 { get; } = new(PIN7);
+    public static Tile Pin8 { get; } = new(PIN8);
+    public static Tile Pin9 { get; } = new(PIN9);
+    public static Tile Sou1 { get; } = new(SOU1);
+    public static Tile Sou2 { get; } = new(SOU2);
+    public static Tile Sou3 { get; } = new(SOU3);
+    public static Tile Sou4 { get; } = new(SOU4);
+    public static Tile Sou5 { get; } = new(SOU5);
+    public static Tile Sou6 { get; } = new(SOU6);
+    public static Tile Sou7 { get; } = new(SOU7);
+    public static Tile Sou8 { get; } = new(SOU8);
+    public static Tile Sou9 { get; } = new(SOU9);
+    public static Tile Ton { get; } = new(TON);
+    public static Tile Nan { get; } = new(NAN);
+    public static Tile Sha { get; } = new(SHA);
+    public static Tile Pei { get; } = new(PEI);
+    public static Tile Haku { get; } = new(HAKU);
+    public static Tile Hatsu { get; } = new(HATSU);
+    public static Tile Chun { get; } = new(CHUN);
 
     public const int ID_MIN = 0;
     public const int ID_MAX = 33;
@@ -96,16 +96,16 @@ internal record TileKind :IComparable<TileKind>
     public bool IsChuuchan => !IsYaochuu;
     public bool IsYaochuu => IsRoutou || IsHonor;
     public bool IsRoutou => Id is MAN1 or MAN9 or PIN1 or PIN9 or SOU1 or SOU9;
-    public static IEnumerable<TileKind> AllKind => Enumerable.Range(ID_MIN, KIND_COUNT).Select(x => new TileKind(x));
+    public static IEnumerable<Tile> AllKind => Enumerable.Range(ID_MIN, KIND_COUNT).Select(x => new Tile(x));
 
-    public TileKind(int id)
+    public Tile(int id)
     {
         Id = ID_MIN <= id && id <= ID_MAX
             ? id
             : throw new ArgumentException($"牌種別IDは{ID_MIN}～{ID_MAX}です。given:{id}", nameof(id));
     }
 
-    public static TileKind ToRealDora(TileKind doraIndicator)
+    public static Tile ToRealDora(Tile doraIndicator)
     {
         var id = doraIndicator.Id;
         return id switch
@@ -166,13 +166,13 @@ internal record TileKind :IComparable<TileKind>
         };
     }
 
-    public static bool operator <(TileKind x, TileKind y) => x.Id < y.Id;
+    public static bool operator <(Tile x, Tile y) => x.Id < y.Id;
 
-    public static bool operator >(TileKind x, TileKind y) => x.Id > y.Id;
+    public static bool operator >(Tile x, Tile y) => x.Id > y.Id;
 
-    public int CompareTo(TileKind? other)
+    public int CompareTo(Tile? other)
     {
-        return other is TileKind x ? -x.Id.CompareTo(Id) : 1;
+        return other is Tile x ? -x.Id.CompareTo(Id) : 1;
     }
 
 }

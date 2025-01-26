@@ -14,10 +14,10 @@ internal record Chun : Yaku
     public override int HanClosed => 1;
     public override bool IsYakuman => false;
 
-    public static bool Valid(TileKindListList hand, FuuroList fuuroList_)
+    public static bool Valid(TileListList hand, FuuroList fuuroList_)
     {
-        return hand.Concat(fuuroList_.KindLists)
+        return hand.Concat(fuuroList_.TileLists)
                    .Where(x => x.IsKoutsu || x.IsKantsu)
-                   .Any(x => x[0] == TileKind.Chun);
+                   .Any(x => x[0] == Tile.Chun);
     }
 }

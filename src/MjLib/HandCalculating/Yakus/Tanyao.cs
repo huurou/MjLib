@@ -13,9 +13,9 @@ internal record Tanyao : Yaku
     public override int HanClosed => 1;
     public override bool IsYakuman => false;
 
-    public static bool Valid(TileKindListList hand, FuuroList fuuroList, GameRules rules)
+    public static bool Valid(TileListList hand, FuuroList fuuroList, GameRules rules)
     {
-        return hand.Concat(fuuroList.KindLists).SelectMany(x => x).Distinct().All(x => x.IsChuuchan) &&
+        return hand.Concat(fuuroList.TileLists).SelectMany(x => x).Distinct().All(x => x.IsChuuchan) &&
             (!fuuroList.HasOpen || rules.Kuitan);
     }
 }

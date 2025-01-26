@@ -3,25 +3,25 @@ using System.Diagnostics;
 
 namespace MjLib.HandCalculating.Dividings;
 
-internal class TileKindListList : List<TileKindList>, IEquatable<TileKindListList>
+internal class TileListList : List<TileList>, IEquatable<TileListList>
 {
-    public TileKindListList()
+    public TileListList()
     {
     }
 
-    public TileKindListList(IEnumerable<TileKindList> kindLists)
+    public TileListList(IEnumerable<TileList> kindLists)
     {
         AddRange(kindLists);
     }
 
-    public TileKindListList(params TileKindList[] kindLists)
+    public TileListList(params TileList[] kindLists)
     {
         AddRange(kindLists);
     }
 
-    public TileKindListList(params string[] sets)
+    public TileListList(params string[] sets)
     {
-        AddRange(sets.Select(x => new TileKindList(x)));
+        AddRange(sets.Select(x => new TileList(x)));
     }
 
     public override string ToString()
@@ -29,14 +29,14 @@ internal class TileKindListList : List<TileKindList>, IEquatable<TileKindListLis
         return string.Join("", this.Select(x => $"[{x}]"));
     }
 
-    public bool Equals(TileKindListList? other)
+    public bool Equals(TileListList? other)
     {
-        return other is TileKindListList x && x.SequenceEqual(this);
+        return other is TileListList x && x.SequenceEqual(this);
     }
 
     public override bool Equals(object? obj)
     {
-        return Equals(obj as TileKindListList);
+        return Equals(obj as TileListList);
     }
 
     public override int GetHashCode()

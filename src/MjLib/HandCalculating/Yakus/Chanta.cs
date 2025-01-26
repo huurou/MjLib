@@ -13,9 +13,9 @@ internal record Chanta : Yaku
     public override int HanClosed => 2;
     public override bool IsYakuman => false;
 
-    public static bool Valid(TileKindListList hand, FuuroList fuuroList)
+    public static bool Valid(TileListList hand, FuuroList fuuroList)
     {
-        var kindLists = hand.Concat(fuuroList.KindLists);
+        var kindLists = hand.Concat(fuuroList.TileLists);
         var shuntus = kindLists.Count(x => x.IsShuntsu);
         var routou = kindLists.Count(x => x.Any(y => y.IsRoutou));
         var honor = kindLists.Count(x => x[0].IsHonor);

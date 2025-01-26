@@ -13,8 +13,8 @@ internal record Daisuushii : Yaku
     public override int HanClosed => 13;
     public override bool IsYakuman => true;
 
-    public static bool Valid(TileKindListList hand, FuuroList fuuroList_)
+    public static bool Valid(TileListList hand, FuuroList fuuroList_)
     {
-        return hand.Concat(fuuroList_.KindLists).Count(x => (x.IsKoutsu || x.IsKantsu) && x[0].IsWind) == 4;
+        return hand.Concat(fuuroList_.TileLists).Count(x => (x.IsKoutsu || x.IsKantsu) && x[0].IsWind) == 4;
     }
 }

@@ -12,7 +12,7 @@ internal record Chuurenpoutou : Yaku
     public override int HanClosed => 13;
     public override bool IsYakuman => true;
 
-    public static bool Valid(TileKindListList hand)
+    public static bool Valid(TileListList hand)
     {
         var mans = hand.Where(x => x[0].IsMan);
         var pins = hand.Where(x => x[0].IsPin);

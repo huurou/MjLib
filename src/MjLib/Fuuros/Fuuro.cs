@@ -7,7 +7,7 @@ namespace MjLib.Fuuros;
 /// </summary>
 /// <param name="Type">副露種別</param>
 /// <param name="TileKindList">牌種類</param>
-internal record Fuuro(FuuroType Type, TileKindList TileKindList)
+internal record Fuuro(FuuroType Type, TileList Tiles)
 {
     /// <summary>
     /// チーかどうか
@@ -49,7 +49,7 @@ internal record Fuuro(FuuroType Type, TileKindList TileKindList)
             FuuroType.Nuki => "抜き",
             _ => "",
         };
-        return $"{typeStr} {TileKindList}";
+        return $"{typeStr} {Tiles}";
     }
 }
 

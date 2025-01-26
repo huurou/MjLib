@@ -1,13 +1,13 @@
 ﻿using MjLib.TileKinds;
 using System.Collections;
-using static MjLib.TileKinds.TileKind;
+using static MjLib.TileKinds.Tile;
 
 namespace MjLib.TileCountArrays;
 
 /// <summary>
 /// 牌の種類id0 ~33をインデックスとして, それぞれの牌の個数を値として持つ配列
 /// </summary>
-internal class TileCountArray : IEnumerable<int>, IEnumerable
+internal class CountArray : IEnumerable<int>
 {
     private readonly int[] array_ = new int[KIND_COUNT];
 
@@ -20,19 +20,19 @@ internal class TileCountArray : IEnumerable<int>, IEnumerable
             array_[index] = value;
         }
     }
-    public int this[TileKind kind] { get => this[kind.Id]; set => this[kind.Id] = value; }
+    public int this[Tile kind] { get => this[kind.Id]; set => this[kind.Id] = value; }
     public int[] this[Range range] => array_[range];
 
-    public TileCountArray()
+    public CountArray()
     { }
 
-    public TileCountArray(IEnumerable<int> counts)
+    public CountArray(IEnumerable<int> counts)
     {
         if (array_.Length != counts.Count()) throw new ArgumentException($"牌種類数と配列の長さが一致しません。given:{counts}", nameof(counts));
         array_ = counts.ToArray();
     }
 
-    public TileCountArray(IEnumerable<TileKind> kinds)
+    public CountArray(IEnumerable<Tile> kinds)
     {
         foreach (var kind in kinds)
         {
@@ -40,9 +40,9 @@ internal class TileCountArray : IEnumerable<int>, IEnumerable
         }
     }
 
-    public TileKindList GetIsolations()
+    public TileList GetIsolations()
     {
-        var isolatations = new TileKindList();
+        var isolatations = new TileList();
         foreach (var kind in AllKind)
         {
             if (kind.IsHonor && this[kind] == 0 ||
@@ -56,7 +56,7 @@ internal class TileCountArray : IEnumerable<int>, IEnumerable
         return isolatations;
     }
 
-    public TileKindList ToTileKindList()
+    public TileList ToTileKindList()
     {
         return new(this);
     }

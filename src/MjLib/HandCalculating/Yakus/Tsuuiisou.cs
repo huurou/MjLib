@@ -12,7 +12,7 @@ internal record Tsuuiisou : Yaku
     public override int HanClosed => 13;
     public override bool IsYakuman => true;
 
-    public static bool Valid(TileKindListList hand)
+    public static bool Valid(TileListList hand)
     {
         return hand.SelectMany(x => x).All(x => x.IsHonor);
     }

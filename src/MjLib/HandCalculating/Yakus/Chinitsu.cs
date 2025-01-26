@@ -1,4 +1,6 @@
-﻿using MjLib.HandCalculating.Dividings;
+﻿using MjLib.Fuuros;
+using MjLib.HandCalculating.Dividings;
+using MjLib.TileKinds;
 
 namespace MjLib.HandCalculating.Yakus;
 
@@ -12,12 +14,13 @@ internal record Chinitsu : Yaku
     public override int HanClosed => 6;
     public override bool IsYakuman => false;
 
-    public static bool Valid(TileKindListList hand)
+    public static bool Valid(TileListList hand, FuuroList fuuroList)
     {
-        var man = hand.Count(x => x[0].IsMan);
-        var pin = hand.Count(x => x[0].IsPin);
-        var sou = hand.Count(x => x[0].IsSou);
-        var honor = hand.Count(x => x[0].IsHonor);
-        return new[] { man, pin, sou }.Count(x => x != 0) == 1 && honor == 0;
+        IEnumerable<TileList> tileLists = [.. hand, .. fuuroList.TileLists];
+        var tiles = tileLists.SelectMany(x => x);
+        return
+            tiles.All(x => x.IsMan) ||
+            tiles.All(x => x.IsPin) ||
+            tiles.All(x => x.IsSou);
     }
 }

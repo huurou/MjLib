@@ -13,8 +13,8 @@ internal record Toitoihou : Yaku
     public override int HanClosed => 2;
     public override bool IsYakuman => false;
 
-    public static bool Valid(TileKindListList hand, FuuroList fuuroList)
+    public static bool Valid(TileListList hand, FuuroList fuuroList)
     {
-        return hand.Concat(fuuroList.KindLists).Count(x => x.IsKoutsu || x.IsKantsu) == 4;
+        return hand.Concat(fuuroList.TileLists).Count(x => x.IsKoutsu || x.IsKantsu) == 4;
     }
 }

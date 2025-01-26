@@ -13,7 +13,7 @@ internal record Ryanpeikou : Yaku
     public override int HanClosed => 3;
     public override bool IsYakuman => false;
 
-    public static bool Valid(TileKindListList hand, FuuroList fuuroList)
+    public static bool Valid(TileListList hand, FuuroList fuuroList)
     {
         if (fuuroList.HasOpen) return false;
         var shuntsus = hand.Where(x => x.IsShuntsu);

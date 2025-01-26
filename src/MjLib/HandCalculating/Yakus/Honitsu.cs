@@ -13,9 +13,9 @@ internal record Honitsu : Yaku
     public override int HanClosed => 3;
     public override bool IsYakuman => false;
 
-    public static bool Valid(TileKindListList hand,FuuroList fuuroList)
+    public static bool Valid(TileListList hand,FuuroList fuuroList)
     {
-        var tileLists = hand.Concat(fuuroList.Select(x => x.TileKindList));
+        var tileLists = hand.Concat(fuuroList.Select(x => x.Tiles));
         var man = tileLists.Count(x => x[0].IsMan);
         var pin = tileLists.Count(x => x[0].IsPin);
         var sou = tileLists.Count(x => x[0].IsSou);

@@ -12,8 +12,8 @@ internal class HandResult
     public int Fu { get; }
     public int Han { get; }
     public Score Score { get; } = new();
-    public YakuList YakuList { get; } = new();
-    public FuList FuList { get; } = new();
+    public YakuList YakuList { get; } = [];
+    public FuList FuList { get; } = [];
     public string? Error { get; }
 
     public HandResult(int fu, int han, Score score, YakuList yakuList, FuList fuList)

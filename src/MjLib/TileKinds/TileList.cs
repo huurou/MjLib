@@ -1,9 +1,9 @@
 ﻿using MjLib.TileCountArrays;
-using static MjLib.TileKinds.TileKind;
+using static MjLib.TileKinds.Tile;
 
 namespace MjLib.TileKinds;
 
-internal class TileKindList : List<TileKind>, IEquatable<TileKindList>, IComparable<TileKindList>
+internal class TileList : List<Tile>, IEquatable<TileList>, IComparable<TileList>
 {
     /// <summary>
     /// 対子かどうか
@@ -12,7 +12,8 @@ internal class TileKindList : List<TileKind>, IEquatable<TileKindList>, ICompara
     /// <summary>
     /// 順子かどうか
     /// </summary>
-    public bool IsShuntsu => Count == 3 && this[0].Id == this[1].Id - 1 && this[1].Id == this[2].Id - 1;
+    public bool IsShuntsu => Count == 3 && this[0].Id == this[1].Id - 1 && this[1].Id == this[2].Id - 1 &&
+        (this.All(x => x.IsMan) || this.All(x => x.IsPin) || this.All(x => x.IsSou));
     /// <summary>
     /// 刻子かどうか
     /// </summary>
@@ -22,16 +23,16 @@ internal class TileKindList : List<TileKind>, IEquatable<TileKindList>, ICompara
     /// </summary>
     public bool IsKantsu => Count == 4 && this[0] == this[1] && this[1] == this[2] && this[2] == this[3];
 
-    public TileKindList()
+    public TileList()
     {
     }
 
-    public TileKindList(IEnumerable<TileKind> kinds)
+    public TileList(IEnumerable<Tile> kinds)
     {
         AddRange(kinds);
     }
 
-    public TileKindList(params TileKind[] kinds)
+    public TileList(params Tile[] kinds)
     {
         if (kinds is not null)
         {
@@ -39,30 +40,30 @@ internal class TileKindList : List<TileKind>, IEquatable<TileKindList>, ICompara
         }
     }
 
-    public TileKindList(IEnumerable<int> ids)
+    public TileList(IEnumerable<int> ids)
     {
-        AddRange(ids.Select(x => new TileKind(x)));
+        AddRange(ids.Select(x => new Tile(x)));
     }
 
-    public TileKindList(TileCountArray countArray)
+    public TileList(CountArray countArray)
     {
         for (var id = ID_MIN; id < KIND_COUNT; id++)
         {
-            AddRange(Enumerable.Repeat(new TileKind(id), countArray[id]));
+            AddRange(Enumerable.Repeat(new Tile(id), countArray[id]));
         }
     }
 
-    public TileKindList(string? man = null, string? pin = null, string? sou = null, string? honor = null)
+    public TileList(string? man = null, string? pin = null, string? sou = null, string? honor = null)
     {
         AddRange(Parse(man, pin, sou, honor));
     }
 
-    public TileKindList(string oneLine = "")
+    public TileList(string oneLine = "")
     {
         AddRange(Parse(oneLine));
     }
 
-    private static IEnumerable<TileKind> Parse(string oneLine = "")
+    private static IEnumerable<Tile> Parse(string oneLine = "")
     {
         var man = "";
         var pin = "";
@@ -107,12 +108,12 @@ internal class TileKindList : List<TileKind>, IEquatable<TileKindList>, ICompara
         return Parse(man, pin, sou, honor);
     }
 
-    private static IEnumerable<TileKind> Parse(string? man = null, string? pin = null, string? sou = null, string? honor = null)
+    private static IEnumerable<Tile> Parse(string? man = null, string? pin = null, string? sou = null, string? honor = null)
     {
-        var mans = (man ?? "").Select(x => new TileKind(int.Parse(x.ToString()) - 1));
-        var pins = (pin ?? "").Select(x => new TileKind(int.Parse(x.ToString()) + 8));
-        var sous = (sou ?? "").Select(x => new TileKind(int.Parse(x.ToString()) + 17));
-        var honors = (honor ?? "").Select(x => new TileKind(int.Parse(x.ToString()) + 26));
+        var mans = (man ?? "").Select(x => new Tile(int.Parse(x.ToString()) - 1));
+        var pins = (pin ?? "").Select(x => new Tile(int.Parse(x.ToString()) + 8));
+        var sous = (sou ?? "").Select(x => new Tile(int.Parse(x.ToString()) + 17));
+        var honors = (honor ?? "").Select(x => new Tile(int.Parse(x.ToString()) + 26));
         return mans.Concat(pins).Concat(sous).Concat(honors);
     }
 
@@ -120,12 +121,12 @@ internal class TileKindList : List<TileKind>, IEquatable<TileKindList>, ICompara
     /// 自身及び隣り合った牌を除いたTileKindListを取得する
     /// </summary>
     /// <returns></returns>
-    public TileKindList GetIsolations()
+    public TileList GetIsolations()
     {
         return ToTileCountArray().GetIsolations();
     }
 
-    public TileCountArray ToTileCountArray()
+    public CountArray ToTileCountArray()
     {
         return new(this);
     }
@@ -140,20 +141,20 @@ internal class TileKindList : List<TileKind>, IEquatable<TileKindList>, ICompara
         return $"{mans}{pins}{sous}{honors}";
     }
 
-    public static bool operator ==(TileKindList? x, TileKindList? y) => x?.Equals(y) ?? y is null;
+    public static bool operator ==(TileList? x, TileList? y) => x?.Equals(y) ?? y is null;
 
-    public static bool operator !=(TileKindList? x, TileKindList? y) => !(x == y);
+    public static bool operator !=(TileList? x, TileList? y) => !(x == y);
 
-    public static bool operator >(TileKindList x, TileKindList y) => x.CompareTo(y) > 0;
+    public static bool operator >(TileList x, TileList y) => x.CompareTo(y) > 0;
 
-    public static bool operator <(TileKindList x, TileKindList y) => x.CompareTo(y) < 0;
+    public static bool operator <(TileList x, TileList y) => x.CompareTo(y) < 0;
 
-    public bool Equals(TileKindList? other)
+    public bool Equals(TileList? other)
     {
-        return other is TileKindList x && x.SequenceEqual(this);
+        return other is TileList x && x.SequenceEqual(this);
     }
 
-    public int CompareTo(TileKindList? other)
+    public int CompareTo(TileList? other)
     {
         if (other is null) return 1;
         var min = Math.Min(Count, other.Count);
@@ -172,11 +173,17 @@ internal class TileKindList : List<TileKind>, IEquatable<TileKindList>, ICompara
 
     public override bool Equals(object? obj)
     {
-        return obj is TileKindList x && Equals(x);
+        return obj is TileList x && Equals(x);
     }
 
     public override int GetHashCode()
     {
-        return base.GetHashCode();
+        var hashCode = new HashCode();
+        foreach (var tile in this)
+        {
+            hashCode.Add(tile);
+        }
+        return hashCode.ToHashCode();
     }
+
 }

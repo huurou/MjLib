@@ -13,9 +13,9 @@ internal record Junchan : Yaku
     public override int HanClosed => 3;
     public override bool IsYakuman => false;
 
-    public static bool Valid(TileKindListList hand, FuuroList fuuroList)
+    public static bool Valid(TileListList hand, FuuroList fuuroList)
     {
-        var kindLists = hand.Concat(fuuroList.KindLists);
+        var kindLists = hand.Concat(fuuroList.TileLists);
         var shuntsu = kindLists.Count(x => x.IsShuntsu);
         var routou = kindLists.Count(x => x.Any(x => x.IsRoutou));
         return shuntsu != 0 && routou == 5;

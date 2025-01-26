@@ -5,7 +5,7 @@ namespace MjLib.Test;
 
 public class AgariTest
 {
-    private TileKindList? hand_;
+    private TileList? hand_;
 
     [Test]
     public void IsAgariTest()
@@ -75,6 +75,9 @@ public class AgariTest
         // 順子を取った残りが不適切
         hand_ = new(man: "112334", pin: "123", sou: "123", honor: "111");
         Assert.That(Agari.IsAgari(hand_), Is.False);
+
+        hand_ = new(man: "11122233");
+        Assert.That(Agari.IsAgari(hand_), Is.True);
     }
 
     [Test]

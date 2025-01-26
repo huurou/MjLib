@@ -1,6 +1,6 @@
 ﻿using MjLib.TileCountArrays;
 using MjLib.TileKinds;
-using static MjLib.TileKinds.TileKind;
+using static MjLib.TileKinds.Tile;
 
 namespace MjLib.Shantens;
 
@@ -8,7 +8,7 @@ internal static class Shanten
 {
     public const int AGARI_SHANTEN = -1;
 
-    private static TileCountArray countArray_ = new();
+    private static CountArray countArray_ = new();
     private static int mentsuCount_;
     private static int tatsuCount_;
     private static int toitsusCount_;
@@ -22,7 +22,7 @@ internal static class Shanten
     /// </summary>
     /// <param name="hand">手牌 鳴かれた牌を含まない手牌</param>
     /// <returns>シャンテン数</returns>
-    public static int Calculate(TileKindList hand, bool useChiitoitsu = true, bool useKokushi = true)
+    public static int Calculate(TileList hand, bool useChiitoitsu = true, bool useKokushi = true)
     {
         var shantens = new List<int> { CalculateForRegular(hand) };
         if (useChiitoitsu) shantens.Add(CalculateForChiitoitsu(hand));
@@ -30,7 +30,7 @@ internal static class Shanten
         return shantens.Min();
     }
 
-    public static int CalculateForRegular(TileKindList hand)
+    public static int CalculateForRegular(TileList hand)
     {
         Init(hand);
         RemoveCharacterTiles();
@@ -39,7 +39,7 @@ internal static class Shanten
         return minShanten_;
     }
 
-    public static int CalculateForChiitoitsu(TileKindList hand)
+    public static int CalculateForChiitoitsu(TileList hand)
     {
         Init(hand);
         // 対子の数
@@ -50,7 +50,7 @@ internal static class Shanten
         return 6 - toitsu + Math.Max(0, 7 - count);
     }
 
-    public static int CalculateForKokushi(TileKindList hand)
+    public static int CalculateForKokushi(TileList hand)
     {
         Init(hand);
         // 么九牌の対子の数
@@ -61,7 +61,7 @@ internal static class Shanten
         return 13 - yaochuu - (yaochuuToitsu != 0 ? 1 : 0);
     }
 
-    private static void Init(TileKindList hand)
+    private static void Init(TileList hand)
     {
         if (hand.Count > 14) throw new ArgumentException($"手牌の数が14個より多いです。given:{hand}", nameof(hand));
         countArray_ = hand.ToTileCountArray();

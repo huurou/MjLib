@@ -12,7 +12,7 @@ internal record Honrouto : Yaku
     public override int HanClosed => 2;
     public override bool IsYakuman => false;
 
-    public static bool Valid(TileKindListList hand)
+    public static bool Valid(TileListList hand)
     {
         return hand.SelectMany(x => x).All(x => x.IsYaochuu);
     }

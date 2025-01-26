@@ -14,12 +14,12 @@ internal record Suuankou : Yaku
     public override int HanClosed => 13;
     public override bool IsYakuman => true;
 
-    public static bool Valid(TileKindListList hand, TileKindList winGroup, FuuroList fuuroList, WinSituation situation)
+    public static bool Valid(TileListList hand, TileList winGroup, FuuroList fuuroList, WinSituation situation)
     {
         var anko = situation.Tsumo
             ? hand.Where(x => x.IsKoutsu)
             : hand.Where(x => x.IsKoutsu && x != winGroup);
-        var ankan = fuuroList.Where(x => x.IsAnkan).Select(x => x.TileKindList);
+        var ankan = fuuroList.Where(x => x.IsAnkan).Select(x => x.Tiles);
         return anko.Count() + ankan.Count() == 4;
     }
 }

@@ -13,8 +13,8 @@ internal record Kokushimusou : Yaku
     public override int HanClosed => 13;
     public override bool IsYakuman => true;
 
-    internal static bool Valid(TileCountArray countArray)
+    internal static bool Valid(CountArray countArray)
     {
-        return TileKind.AllKind.Where(x => x.IsYaochuu).Aggregate(1, (x, y) => x * countArray[y]) == 2;
+        return Tile.AllKind.Where(x => x.IsYaochuu).Aggregate(1, (x, y) => x * countArray[y]) == 2;
     }
 }

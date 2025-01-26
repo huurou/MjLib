@@ -25,17 +25,17 @@ internal static class HandCalculator
     /// <returns>結果</returns>
     /// <exception cref="NotImplementedException"></exception>
     public static HandResult Calculate(
-        TileKindList hand,
-        TileKind? winTile,
+        TileList hand,
+        Tile? winTile,
         FuuroList? fuuroList = null,
-        TileKindList? doraIndicators = null,
-        TileKindList? uradoraIndicators = null,
+        TileList? doraIndicators = null,
+        TileList? uradoraIndicators = null,
         WinSituation? situation = null,
         GameRules? rules = null)
     {
-        fuuroList ??= new();
-        doraIndicators ??= new();
-        uradoraIndicators ??= new();
+        fuuroList ??= [];
+        doraIndicators ??= [];
+        uradoraIndicators ??= [];
         situation ??= new();
         rules ??= new();
         // 流し満貫は手牌の形に関係ないので特別にここで返す
@@ -57,7 +57,7 @@ internal static class HandCalculator
             var fu = 0;
             var han = yakuList.Sum(x => x.HanClosed);
             var score = ScoreCalcurator.Calculate(fu, han, situation, rules, true);
-            result = new(fu, han, score, yakuList, new());
+            result = new(fu, han, score, yakuList, []);
         }
         // 天和はあがり牌なし
         else if (winTile is null)
@@ -67,7 +67,7 @@ internal static class HandCalculator
             var fu = 0;
             var han = yakuList.Sum(x => x.HanClosed);
             var score = ScoreCalcurator.Calculate(fu, han, situation, rules, true);
-            result = new(fu, han, score, yakuList, new());
+            result = new(fu, han, score, yakuList, []);
         }
         else
         {
@@ -124,7 +124,7 @@ internal static class HandCalculator
     }
 
     // エラーをチェックする
-    private static bool CheckError(TileKindList hand, TileKind? winTile, FuuroList fuuroList, WinSituation situation, [NotNullWhen(true)] out HandResult? result)
+    private static bool CheckError(TileList hand, Tile? winTile, FuuroList fuuroList, WinSituation situation, [NotNullWhen(true)] out HandResult? result)
     {
         result = null;
         if (!Agari.IsAgari(hand)) result = new("手牌がアガリ形ではありません。");
@@ -170,25 +170,25 @@ internal static class HandCalculator
     }
 
     // 役を判定する
-    private static void EvaluateYaku(YakuList yakuList, TileKindListList hand, TileKind winTile, TileKindList winGroup, FuuroList fuuroList, FuList fuList, WinSituation situation, GameRules rules)
+    private static void EvaluateYaku(YakuList yakuList, TileListList hand, Tile winTile, TileList winGroup, FuuroList fuuroList, FuList fuList, WinSituation situation, GameRules rules)
     {
         EvaluateFormless(yakuList, hand, fuuroList, situation, rules);
         if (hand.Count == 7)
         {
             EvaluateChiitoisu(yakuList, hand, rules);
         }
-        if (hand.Concat(fuuroList.KindLists).Any(x => x.IsShuntsu))
+        if (hand.Concat(fuuroList.TileLists).Any(x => x.IsShuntsu))
         {
             EvaluateShuntsu(yakuList, hand, fuuroList, fuList);
         }
-        if (hand.Concat(fuuroList.KindLists).Any(x => x.IsKoutsu || x.IsKantsu))
+        if (hand.Concat(fuuroList.TileLists).Any(x => x.IsKoutsu || x.IsKantsu))
         {
             EvaluateKoutsu(yakuList, hand, winTile, winGroup, fuuroList, situation, rules);
         }
     }
 
     // 形を問わない役を判定する
-    private static void EvaluateFormless(YakuList yakuList, TileKindListList hand, FuuroList fuuroList, WinSituation situation, GameRules rules)
+    private static void EvaluateFormless(YakuList yakuList, TileListList hand, FuuroList fuuroList, WinSituation situation, GameRules rules)
     {
         if (Tsumo.Valid(situation, fuuroList))
         {
@@ -234,7 +234,7 @@ internal static class HandCalculator
         {
             yakuList.Add(Yaku.Honitsu);
         }
-        if (Chinitsu.Valid(hand))
+        if (Chinitsu.Valid(hand, fuuroList))
         {
             yakuList.Add(Yaku.Chinitsu);
         }
@@ -253,7 +253,7 @@ internal static class HandCalculator
     }
 
     // 七対子形の役を判定する
-    private static void EvaluateChiitoisu(YakuList yakuList, TileKindListList hand, GameRules rules)
+    private static void EvaluateChiitoisu(YakuList yakuList, TileListList hand, GameRules rules)
     {
         if (Chiitoitsu.Valid(hand))
         {
@@ -266,7 +266,7 @@ internal static class HandCalculator
     }
 
     // 順子が必要な役を判定する
-    private static void EvaluateShuntsu(YakuList yakuList, TileKindListList hand, FuuroList fuuroList, FuList fuList)
+    private static void EvaluateShuntsu(YakuList yakuList, TileListList hand, FuuroList fuuroList, FuList fuList)
     {
         if (Pinfu.Valid(fuList, fuuroList))
         {
@@ -300,7 +300,7 @@ internal static class HandCalculator
     }
 
     // 刻子が必要な役を判定する
-    private static void EvaluateKoutsu(YakuList yakuList, TileKindListList hand, TileKind winTile, TileKindList winGroup, FuuroList fuuroList, WinSituation situation, GameRules rules)
+    private static void EvaluateKoutsu(YakuList yakuList, TileListList hand, Tile winTile, TileList winGroup, FuuroList fuuroList, WinSituation situation, GameRules rules)
     {
         if (Toitoihou.Valid(hand, fuuroList))
         {
@@ -377,11 +377,11 @@ internal static class HandCalculator
     }
 
     // ドラを追加する
-    private static void AddDora(YakuList yakuList, TileKindListList devidedHand, TileKindList doraIndicators, TileKindList uradoraIndicators, WinSituation situation)
+    private static void AddDora(YakuList yakuList, TileListList devidedHand, TileList doraIndicators, TileList uradoraIndicators, WinSituation situation)
     {
         var hand = devidedHand.SelectMany(y => y);
-        yakuList.AddRange(Enumerable.Repeat(Yaku.Dora, doraIndicators.Select(TileKind.ToRealDora).Sum(x => hand.Count(y => x == y))));
-        yakuList.AddRange(Enumerable.Repeat(Yaku.Uradora, uradoraIndicators.Select(TileKind.ToRealDora).Sum(x => hand.Count(y => x == y))));
+        yakuList.AddRange(Enumerable.Repeat(Yaku.Dora, doraIndicators.Select(Tile.ToRealDora).Sum(x => hand.Count(y => x == y))));
+        yakuList.AddRange(Enumerable.Repeat(Yaku.Uradora, uradoraIndicators.Select(Tile.ToRealDora).Sum(x => hand.Count(y => x == y))));
         yakuList.AddRange(Enumerable.Repeat(Yaku.Akadora, situation.Akadora));
     }
 }

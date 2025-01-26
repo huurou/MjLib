@@ -1,4 +1,4 @@
-﻿using static MjLib.TileKinds.TileKind;
+﻿using static MjLib.TileKinds.Tile;
 
 namespace MjLib.Test;
 

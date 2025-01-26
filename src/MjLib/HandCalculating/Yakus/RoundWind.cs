@@ -1,7 +1,7 @@
 ﻿using MjLib.Fuuros;
 using MjLib.HandCalculating.Dividings;
 using MjLib.TileKinds;
-using static MjLib.TileKinds.TileKind;
+using static MjLib.TileKinds.Tile;
 
 namespace MjLib.HandCalculating.Yakus;
 
@@ -15,14 +15,14 @@ internal record RoundWind : Yaku
     public override int HanClosed => 1;
     public override bool IsYakuman => false;
 
-    public static bool Valid(TileKindListList hand, FuuroList fuuroList_, WinSituation situation_)
+    public static bool Valid(TileListList hand, FuuroList fuuroList_, WinSituation situation_)
     {
-        return hand.Concat(fuuroList_.KindLists)
+        return hand.Concat(fuuroList_.TileLists)
                    .Where(x => (x.IsKoutsu || x.IsKantsu) && x[0] == WindToTileKind(situation_.Round))
                    .Any();
     }
 
-    private static TileKind WindToTileKind(Wind wind)
+    private static Tile WindToTileKind(Wind wind)
     {
         return wind switch
         {
