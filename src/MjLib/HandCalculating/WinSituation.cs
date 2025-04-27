@@ -85,3 +85,11 @@ internal class WinSituation
     /// </summary>
     public bool IsDealer => Player == Wind.East;
 }
+
+internal enum Wind
+{
+    East,
+    South,
+    West,
+    North,
+}

@@ -13,6 +13,7 @@ internal static class Shanten
     private static int tatsuCount_;
     private static int toitsusCount_;
     private static int jidahaiCount_;
+    // 4枚数牌を持っているかどうか
     private static readonly bool[] suits_ = new bool[KIND_COUNT];
     private static readonly bool[] isolations_ = new bool[KIND_COUNT];
     private static int minShanten_;
@@ -138,7 +139,7 @@ internal static class Shanten
         if (i > 8) i -= 9;
         if (countArray_[id] == 4)
         {
-            IncreaseSet(id);
+            IncreaseKoutsu(id);
             if (i < 7 && countArray_[id + 2] != 0)
             {
                 if (countArray_[id + 1] != 0)
@@ -147,20 +148,20 @@ internal static class Shanten
                     Run(id);
                     DecreaseShuntsu(id);
                 }
-                IncreaseTatsu2(id);
+                IncreaseKanchan(id);
                 Run(id);
-                DecreaseTatsu2(id);
+                DecreaseKanchan(id);
             }
             if (i < 8 && countArray_[id + 1] != 0)
             {
-                IncreaseTatsu1(id);
+                IncreaseRyanmen(id);
                 Run(id);
-                DecreaseTatsu1(id);
+                DecreaseRyanmen(id);
             }
             IncreaseIsolation(id);
             Run(id);
             DecreaseIsolation(id);
-            DecreaseSet(id);
+            DecreaseKoutsu(id);
             IncreaseToitsu(id);
             if (i < 7 && countArray_[id + 2] != 0)
             {
@@ -170,23 +171,23 @@ internal static class Shanten
                     Run(id);
                     DecreaseShuntsu(id);
                 }
-                IncreaseTatsu2(id);
+                IncreaseKanchan(id);
                 Run(id);
-                DecreaseTatsu2(id);
+                DecreaseKanchan(id);
             }
             if (i < 8 && countArray_[id + 1] != 0)
             {
-                IncreaseTatsu1(id);
+                IncreaseRyanmen(id);
                 Run(id);
-                DecreaseTatsu1(id);
+                DecreaseRyanmen(id);
             }
             DecreaseToitsu(id);
         }
         if (countArray_[id] == 3)
         {
-            IncreaseSet(id);
+            IncreaseKoutsu(id);
             Run(id);
-            DecreaseSet(id);
+            DecreaseKoutsu(id);
             IncreaseToitsu(id);
             if (i < 7 && countArray_[id + 1] != 0 && countArray_[id + 2] != 0)
             {
@@ -198,15 +199,15 @@ internal static class Shanten
             {
                 if (i < 7 && countArray_[id + 2] != 0)
                 {
-                    IncreaseTatsu2(id);
+                    IncreaseKanchan(id);
                     Run(id);
-                    DecreaseTatsu2(id);
+                    DecreaseKanchan(id);
                 }
                 if (i < 8 && countArray_[id + 1] != 0)
                 {
-                    IncreaseTatsu1(id);
+                    IncreaseRyanmen(id);
                     Run(id);
-                    DecreaseTatsu1(id);
+                    DecreaseRyanmen(id);
                 }
             }
             DecreaseToitsu(id);
@@ -252,15 +253,15 @@ internal static class Shanten
                         Run(id);
                         DecreaseShuntsu(id);
                     }
-                    IncreaseTatsu2(id);
+                    IncreaseKanchan(id);
                     Run(id);
-                    DecreaseTatsu2(id);
+                    DecreaseKanchan(id);
                 }
                 if (i < 8 && countArray_[id + 1] != 0)
                 {
-                    IncreaseTatsu1(id);
+                    IncreaseRyanmen(id);
                     Run(id);
-                    DecreaseTatsu1(id);
+                    DecreaseRyanmen(id);
                 }
             }
         }
@@ -294,13 +295,13 @@ internal static class Shanten
         }
     }
 
-    private static void IncreaseSet(int id)
+    private static void IncreaseKoutsu(int id)
     {
         countArray_[id] -= 3;
         mentsuCount_++;
     }
 
-    private static void DecreaseSet(int id)
+    private static void DecreaseKoutsu(int id)
     {
         countArray_[id] += 3;
         mentsuCount_--;
@@ -334,28 +335,28 @@ internal static class Shanten
         mentsuCount_--;
     }
 
-    private static void IncreaseTatsu1(int id)
+    private static void IncreaseRyanmen(int id)
     {
         countArray_[id]--;
         countArray_[id + 1]--;
         tatsuCount_++;
     }
 
-    private static void DecreaseTatsu1(int id)
+    private static void DecreaseRyanmen(int id)
     {
         countArray_[id]++;
         countArray_[id + 1]++;
         tatsuCount_--;
     }
 
-    private static void IncreaseTatsu2(int id)
+    private static void IncreaseKanchan(int id)
     {
         countArray_[id]--;
         countArray_[id + 2]--;
         tatsuCount_++;
     }
 
-    private static void DecreaseTatsu2(int id)
+    private static void DecreaseKanchan(int id)
     {
         countArray_[id]++;
         countArray_[id + 2]++;
